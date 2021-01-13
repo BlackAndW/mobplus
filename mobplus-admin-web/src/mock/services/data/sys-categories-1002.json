@@ -1,0 +1,63 @@
+{
+    "code": 2000,
+    "message": "ok",
+    "result": {
+        "data": [
+            {
+                "children": [
+                    {
+                        "createAt": 0,
+                        "creator": 0,
+                        "id": 1014,
+                        "name": "项目状态",
+                        "status": 2,
+                        "updateAt": 0,
+                        "updator": 0
+                    },
+                    {
+                        "createAt": 0,
+                        "creator": 0,
+                        "id": 1015,
+                        "name": "新闻类别",
+                        "status": 2,
+                        "updateAt": 0,
+                        "updator": 0
+                    }
+                ],
+                "createAt": 0,
+                "creator": 0,
+                "id": 1011,
+                "name": "系统管理",
+                "nameEn": "Gender",
+                "status": 2,
+                "updateAt": 0,
+                "updator": 0
+            },
+            {
+                "createAt": 0,
+                "creator": 0,
+                "id": 1012,
+                "name": "报表管理",
+                "nameEn": "Report",
+                "status": 2,
+                "updateAt": 0,
+                "updator": 0
+            },
+            {
+                "createAt": 0,
+                "creator": 0,
+                "id": 1013,
+                "name": "表单管理",
+                "nameEn": "Form",
+                "status": 2,
+                "updateAt": 0,
+                "updator": 0
+            }
+        ],
+        "offset": 0,
+        "pageCount": 1,
+        "pageNo": 1,
+        "pageSize": 20,
+        "totalCount": 3
+    }
+}

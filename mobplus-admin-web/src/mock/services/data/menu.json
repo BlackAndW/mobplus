@@ -1,0 +1,110 @@
+{
+    "code": 2000,
+    "message": "ok",
+    "result": [
+        {
+            "children": [
+                {
+                    "component": "dashboard",
+                    "hidden": false,
+                    "id": 1002,
+                    "keepAlive": false,
+                    "name": "Dashboard",
+                    "path": "/dashboard",
+                    "title": "Dashboard"
+                },
+                {
+                    "children": [
+                        {
+                            "component": "SysConfList",
+                            "hidden": true,
+                            "id": 1004,
+                            "keepAlive": false,
+                            "name": "SysConf",
+                            "path": "/sys/conf",
+                            "title": "系统配置"
+                        },
+                        {
+                            "component": "SysCategoryList",
+                            "hidden": false,
+                            "id": 1005,
+                            "keepAlive": false,
+                            "name": "SysCategory",
+                            "path": "/sys/categories",
+                            "title": "数据分类"
+                        },
+                        {
+                            "component": "SysDictList",
+                            "hidden": false,
+                            "id": 1006,
+                            "keepAlive": false,
+                            "name": "SysDict",
+                            "path": "/sys/dict",
+                            "title": "数据字典"
+                        },
+                        {
+                            "component": "SysPermissionList",
+                            "hidden": false,
+                            "id": 1007,
+                            "keepAlive": false,
+                            "name": "SysPermission",
+                            "path": "/sys/permission",
+                            "title": "权限信息"
+                        },
+                        {
+                            "component": "SysMenuList",
+                            "hidden": false,
+                            "id": 1008,
+                            "keepAlive": false,
+                            "name": "SysMenu",
+                            "path": "/sys/menu",
+                            "title": "菜单管理"
+                        },
+                        {
+                            "component": "SysDepartList",
+                            "hidden": false,
+                            "id": 1009,
+                            "keepAlive": false,
+                            "name": "SysDepart",
+                            "path": "/sys/depart",
+                            "title": "部门管理"
+                        },
+                        {
+                            "component": "SysRoleList",
+                            "hidden": false,
+                            "id": 1010,
+                            "keepAlive": false,
+                            "name": "SysRole",
+                            "path": "/sys/role",
+                            "title": "角色管理"
+                        },
+                        {
+                            "component": "SysUserList",
+                            "hidden": false,
+                            "id": 1011,
+                            "keepAlive": true,
+                            "name": "SysUser",
+                            "path": "/sys/user",
+                            "title": "用户管理"
+                        }
+                    ],
+                    "component": "RouteView",
+                    "hidden": false,
+                    "id": 1003,
+                    "keepAlive": false,
+                    "name": "SysDictItem",
+                    "path": "/sys",
+                    "title": "系统配置"
+                }
+            ],
+            "component": "BasicLayout",
+            "hidden": false,
+            "id": 1001,
+            "keepAlive": false,
+            "name": "index",
+            "path": "/",
+            "redirect": "/dashboard",
+            "title": "ROOT"
+        }
+    ]
+}

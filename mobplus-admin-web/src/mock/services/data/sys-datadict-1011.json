@@ -1,0 +1,41 @@
+{
+    "code": 2000,
+    "message": "ok",
+    "result": {
+        "data": [
+            {
+                "category": 1011,
+                "categoryName":"表单管理",
+                "code": "Gender",
+                "createAt": 0,
+                "creator": 0,
+                "id": 1001,
+                "name": "性别",
+                "nameEn": "性别",
+                "status": 2,
+                "type": 0,
+                "updateAt": 0,
+                "updator": 0
+            },
+            {
+                "category": 1011,
+                "categoryName": "表单管理",
+                "code": "DataType",
+                "createAt": 0,
+                "creator": 0,
+                "id": 1002,
+                "name": "字段类型",
+                "nameEn": "DataType",
+                "status": 0,
+                "type": 1,
+                "updateAt": 0,
+                "updator": 0
+            }
+        ],
+        "offset": 0,
+        "pageCount": 1,
+        "pageNo": 1,
+        "pageSize": 20,
+        "totalCount": 2
+    }
+}

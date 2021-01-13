@@ -1,0 +1,95 @@
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+}
+::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #cdcdcd;
+}
+
+::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    background: #f6f6f6;
+}
+
+/** 搜索表格的样式重写 */
+.table-form-wrapper {
+    .ant-form-item {
+        display: flex;
+        margin-bottom: 16px;
+        margin-right: 0;
+    }
+    .ant-form-item .ant-form-item-control-wrapper {
+        flex: 1 1;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .ant-form-item > .ant-form-item-label {
+        line-height: 32px;
+        padding-right: 8px;
+        width: auto;
+    }
+    .ant-form-item .ant-form-item-control {
+        height: 32px;
+        line-height: 32px;
+    }
+    .table-page-search-submitButtons {
+        display: block;
+        margin-bottom: 16px;
+        white-space: nowrap;
+        float: left;
+        overflow: hidden;
+    }
+}
+
+.act-bar {
+    margin-bottom: 10px;
+    .l {
+        float: left;
+    }
+    .r {
+        float: right;
+    }
+    &::after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+.ant-modal-close-x{
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+}
+.ant-modal-body{
+    padding: 20px;
+}
+.panel {
+    height: calc(100% - 10px);
+
+    .card-list {
+        height: 100%;
+
+        .danger {
+            color: '#faad14';
+        }
+
+        .table-expand {
+            margin: 0;
+            width: 66%;
+            // background-color: #fff;
+            label {
+                display: inline-block;
+                font-weight: bold;
+                width: 100px;
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+{
+    // "eslint.autoFixOnSave": true,
+    "files.autoSave": "off",
+    // "eslint.validate": [
+    //     "javascript",
+    //     {
+    //         "language": "html",
+    //         "autoFix": true
+    //     },
+    //     {
+    //         "language": "vue",
+    //         "autoFix": true
+    //     }
+    // ],
+    "eslint.options": {
+        "plugins": [
+            "html"
+        ]
+    },
+    "editor.tabSize": 4,
+    "editor.detectIndentation": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
+}

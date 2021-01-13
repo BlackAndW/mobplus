@@ -1,0 +1,4 @@
+.idea
+target
+*.iml
+/mobplus-admin/src/main/resources/static

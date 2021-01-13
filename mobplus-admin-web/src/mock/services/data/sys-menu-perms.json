@@ -1,0 +1,134 @@
+{
+    "code": 2000,
+    "message": "ok",
+    "result": [
+        {
+            "checkedAll": false,
+            "selected": [],
+            "indeterminate": false,
+            "name": "权限管理",
+            "actionsOptions": [
+                {
+                    "label": "导出菜单信息",
+                    "value": "add"
+                },
+                {
+                    "label": "新增部门信息",
+                    "value": "edit"
+                },
+                {
+                    "label": "修改部门信息",
+                    "value": "query"
+                },
+                {
+                    "label": "查询部门信息",
+                    "value": "delete"
+                },
+                {
+                    "label": "删除部门信息",
+                    "value": "import"
+                },
+                {
+                    "label": "导入部门信息",
+                    "value": "export"
+                }
+            ]
+        },
+        {
+            "checkedAll": false,
+            "selected": [],
+            "indeterminate": false,
+            "name": "菜单管理",
+            "actionsOptions": [
+                {
+                    "label": "导出菜单信息",
+                    "value": "add"
+                },
+                {
+                    "label": "新增部门信息",
+                    "value": "edit"
+                },
+                {
+                    "label": "修改部门信息",
+                    "value": "query"
+                },
+                {
+                    "label": "查询部门信息",
+                    "value": "delete"
+                },
+                {
+                    "label": "删除部门信息",
+                    "value": "import"
+                },
+                {
+                    "label": "导入部门信息",
+                    "value": "export"
+                }
+            ]
+        },
+        {
+            "checkedAll": false,
+            "selected": [],
+            "indeterminate": false,
+            "name": "数据分类",
+            "actionsOptions": [
+                {
+                    "label": "导出菜单信息",
+                    "value": "add"
+                },
+                {
+                    "label": "新增部门信息",
+                    "value": "edit"
+                },
+                {
+                    "label": "修改部门信息",
+                    "value": "query"
+                },
+                {
+                    "label": "查询部门信息",
+                    "value": "delete"
+                },
+                {
+                    "label": "删除部门信息",
+                    "value": "import"
+                },
+                {
+                    "label": "导入部门信息",
+                    "value": "export"
+                }
+            ]
+        },
+        {
+            "checkedAll": false,
+            "selected": [],
+            "indeterminate": false,
+            "name": "用户管理",
+            "actionsOptions": [
+                {
+                    "label": "导出菜单信息",
+                    "value": "add"
+                },
+                {
+                    "label": "新增部门信息",
+                    "value": "edit"
+                },
+                {
+                    "label": "修改部门信息",
+                    "value": "query"
+                },
+                {
+                    "label": "查询部门信息",
+                    "value": "delete"
+                },
+                {
+                    "label": "删除部门信息",
+                    "value": "import"
+                },
+                {
+                    "label": "导入部门信息",
+                    "value": "export"
+                }
+            ]
+        }
+    ]
+}

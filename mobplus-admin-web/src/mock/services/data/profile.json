@@ -1,0 +1,17 @@
+{
+    "code": 2000,
+    "message": "ok",
+    "result": {
+        "account": "admin",
+        "createAt": "0",
+        "creator": 0,
+        "dptId": 0,
+        "gender": 2,
+        "id": 0,
+        "nickName": "管理员",
+        "avatar": "https://randomuser.me/api/portraits/women/6.jpg",
+        "status": 2,
+        "updateAt": "0",
+        "updator": 0
+    }
+}

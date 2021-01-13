@@ -1,0 +1,125 @@
+{
+    "code": 2000,
+    "message": "ok",
+    "result": {
+        "data": [
+            {
+                "createAt": 1567928589546,
+                "creator": 0,
+                "id": 1001,
+                "memo": "系统配置",
+                "name": "系统配置",
+                "nameEn": "System Configuration",
+                "status": 2,
+                "updateAt": "0",
+                "updator": 0
+            },
+            {
+                "createAt": 1567928589546,
+                "creator": 0,
+                "id": 1002,
+                "memo": "数据字典",
+                "name": "数据字典",
+                "nameEn": "Data Dictionory",
+                "status": 2,
+                "updateAt": "0",
+                "updator": 0
+            },
+            {
+                "children": [
+                    {
+                        "createAt": 1567918809506,
+                        "creator": 0,
+                        "id": 1004,
+                        "memo": "数据分类权限",
+                        "name": "数据分类",
+                        "nameEn": "DataCategory",
+                        "status": 3,
+                        "updateAt": "0",
+                        "updator": 0
+                    },
+                    {
+                        "createAt": "0",
+                        "creator": 0,
+                        "id": 1005,
+                        "memo": "数据字典权限",
+                        "name": "数据字典",
+                        "nameEn": "DataDictionory",
+                        "status": 4,
+                        "updateAt": "0",
+                        "updator": 0
+                    },
+                    {
+                        "createAt": "0",
+                        "creator": 0,
+                        "id": 1006,
+                        "memo": "权限信息权限",
+                        "name": "权限信息",
+                        "nameEn": "Permissions",
+                        "status": 5,
+                        "updateAt": "0",
+                        "updator": 0
+                    },
+                    {
+                        "createAt": "0",
+                        "creator": 0,
+                        "id": 1007,
+                        "memo": "菜单信息权限",
+                        "name": "菜单信息",
+                        "nameEn": "MenuManager",
+                        "status": 1,
+                        "updateAt": "0",
+                        "updator": 0
+                    },
+                    {
+                        "createAt": "0",
+                        "creator": 0,
+                        "id": 1008,
+                        "memo": "部门信息权限",
+                        "name": "部门信息",
+                        "nameEn": "Department",
+                        "status": 2,
+                        "updateAt": "0",
+                        "updator": 0
+                    },
+                    {
+                        "createAt": "0",
+                        "creator": 0,
+                        "id": 1009,
+                        "memo": "角色信息权限",
+                        "name": "角色信息",
+                        "nameEn": "RoleManager",
+                        "status": 2,
+                        "updateAt": "0",
+                        "updator": 0
+                    },
+                    {
+                        "createAt": "0",
+                        "creator": 0,
+                        "id": 1010,
+                        "memo": "用户信息权限",
+                        "name": "用户信息",
+                        "nameEn": "UserManager",
+                        "status": 2,
+                        "updateAt": "0",
+                        "updator": 0
+                    }
+                ],
+                "createAt": 0,
+                "creator": 0,
+                "id": 1003,
+                "memo": "操作权限分类",
+                "name": "权限分类",
+                "nameEn": "Permission Category",
+                "status": 2,
+                "updateAt": "0",
+                "updator": 0
+            }
+        ],
+        "offset": 0,
+        "pageCount": 1,
+        "pageNo": 1,
+        "pageSize": 20,
+        "totalCount": 3
+    }
+}

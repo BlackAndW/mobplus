@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="false" scanPeriod="60 seconds" debug="false">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <springProfile name="dev">
+<!--        <logger name="druid.sql" level="DEBUG"/>-->
+<!--        <logger name="druid.sql.ResultSet" level="DEBUG"/>-->
+
+        <logger name="com.yeecloud" level="ALL"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+    <springProfile name="prod">
+        <property name="LOGGER_ROOT" value="logs"/>
+        <property name="IDC" value="${IDC}"/>
+        <property name="WorkId" value="${WorkId}"/>
+
+        <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOGGER_ROOT}/all.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOGGER_ROOT}/%d{yyyyMMdd}/trace/%d{yyyyMMdd}-all-${IDC}-${WorkId}.%i.log.zip
+                </fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>100MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            </layout>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ALL</level>
+                <!--<onMatch>ACCEPT</onMatch>-->
+                <!--<onMismatch>DENY</onMismatch>-->
+            </filter>
+        </appender>
+
+        <appender name="VMG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOGGER_ROOT}/recieved_vmg.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOGGER_ROOT}/%d{yyyyMMdd}/received/%d{yyyyMMdd}-vmg-${IDC}-${WorkId}.%i.log.zip
+                </fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>100MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            </layout>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ALL</level>
+                <!--<onMatch>ACCEPT</onMatch>-->
+                <!--<onMismatch>DENY</onMismatch>-->
+            </filter>
+        </appender>
+        <appender name="IONNEX" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOGGER_ROOT}/recieved_ionnex.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOGGER_ROOT}/%d{yyyyMMdd}/received/%d{yyyyMMdd}-ionnex-${IDC}-${WorkId}.%i.log.zip
+                </fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>100MB</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            </layout>
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>ALL</level>
+                <!--<onMatch>ACCEPT</onMatch>-->
+                <!--<onMismatch>DENY</onMismatch>-->
+            </filter>
+        </appender>
+
+        <logger name="com.yeecloud" level="debug"/>
+        <logger name="com.yeecloud.adplus.gateway.controller.VMGController" level="ALL" additivity="false">
+            <appender-ref ref="VMG"/>
+        </logger>
+        <logger name="com.yeecloud.adplus.gateway.controller.IONNEXController" level="ALL" additivity="false">
+            <appender-ref ref="IONNEX"/>
+        </logger>
+
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ALL"/>
+        </root>
+    </springProfile>
+</configuration>
