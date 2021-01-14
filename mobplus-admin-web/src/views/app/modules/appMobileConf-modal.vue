@@ -12,7 +12,7 @@
                         v-decorator="[ 'key', {initialValue: model.key, rules: [ { required: true, message: '请输入配置键' }]}]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="配置键">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="配置值">
                     <a-input
                         v-decorator="[ 'value', {initialValue: model.value, rules: [ { required: true, message: '请输入配置值' }]}]"
                     />

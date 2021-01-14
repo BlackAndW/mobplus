@@ -8,7 +8,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 应用
@@ -57,7 +56,7 @@ public class App extends AuditorEntity {
 
 
     @Transient
-    public Map<String, Object> getParameters() {
+    public HashMap getParameters() {
         if (StringUtils.isNotBlank(this.getConf())) {
             try {
                 return JSON.parseObject(this.getConf(), HashMap.class);

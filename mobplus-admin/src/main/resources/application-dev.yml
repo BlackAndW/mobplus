@@ -39,7 +39,7 @@ spring:
     properties.hibernate:
       dialect: org.hibernate.dialect.MySQL8Dialect
       hbm2ddl.auto: none
-    show-sql: false
+    show-sql: true
     open-in-view: true
 
 #验证码背景图张数

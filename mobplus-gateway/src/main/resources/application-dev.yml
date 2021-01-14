@@ -39,7 +39,7 @@ spring:
     properties.hibernate:
       dialect: org.hibernate.dialect.MySQL8Dialect
       hbm2ddl.auto: none
-    show-sql: false
+    show-sql: true
 
 sms:
   appCode: cfe4652efa4b4857a9e5ca856fc1566c
