@@ -1,16 +1,21 @@
 package com.yeecloud.adplus.gateway.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.PropertyNamingStrategy;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.yeecloud.adplus.dal.entity.AppActivity;
+import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
+import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
 import com.yeecloud.adplus.gateway.service.AppActivityService;
+import com.yeecloud.meeto.common.codec.Codec;
+import com.yeecloud.meeto.common.result.Result;
+import org.hibernate.service.spi.ServiceException;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,22 +33,23 @@ public class AppActivityController {
     @Autowired
     AppActivityService appActivityService;
 
-    @RequestMapping("/page")
-    public Page<AppActivity> getAppActivityList(@RequestParam Map<String, Object> params) {
-        return appActivityService.getAppActivityPage(new Query(params));
-    }
-
-    @RequestMapping("/status")
-    public int getAppActivityStatus(@RequestParam Map<String, Object> params) {
-        Page<AppActivity> page = appActivityService.getAppActivityPage(new Query(params));
-        log.info("beforeConvert: " + page.getContent().toString());
-        return page.getContent().get(0).getStatus();
-    }
-
     @RequestMapping("/list")
-    public List<AppActivity> getAppActivityList2(@RequestParam Map<String, Object> params) {
-        Page<AppActivity> page = appActivityService.getAppActivityPage(new Query(params));
-        log.info("beforeConvert: " + page.getContent().toString());
-        return page.getContent();
+    public Result getAppActivityList2(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) {
+        boolean needCodec = m == null || m.trim().length() == 0;
+        if (body != null && needCodec) {
+            body = Codec.decode(body);
+        }
+        Result response = new Result<>();
+        try {
+            log.info("JsonBody: " + body);
+            DeviceForm form = JSON.parseObject(body, DeviceForm.class);
+            List<AppActivityVO> appActivityVOList = appActivityService.getAppActivityList(form);
+            SerializeConfig config = new SerializeConfig();
+            config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
+            response = Result.SUCCESS(appActivityVOList);
+        } catch (Throwable e) {
+            throw new ServiceException(e.getMessage());
+        }
+        return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
     }
 }
