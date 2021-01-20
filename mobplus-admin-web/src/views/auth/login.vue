@@ -26,6 +26,7 @@
             </a-form-item>
             <!-- <a-row :gutter="0">
                 <a-col :span="14"> -->
+                    <!-- 此为生产环境，需要验证码
                     <a-form-item class="form-item captcha">
                         <a-input
                             autocomplete="false"
@@ -33,6 +34,20 @@
                             v-decorator="[
                                 'captcha',
                                 {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}
+                            ]"
+                        >
+                        <img slot="addonAfter" ref="captcha" class="form-image" :src="captchaUrl" @click="refreshCaptcha()" />
+                        </a-input>
+                    </a-form-item>
+                    -->
+                    <!-- 开发环境取消验证码 -->
+                    <a-form-item class="form-item captcha">
+                        <a-input
+                            autocomplete="false"
+                            placeholder="开发环境就别输入验证码了"
+                            v-decorator="[
+                                'captcha',
+                                {rules: [{ required: false, message: '请输入验证码' }], validateTrigger: 'blur'}
                             ]"
                         >
                         <img slot="addonAfter" ref="captcha" class="form-image" :src="captchaUrl" @click="refreshCaptcha()" />
