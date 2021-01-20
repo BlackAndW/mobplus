@@ -2,3 +2,5 @@
 target
 *.iml
 /mobplus-admin/src/main/resources/static
+*.log
+*.yml
