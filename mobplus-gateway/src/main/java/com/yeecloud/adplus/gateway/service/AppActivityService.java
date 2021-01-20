@@ -2,9 +2,13 @@ package com.yeecloud.adplus.gateway.service;
 
 import com.yeecloud.adplus.dal.entity.AppActivity;
 
+import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
+import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
+import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -13,7 +17,6 @@ import java.util.Optional;
  */
 public interface AppActivityService {
 
-    Page<AppActivity> getAppActivityPage(Query query);
+    List<AppActivityVO> getAppActivityList(DeviceForm form) throws ServiceException;
 
-    Optional<AppActivity> getAppActivityList(Query query);
 }

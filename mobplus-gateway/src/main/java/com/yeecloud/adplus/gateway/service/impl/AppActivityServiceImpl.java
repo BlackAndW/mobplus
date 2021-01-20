@@ -1,11 +1,19 @@
 package com.yeecloud.adplus.gateway.service.impl;
 
+import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.yeecloud.adplus.dal.entity.App;
 import com.yeecloud.adplus.dal.entity.AppActivity;
+import com.yeecloud.adplus.dal.entity.AppProject;
 import com.yeecloud.adplus.dal.entity.QAppActivity;
 import com.yeecloud.adplus.dal.repository.AppActivityRepository;
+import com.yeecloud.adplus.dal.repository.AppRepository;
+import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
+import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
 import com.yeecloud.adplus.gateway.service.AppActivityService;
+import com.yeecloud.meeto.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +22,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.yeecloud.meeto.common.util.Query;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,29 +38,31 @@ public class AppActivityServiceImpl implements AppActivityService {
     @Autowired
     AppActivityRepository appActivityRepository;
 
-    @Override
-    public Page<AppActivity> getAppActivityPage(Query query) {
-        QAppActivity appActivity = QAppActivity.appActivity;
-        Predicate predicate = appActivity.deleted.eq(false);
+    @Autowired
+    private AppRepository appRepository;
 
-        Integer appId = query.get("appId", Integer.class);
-        if (appId != null && appId > 0) {
-            predicate = ExpressionUtils.and(predicate, appActivity.app.id.eq(appId));
-        }
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
-        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-        return appActivityRepository.findAll(predicate, pagRequest);
-    }
+    @Autowired
+    JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Optional<AppActivity> getAppActivityList(Query query) {
+    public List<AppActivityVO> getAppActivityList(DeviceForm form) throws ServiceException{
+        App app = appRepository.findByAppId(form.getAppId());
+        if (app == null || app.isDeleted()) {
+            throw new ServiceException("该应用不存在！");
+        }
         QAppActivity appActivity = QAppActivity.appActivity;
         Predicate predicate = appActivity.deleted.eq(false);
-
-        Integer appId = query.get("appId", Integer.class);
-        if (appId != null && appId > 0) {
-            return null;
+        predicate = ExpressionUtils.and(predicate, appActivity.app.id.eq(app.getId()));
+        List<AppActivity> appActivityList = jpaQueryFactory
+                .selectFrom(appActivity)
+                .where(predicate)
+                .fetch();
+        List<AppActivityVO> appActivityVOList = new ArrayList<>();
+        for(AppActivity appActivityItem : appActivityList){
+            AppActivityVO appActivityVO = new AppActivityVO();
+            NewBeanUtils.copyProperties(appActivityVO, appActivityItem);
+            appActivityVOList.add(appActivityVO);
         }
-        return appActivityRepository.findById(appId);
+        return appActivityVOList;
     }
 }
