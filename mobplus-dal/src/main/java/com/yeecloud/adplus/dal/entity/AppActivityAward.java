@@ -28,7 +28,7 @@ public class AppActivityAward extends AuditorEntity{
 
     /** 奖品类别 */
     @Column(name = "award_type")
-    private int awardType;
+    private Integer awardType;
 
     /** 奖品名称 */
     @Column(name = "award_name")

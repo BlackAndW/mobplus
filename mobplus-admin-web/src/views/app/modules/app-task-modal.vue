@@ -2,39 +2,32 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
-                <a-form-item>
-                    <a-input
-                        type="hidden"
-                        v-decorator="[ 'app.id', {initialValue: model.app}]"
-                    />
-                </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="广告类型">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务类型">
                     <a-select
-                        placeholder="==请选择广告类型=="
-                        v-decorator="['type.id', {initialValue: model.type, rules: [{ required: true, message: '请选择广告类型'}]} ]"
+                        placeholder="==请选择任务类型=="
+                        v-decorator="['taskType', {initialValue: model.taskType, rules: [{ required: true, message: '请选择任务类型'}]} ]"
                     >
                         <a-select-option
-                            v-for="item in AdType"
+                            v-for="item in TaskTypeList"
                             :key="item.value"
                             :value="item.value"
                         >{{ item.label }}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="展示位代码">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务类别">
                     <a-input
-                        v-decorator="[ 'code', {initialValue: model.code, rules: [ { required: true, message: '请输入展示位代码' }] }]"
+                        v-decorator="[ 'taskType', {initialValue: model.taskType, rules: [ { required: true, message: '请输入任务类别' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="展示位名称">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务名称">
                     <a-input
-                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入展示位名称' }] }]"
+                        v-decorator="[ 'taskName', {initialValue: model.taskName, rules: [ { required: true, message: '请输入任务名称' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否展示广告">
-                    <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择是否展示广告' }]}]">
-                        <a-radio-button :value="1">展示</a-radio-button>
-                        <a-radio-button :value="2">隐藏</a-radio-button>
-                    </a-radio-group>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务奖励金币">
+                    <a-input
+                        v-decorator="[ 'taskBonusCoin', {initialValue: model.taskBonusCoin, rules: [ { required: true, message: '请输入任务奖励的金币' }] }]"
+                    />
                 </a-form-item>
             </a-form>
         </a-spin>
@@ -57,35 +50,29 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-
-            advList: [],
+            currentAppActivity: null,
+            TaskTypeList: [{ label: '新手任务', value: 1 }, { lable: '日常任务', value: 2 }],
             func: () => {}
         };
     },
     mounted () {
-        this.loadAdvList();
     },
-    computed: {
-        AdType: function () {
-            console.log(this.$DictFilterExclude(this.$AdType, [0]));
-            return this.$DictFilterExclude(this.$AdType, [0]);
-        }
-    },
+    computed: {},
     methods: {
-        add: function (currentApp) {
-            this.title = '添加展示位';
+        add: function (currentAppActivity) {
+            this.title = '添加任务';
             this.model = {};
-            this.model.app = currentApp.key;
-            this.url = '/app/position';
+            this.model.activityId = currentAppActivity;
+            this.url = '/app/activity/task/';
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.visible = true;
         },
-        edit: function (record, currentApp) {
-            this.title = '编辑展示位:' + record.id;
+        edit: function (record, currentAppActivity) {
+            this.title = '编辑任务:' + record.id;
             this.model = record;
-            this.model.app = currentApp.key;
-            this.url = '/app/position/' + record.id;
+            this.model.activityId = currentAppActivity;
+            this.url = '/app/activity/task/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
             this.visible = true;
@@ -102,6 +89,7 @@ export default {
             const $self = this;
             // 触发表单验证
             this.form.validateFields((err, values) => {
+                console.log(values);
                 if (!err) {
                     $self.confirmLoading = true;
                     $self
@@ -118,9 +106,6 @@ export default {
                         });
                 }
             });
-        },
-        loadAdvList: async function () {
-            this.advList = await this.$http.get('/ad/adv/sct', {});
         }
     }
 };

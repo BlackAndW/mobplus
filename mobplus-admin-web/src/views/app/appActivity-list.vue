@@ -75,15 +75,15 @@
                         </template>
                         <span slot="actionAward" slot-scope="text, record">
                             <a
-                                v-action="['app:activity:edit']"
+                                v-action="['app:activity:query']"
                                 @click="$refs.awardModal.show(record)"
                             >编辑</a>
                             <a-divider type="vertical" />
                         </span>
                         <span slot="actionTask" slot-scope="text, record">
                             <a
-                                v-action="['app:activity:edit']"
-                                @click="$refs.taskModal.show(record)"
+                                v-action="['app:activity:query']"
+                                @click="$refs.taskModal.show(record, activityId)"
                             >编辑</a>
                             <a-divider type="vertical" />
                         </span>
@@ -114,8 +114,8 @@
 import { mixinDevice } from '@/utils/mixin';
 import { STable, STree, ETag } from '@/components';
 import AppActivityModal from '@/views/app/modules/appActivity-modal';
-import AppActivityModalAward from '@/views/app/modules/appAvtivity-award-modal';
-import AppActivityModalTask from '@/views/app/modules/appAvtivity-task-modal';
+import AppActivityAwardModal from '@/views/app/modules/appActivity-award-modal';
+import AppActivityTaskModal from '@/views/app/modules/appActivity-task-modal';
 
 const columns = [
     {
@@ -171,8 +171,8 @@ export default {
         STree,
         ETag,
         AppActivityModal,
-        AppActivityModalAward,
-        AppActivityModalTask
+        AppActivityAwardModal,
+        AppActivityTaskModal
     },
     data () {
         return {

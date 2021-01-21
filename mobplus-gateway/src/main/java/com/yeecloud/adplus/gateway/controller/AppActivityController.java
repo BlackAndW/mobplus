@@ -27,14 +27,14 @@ import java.util.Optional;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/app/activity")
+@RequestMapping("/api/v1/app")
 public class AppActivityController {
 
     @Autowired
     AppActivityService appActivityService;
 
-    @RequestMapping("/list")
-    public Result getAppActivityList2(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) {
+    @RequestMapping("/activityList")
+    public Result getAppActivityList(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);

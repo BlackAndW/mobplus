@@ -27,7 +27,7 @@ public class AppActivityTask extends AuditorEntity{
 
     /** 任务类别 */
     @Column(name = "task_type")
-    private int taskType;
+    private Integer taskType;
 
     /** 任务名称 */
     @Column(name = "task_name")
@@ -35,7 +35,7 @@ public class AppActivityTask extends AuditorEntity{
 
     /** 任务奖励金币 */
     @Column(name = "task_bonus_coin")
-    private int taskBonusCoin;
+    private Integer taskBonusCoin;
 
     @Column(name = "c_remark")
     private String remark;
