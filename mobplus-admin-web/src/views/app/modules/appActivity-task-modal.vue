@@ -1,25 +1,14 @@
 <template>
-    <a-modal
+    <div>
+        <a-modal
         :title="title"
         :width="modalWidth"
         :visible="visible"
         :confirmLoading="confirmLoading"
-        @ok="onSubmit"
         @cancel="onCancel"
         cancelText="关闭"
     >
         <a-spin :spinning="confirmLoading">
-            <!--       -->
-            <a-alert :showIcon="true" style="margin-bottom: 10px">
-                <template slot="message">
-                    <span style="margin-right: 12px">
-                        已选择:
-                        <a style="font-weight: 600">{{
-                            selectedRows.length
-                        }}</a>
-                    </span>
-                </template>
-            </a-alert>
             <s-table
                 bordered
                 ref="table"
@@ -36,43 +25,46 @@
                     onChange: onSelectChange
                 }"
             >
-                <template slot="ratioSlot" slot-scope="text, record">
-                    <a-input-number
-                        :min="1"
-                        :max="99"
-                        style="margin: -5px 0"
-                        :value="text || 1"
-                        @change="val => handleCellChange(val, record.key, 'ratio', record)"
-                    />
-                </template>
-                <template slot="typeSlot" slot-scope="text">
-                    {{ $GetDictLabel($AdType, text) }}
-                </template>
+                <span slot="action" slot-scope="text, record">
+                    <a
+                        v-action="['app:activity:edit']"
+                        @click="$refs.modal.edit(record, currentAppActivity)"
+                    >编辑</a>
+                    <a-divider type="vertical" />
+                </span>
             </s-table>
         </a-spin>
-    </a-modal>
+        </a-modal>
+        <app-task-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
+    </div>
 </template>
 
 <script>
 import { mixinDevice } from '@/utils/mixin';
 import { STable, ETag } from '@/components';
+import AppTaskModal from '@/views/app/modules/app-task-modal';
 
 const columns = [
     {
-        title: '奖品名称',
-        dataIndex: 'activityAward.name',
+        title: '任务类别',
+        dataIndex: 'taskType',
         scopedSlots: { customRender: 'typeSlot' }
     },
     {
-        title: '类型',
-        dataIndex: 'activityAward.type',
+        title: '任务名称',
+        dataIndex: 'taskName',
         scopedSlots: { customRender: 'typeSlot' }
     },
     {
-        title: '权重',
-        dataIndex: 'ratio',
-        width: 108,
+        title: '任务奖励金币',
+        dataIndex: 'taskBonusCoin',
         scopedSlots: { customRender: 'ratioSlot' }
+    },
+    {
+        title: '任务设置',
+        dataIndex: 'action',
+        align: 'center',
+        scopedSlots: { customRender: 'action' }
     }
 ];
 
@@ -80,11 +72,12 @@ export default {
     mixins: [mixinDevice],
     components: {
         STable,
-        ETag
+        ETag,
+        AppTaskModal
     },
     data () {
         return {
-            title: '活动名称：奖品测试',
+            title: '活动名称：测试',
             modalWidth: 900,
             visible: false,
             confirmLoading: false,
@@ -98,8 +91,7 @@ export default {
             selectedRows: [],
 
             loadData: this.loadDataList,
-
-            // ad pos
+            currentAppActivity: null,
             model: {}
         };
     },
@@ -109,9 +101,10 @@ export default {
         }
     },
     methods: {
-        show: function (record) {
-            this.title = '关联广告位 展示位:' + record.name + ' 类型:' + record.typeName;
+        show: function (record, activityId) {
+            this.title = '活动名称：奖品测试';
             this.model = record;
+            this.currentAppActivity = activityId;
             this.reload();
             this.visible = true;
         },
@@ -125,40 +118,9 @@ export default {
             this.selectedRowKeys = [];
             this.selectedRows = [];
         },
-        onSubmit: function () {
-            const params = [];
-            this.selectedRows.forEach(ele => {
-                params.push({
-                    adPos: {
-                        id: ele.adPos.id
-                    },
-                    ratio: ele.ratio
-                });
-            });
-            if (params.length === 0) {
-                this.$message.warning('请选择广告位!');
-                return;
-            }
-            this.confirmLoading = true;
-            this.$http
-                .put(
-                    '/app/activity/award/' + this.model.id,
-                    params
-                )
-                .then(data => {
-                    this.$message.success(data || '广告分配成功!');
-                    this.close();
-                })
-                .catch(err => {
-                    if (err) {
-                        console.log(err.stack);
-                    }
-                    this.confirmLoading = false;
-                });
-        },
         loadDataList: function (params) {
             return this.$http.get(
-                '/app/activity/award/' + this.model.id,
+                '/app/activity/task/?activityId=' + this.model.id,
                 Object.assign(params, this.queryParam)
             );
         },

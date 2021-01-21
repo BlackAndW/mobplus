@@ -3,14 +3,18 @@ package com.yeecloud.adplus.admin.controller.app.vo;
 import com.yeecloud.adplus.admin.common.vo.BaseVO;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author: Leonard
  * @create: 2021/1/18
  */
 @Data
-public class AppActivityVO extends BaseVO {
+public class AppActivityVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private Integer id;
 
     /** 活动名称 */
     private String name;

@@ -4,14 +4,17 @@ import cn.hutool.core.util.IdUtil;
 import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.yeecloud.adplus.admin.controller.app.form.AppActivityAwardForm;
 import com.yeecloud.adplus.admin.controller.app.form.AppActivityForm;
+import com.yeecloud.adplus.admin.controller.app.form.AppActivityTaskForm;
 import com.yeecloud.adplus.admin.service.AppActivityService;
-import com.yeecloud.adplus.dal.entity.AdPosition;
-import com.yeecloud.adplus.dal.entity.AppActivity;
-import com.yeecloud.adplus.dal.entity.QAdPosition;
-import com.yeecloud.adplus.dal.entity.QAppActivity;
+import com.yeecloud.adplus.admin.service.AppActivityTaskService;
+import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.AdPositionRepository;
+import com.yeecloud.adplus.dal.repository.AppActivityAwardRepository;
 import com.yeecloud.adplus.dal.repository.AppActivityRepository;
+import com.yeecloud.adplus.dal.repository.AppActivityTaskRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import com.yeecloud.meeto.common.util.StringUtils;
@@ -23,6 +26,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author: Leonard
  * @create: 2021/1/18
@@ -33,6 +38,15 @@ public class AppActivityServiceImpl implements AppActivityService {
 
     @Autowired
     private AppActivityRepository appActivityRepository;
+
+    @Autowired
+    private AppActivityTaskRepository appActivityTaskRepository;
+
+    @Autowired
+    private AppActivityAwardRepository appActivityAwardRepository;
+
+    @Autowired
+    private JPAQueryFactory jpaQueryFactory;
 
     @Override
     public Page<AppActivity> query(Query query) throws ServiceException {
@@ -95,5 +109,123 @@ public class AppActivityServiceImpl implements AppActivityService {
     @Transactional(rollbackFor = Throwable.class)
     public void delete(Integer[] ids) throws ServiceException {
         appActivityRepository.deleteById(ids);
+    }
+
+    @Override
+    public Page<AppActivityTask> queryTask(Query query) throws ServiceException {
+        QAppActivityTask appActivityTask = QAppActivityTask.appActivityTask;
+        Predicate predicate = appActivityTask.deleted.eq(false);
+
+        Integer activityId = query.get("activityId", Integer.class);
+        if (activityId != null && activityId > 0){
+            predicate = ExpressionUtils.and(predicate, appActivityTask.appActivity.id.eq(activityId));
+        }
+        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
+        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
+        return appActivityTaskRepository.findAll(predicate, pagRequest);
+    }
+
+    @Override
+    public AppActivityTask findByTaskId(Integer id) throws ServiceException {
+        try {
+            AppActivityTask entity = appActivityTaskRepository.findById(id).orElse(null);
+            if (entity != null && !entity.isDeleted()) {
+                return entity;
+            }
+            return null;
+        } catch (Throwable e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void create(AppActivityTaskForm form) throws ServiceException {
+        AppActivityTask appActivityTask = new AppActivityTask();
+        NewBeanUtils.copyProperties(appActivityTask, form, true);
+        try {
+            appActivityTaskRepository.save(appActivityTask);
+        } catch (Throwable e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void update(Integer id, AppActivityTaskForm form) throws ServiceException {
+        try {
+            AppActivityTask entity = appActivityTaskRepository.findById(id).orElse(null);
+            if (entity != null && !entity.isDeleted()) {
+                NewBeanUtils.copyProperties(entity, form, true);
+                appActivityTaskRepository.save(entity);
+            }
+        } catch (Throwable e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void deleteTask(Integer[] ids) throws ServiceException {
+        appActivityTaskRepository.deleteById(ids);
+    }
+
+    @Override
+    public Page<AppActivityAward> queryAward(Query query) throws ServiceException {
+        QAppActivityAward appActivityAward = QAppActivityAward.appActivityAward;
+        Predicate predicate = appActivityAward.deleted.eq(false);
+
+        Integer activityId = query.get("activityId", Integer.class);
+        if (activityId != null && activityId > 0){
+            predicate = ExpressionUtils.and(predicate, appActivityAward.appActivity.id.eq(activityId));
+        }
+        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
+        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
+        return appActivityAwardRepository.findAll(predicate, pagRequest);
+    }
+
+    @Override
+    public AppActivityAward findByAwardId(Integer id) throws ServiceException {
+        try {
+            AppActivityAward entity = appActivityAwardRepository.findById(id).orElse(null);
+            if (entity != null && !entity.isDeleted()) {
+                return entity;
+            }
+            return null;
+        } catch (Throwable e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void create(AppActivityAwardForm form) throws ServiceException {
+        AppActivityAward appActivityAward = new AppActivityAward();
+        NewBeanUtils.copyProperties(appActivityAward, form, true);
+        try {
+            appActivityAwardRepository.save(appActivityAward);
+        } catch (Throwable e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void update(Integer id, AppActivityAwardForm form) throws ServiceException {
+        try {
+            AppActivityAward entity = appActivityAwardRepository.findById(id).orElse(null);
+            if (entity != null && !entity.isDeleted()) {
+                NewBeanUtils.copyProperties(entity, form, true);
+                appActivityAwardRepository.save(entity);
+            }
+        } catch (Throwable e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void deleteAward(Integer[] ids) throws ServiceException {
+        appActivityAwardRepository.deleteById(ids);
     }
 }

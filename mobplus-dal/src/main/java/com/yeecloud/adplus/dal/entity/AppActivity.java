@@ -33,23 +33,23 @@ public class AppActivity extends AuditorEntity{
 
     /** 每日最多抽奖次数 */
     @Column(name = "draw_counts")
-    private int drawCounts;
+    private Integer drawCounts;
 
     /** 抽奖消耗的金币 */
     @Column(name = "need_coin")
-    private int needCoin;
+    private Integer needCoin;
 
     /** 抽奖最多赠送的金币 */
     @Column(name = "max_bonus_coin")
-    private int maxBonusCoin;
+    private Integer maxBonusCoin;
 
     /** 抽奖最少赠送的金币 */
     @Column(name = "min_bonus_coin")
-    private int minBonusCoin;
+    private Integer minBonusCoin;
 
     /** 活动版本 */
     @Column(name = "version")
-    private int version;
+    private Integer version;
 
     @Column(name = "c_remark")
     private String remark;
