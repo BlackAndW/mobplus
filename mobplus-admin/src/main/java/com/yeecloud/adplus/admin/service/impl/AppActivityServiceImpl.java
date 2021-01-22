@@ -11,10 +11,7 @@ import com.yeecloud.adplus.admin.controller.app.form.AppActivityTaskForm;
 import com.yeecloud.adplus.admin.service.AppActivityService;
 import com.yeecloud.adplus.admin.service.AppActivityTaskService;
 import com.yeecloud.adplus.dal.entity.*;
-import com.yeecloud.adplus.dal.repository.AdPositionRepository;
-import com.yeecloud.adplus.dal.repository.AppActivityAwardRepository;
-import com.yeecloud.adplus.dal.repository.AppActivityRepository;
-import com.yeecloud.adplus.dal.repository.AppActivityTaskRepository;
+import com.yeecloud.adplus.dal.repository.*;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import com.yeecloud.meeto.common.util.StringUtils;
@@ -44,6 +41,12 @@ public class AppActivityServiceImpl implements AppActivityService {
 
     @Autowired
     private AppActivityAwardRepository appActivityAwardRepository;
+
+    @Autowired
+    private ChannelRepository channelRepository;
+
+    @Autowired
+    private AppVersionRepository appVersionRepository;
 
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
@@ -96,8 +99,12 @@ public class AppActivityServiceImpl implements AppActivityService {
     public void update(Integer id, AppActivityForm form) throws ServiceException {
         try {
             AppActivity entity = appActivityRepository.findById(id).orElse(null);
+            Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
+            AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
             if (entity != null && !entity.isDeleted()) {
                 NewBeanUtils.copyProperties(entity, form, true);
+                entity.setAppVersion(appVersion);
+                entity.setChannel(channel);
                 appActivityRepository.save(entity);
             }
         } catch (Throwable e) {

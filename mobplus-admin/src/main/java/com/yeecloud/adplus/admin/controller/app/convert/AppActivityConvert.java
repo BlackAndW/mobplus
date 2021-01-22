@@ -19,6 +19,12 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring", uses = GeneralConvert.class)
 public interface AppActivityConvert {
+    @Mappings({
+            @Mapping(target = "appVersionId", source = "appVersion.id"),
+            @Mapping(target = "versionCode", source = "appVersion.code"),
+            @Mapping(target = "channelId", source = "channel.id"),
+            @Mapping(target = "channelName", source = "channel.name")
+    })
 
     AppActivityVO convert(AppActivity appActivity);
 

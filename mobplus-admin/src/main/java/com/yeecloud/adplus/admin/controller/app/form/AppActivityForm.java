@@ -13,6 +13,14 @@ import javax.validation.constraints.NotNull;
 @Data
 public class AppActivityForm {
 
+    /** 应用版本 */
+    @NotNull(message = "请输入应用版本")
+    private Integer appVersionId;
+
+    /** 应用渠道 */
+    @NotNull(message = "请输入应用渠道")
+    private Integer channelId;
+
     /** 活动名称 */
     @NotBlank(message = "请输入活动名称")
     private String name;
@@ -33,12 +41,7 @@ public class AppActivityForm {
     @NotNull(message = "请输入奖励金币的最小值")
     private Integer minBonusCoin;
 
-    /** 活动版本 */
-    @NotBlank(message = "请输入活动版本")
-    private Integer version;
-
     private String remark;
 
-    @NotBlank(message = "请选择应用状态")
     private Integer status;
 }

@@ -33,10 +33,25 @@
                         v-decorator="[ 'minBonusCoin', {initialValue: model.minBonusCoin, rules: [ { required: true, message: '请输入单次抽取金币下限' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="活动版本">
-                    <a-input
-                        v-decorator="[ 'version', {initialValue: model.version, rules: [ { required: true, message: '请输入活动版本' }] }]"
-                    />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="版本">
+                    <a-select placeholder="请选择版本" style="width:200px" v-decorator="[ 'appVersionId', {initialValue: model.appVersionId, rules: [ { required: true, message: '请选择版本' }]}]">
+                        <a-select-option
+                            v-for="appVersion in appVersionList"
+                            :key="appVersion.id"
+                            :value="appVersion.id"
+                        >{{ appVersion.name }}     {{ appVersion.code }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="渠道">
+                    <a-select placeholder="请选择渠道" style="width:200px" v-decorator="[ 'channelId', {initialValue: model.channelId, rules: [ { required: true, message: '请选择渠道' }]}]">
+                        <a-select-option
+                            v-for="channel in channelList"
+                            :key="channel.id"
+                            :value="channel.id"
+                        >{{ channel.name }}     {{ channel.code }}
+                        </a-select-option>
+                    </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否开启活动">
                     <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择是否开启活动' }]}]">
@@ -66,17 +81,14 @@ export default {
             form: this.$form.createForm(this),
             model: {},
 
-            advList: [],
+            appVersionList: {},
+            channelList: {},
             func: () => {}
         };
     },
     mounted () {
     },
-    computed: {
-        // AdType: function () {
-        //     return this.$DictFilterExclude(this.$AdType, [0]);
-        // }
-    },
+    computed: {},
     methods: {
         add: function (currentApp) {
             this.title = '添加活动';
@@ -86,6 +98,8 @@ export default {
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.visible = true;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         edit: function (record, currentApp) {
             this.title = '编辑活动:' + record.id;
@@ -95,6 +109,8 @@ export default {
             this.func = this.$http.put;
             this.confirmLoading = false;
             this.visible = true;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         close: function (success) {
             this.$emit('close', success || false);
@@ -104,10 +120,19 @@ export default {
         onCancel: function () {
             this.close(false);
         },
+        loadChannelList: async function () {
+            this.channelList = await this.$http.get('/release/channel/sct', {});
+        },
+        loadAppVersionList: async function (currentApp) {
+            this.appVersionList = await this.$http.get('/app/version/sct', {
+                appId: currentApp.key
+            });
+        },
         onSubmit: function () {
             const $self = this;
             // 触发表单验证
             this.form.validateFields((err, values) => {
+                console.log(values);
                 if (!err) {
                     $self.confirmLoading = true;
                     $self
@@ -124,9 +149,6 @@ export default {
                         });
                 }
             });
-        },
-        loadAdvList: async function () {
-            this.advList = await this.$http.get('/ad/adv/sct', {});
         }
     }
 };
