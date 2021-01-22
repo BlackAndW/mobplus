@@ -15,6 +15,9 @@ import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
 import com.yeecloud.adplus.gateway.service.AppActivityService;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 import com.yeecloud.meeto.common.util.Query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,8 +65,16 @@ public class AppActivityServiceImpl implements AppActivityService {
         for(AppActivity appActivityItem : appActivityList){
             AppActivityVO appActivityVO = new AppActivityVO();
             NewBeanUtils.copyProperties(appActivityVO, appActivityItem);
+            appActivityVO.setSessionCount(countSession());
             appActivityVOList.add(appActivityVO);
         }
         return appActivityVOList;
+    }
+
+    private int countSession(){
+        DateTime startTime = new DateTime("2021-1-18");
+        DateTime nowTime = new DateTime(new Date());
+        Period dayPeriod = new Period(startTime, nowTime, PeriodType.days());
+        return (dayPeriod.getDays()/7 + 1);
     }
 }

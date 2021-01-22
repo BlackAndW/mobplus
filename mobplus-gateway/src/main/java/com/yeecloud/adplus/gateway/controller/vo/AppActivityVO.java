@@ -29,6 +29,9 @@ public class AppActivityVO implements Serializable {
     /** 抽奖最少赠送的金币 */
     private Integer minBonusCoin;
 
+    /** 活动期数 */
+    private Integer sessionCount;
+
     private String remark;
 
     private Integer status;
