@@ -34,11 +34,11 @@ public class AppActivityForm {
     private Integer minBonusCoin;
 
     /** 活动版本 */
-    @NotBlank(message = "请输入活动版本")
+    @NotNull(message = "请输入活动版本")
     private Integer version;
 
     private String remark;
 
-    @NotBlank(message = "请选择应用状态")
+    @NotNull(message = "请选择应用状态")
     private Integer status;
 }
