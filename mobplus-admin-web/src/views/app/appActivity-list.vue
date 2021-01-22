@@ -24,18 +24,27 @@
                                     v-model="queryParam.keyword"
                                 />
                             </a-form-item>
-                            <!--
-                            <a-form-item label="广告类型">
-                                <a-select placeholder="广告类型" v-model="queryParam.type" style="width:120px">
+                            <a-form-item label="渠道名称">
+                                <a-select placeholder="渠道名称" v-model="queryParam.channelId" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option
-                                        v-for="item in AdType"
-                                        :key="item.value"
-                                        :value="item.value"
-                                    >{{ item.label }}</a-select-option>
+                                        v-for="channel in channelList"
+                                        :key="channel.id"
+                                        :value="channel.id"
+                                    >{{ channel.name }}</a-select-option>
                                 </a-select>
                             </a-form-item>
-                            -->
+                            <a-form-item label="版本">
+                                <a-select placeholder="版本" v-model="queryParam.appVersionId" style="width:120px">
+                                    <a-select-option :value="0">不限</a-select-option>
+                                    <a-select-option
+                                        v-for="appVersion in appVersionList"
+                                        :key="appVersion.id"
+                                        :value="appVersion.id"
+                                    >{{ appVersion.code }}
+                                    </a-select-option>
+                                </a-select>
+                            </a-form-item>
                             <a-form-item>
                                 <a-button
                                     type="primary"
@@ -123,6 +132,14 @@ const columns = [
         dataIndex: 'name'
     },
     {
+        title: '版本',
+        dataIndex: 'versionCode'
+    },
+    {
+        title: '渠道',
+        dataIndex: 'channelName'
+    },
+    {
         title: '抽奖次数',
         dataIndex: 'drawCounts'
     },
@@ -191,7 +208,9 @@ export default {
             // 分类树数据
             currentApp: null,
             treeloading: false,
-            appTreeData: []
+            appTreeData: [],
+            channelList: [],
+            appVersionList: []
         };
     },
     created () {},
@@ -229,10 +248,22 @@ export default {
             this.selectedRows = selectedRows;
         },
         loadDataList: function (params) {
+            this.loadAppVersionList(this.currentApp.key);
+            this.loadChannelList(this.currentApp.key);
             return this.$http.get(
                 url + '?appId=' + this.currentApp.key,
                 Object.assign(params, this.queryParam)
             );
+        },
+        loadAppVersionList: async function (appId) {
+            this.appVersionList = await this.$http.get('/app/version/sct', {
+                appId: appId
+            });
+            console.log(this.appVersionList);
+        },
+        loadChannelList: async function () {
+            this.channelList = await this.$http.get('/release/channel/sct', {});
+            console.log(this.channelList);
         },
         onQueryDict: function (item) {
             this.currentApp = item;

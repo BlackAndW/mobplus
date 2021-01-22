@@ -16,6 +16,18 @@ public class AppActivityVO implements Serializable {
 
     private Integer id;
 
+    /** 应用版本 */
+    private Integer appVersionId;
+
+    /** 应用渠道 */
+    private Integer channelId;
+
+    /** 应用版本号 */
+    private String versionCode;
+
+    /** 应用渠道名 */
+    private String channelName;
+
     /** 活动名称 */
     private String name;
 

@@ -62,6 +62,7 @@ public class AppActivityServiceImpl implements AppActivityService {
                 .where(predicate)
                 .fetch();
         List<AppActivityVO> appActivityVOList = new ArrayList<>();
+        log.info("appActivityList: " + appActivityList.toString());
         for(AppActivity appActivityItem : appActivityList){
             AppActivityVO appActivityVO = new AppActivityVO();
             NewBeanUtils.copyProperties(appActivityVO, appActivityItem);
