@@ -86,8 +86,12 @@ public class AppActivityServiceImpl implements AppActivityService {
     @Transactional(rollbackFor = Throwable.class)
     public void create(AppActivityForm form) throws ServiceException {
         AppActivity appActivity = new AppActivity();
+        AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
+        Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
         NewBeanUtils.copyProperties(appActivity, form, true);
         try {
+            appActivity.setAppVersion(appVersion);
+            appActivity.setChannel(channel);
             appActivityRepository.save(appActivity);
         } catch (Throwable e) {
             throw new ServiceException(e);
