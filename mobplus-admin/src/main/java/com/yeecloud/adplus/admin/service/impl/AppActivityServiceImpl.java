@@ -61,7 +61,7 @@ public class AppActivityServiceImpl implements AppActivityService {
             if (appId != null && appId > 0) {
                 predicate = ExpressionUtils.and(predicate, appActivity.app.id.eq(appId));
             }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
             return appActivityRepository.findAll(predicate, pagRequest);
         } catch (Throwable e) {
@@ -114,22 +114,26 @@ public class AppActivityServiceImpl implements AppActivityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public void delete(Integer[] ids) throws ServiceException {
+    public void delete(Integer[] ids) {
         appActivityRepository.deleteById(ids);
     }
 
     @Override
     public Page<AppActivityTask> queryTask(Query query) throws ServiceException {
-        QAppActivityTask appActivityTask = QAppActivityTask.appActivityTask;
-        Predicate predicate = appActivityTask.deleted.eq(false);
+        try{
+            QAppActivityTask appActivityTask = QAppActivityTask.appActivityTask;
+            Predicate predicate = appActivityTask.deleted.eq(false);
 
-        Integer activityId = query.get("activityId", Integer.class);
-        if (activityId != null && activityId > 0){
-            predicate = ExpressionUtils.and(predicate, appActivityTask.appActivity.id.eq(activityId));
+            Integer activityId = query.get("activityId", Integer.class);
+            if (activityId != null && activityId > 0){
+                predicate = ExpressionUtils.and(predicate, appActivityTask.appActivity.id.eq(activityId));
+            }
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+            PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
+            return appActivityTaskRepository.findAll(predicate, pagRequest);
+        } catch (Throwable e) {
+            throw new ServiceException(e);
         }
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
-        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-        return appActivityTaskRepository.findAll(predicate, pagRequest);
     }
 
     @Override
@@ -179,16 +183,20 @@ public class AppActivityServiceImpl implements AppActivityService {
 
     @Override
     public Page<AppActivityAward> queryAward(Query query) throws ServiceException {
-        QAppActivityAward appActivityAward = QAppActivityAward.appActivityAward;
-        Predicate predicate = appActivityAward.deleted.eq(false);
+        try {
+            QAppActivityAward appActivityAward = QAppActivityAward.appActivityAward;
+            Predicate predicate = appActivityAward.deleted.eq(false);
 
-        Integer activityId = query.get("activityId", Integer.class);
-        if (activityId != null && activityId > 0){
-            predicate = ExpressionUtils.and(predicate, appActivityAward.appActivity.id.eq(activityId));
+            Integer activityId = query.get("activityId", Integer.class);
+            if (activityId != null && activityId > 0){
+                predicate = ExpressionUtils.and(predicate, appActivityAward.appActivity.id.eq(activityId));
+            }
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+            PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
+            return appActivityAwardRepository.findAll(predicate, pagRequest);
+        } catch (Throwable e) {
+            throw new ServiceException(e);
         }
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
-        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-        return appActivityAwardRepository.findAll(predicate, pagRequest);
     }
 
     @Override

@@ -86,14 +86,14 @@
                             <a
                                 v-action="['app:activity:query']"
                                 @click="$refs.awardModal.show(record)"
-                            >编辑</a>
+                            >设置</a>
                             <a-divider type="vertical" />
                         </span>
                         <span slot="actionTask" slot-scope="text, record">
                             <a
                                 v-action="['app:activity:query']"
-                                @click="$refs.taskModal.show(record, activityId)"
-                            >编辑</a>
+                                @click="$refs.taskModal.show(record)"
+                            >设置</a>
                             <a-divider type="vertical" />
                         </span>
                         <span slot="action" slot-scope="text, record">
@@ -259,11 +259,9 @@ export default {
             this.appVersionList = await this.$http.get('/app/version/sct', {
                 appId: appId
             });
-            console.log(this.appVersionList);
         },
         loadChannelList: async function () {
             this.channelList = await this.$http.get('/release/channel/sct', {});
-            console.log(this.channelList);
         },
         onQueryDict: function (item) {
             this.currentApp = item;

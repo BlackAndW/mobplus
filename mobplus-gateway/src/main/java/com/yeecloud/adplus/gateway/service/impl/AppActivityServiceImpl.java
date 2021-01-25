@@ -4,13 +4,12 @@ import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.yeecloud.adplus.dal.entity.App;
-import com.yeecloud.adplus.dal.entity.AppActivity;
-import com.yeecloud.adplus.dal.entity.AppProject;
-import com.yeecloud.adplus.dal.entity.QAppActivity;
+import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.AppActivityRepository;
 import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
+import com.yeecloud.adplus.gateway.controller.vo.AppActivityAwardVO;
+import com.yeecloud.adplus.gateway.controller.vo.AppActivityTaskVO;
 import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
 import com.yeecloud.adplus.gateway.service.AppActivityService;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -57,6 +56,8 @@ public class AppActivityServiceImpl implements AppActivityService {
         QAppActivity appActivity = QAppActivity.appActivity;
         Predicate predicate = appActivity.deleted.eq(false);
         predicate = ExpressionUtils.and(predicate, appActivity.app.id.eq(app.getId()));
+        predicate = ExpressionUtils.and(predicate, appActivity.channel.code.eq(form.getChannel()));
+        predicate = ExpressionUtils.and(predicate, appActivity.appVersion.code.eq(form.getPkgVersion()));
         List<AppActivity> appActivityList = jpaQueryFactory
                 .selectFrom(appActivity)
                 .where(predicate)
@@ -67,9 +68,46 @@ public class AppActivityServiceImpl implements AppActivityService {
             AppActivityVO appActivityVO = new AppActivityVO();
             NewBeanUtils.copyProperties(appActivityVO, appActivityItem);
             appActivityVO.setSessionCount(countSession());
+            appActivityVO.setTaskList(getAppTaskList(appActivityItem));
+            appActivityVO.setAwardList(getAppAwardList(appActivityItem));
             appActivityVOList.add(appActivityVO);
         }
         return appActivityVOList;
+    }
+
+    public List<AppActivityTaskVO> getAppTaskList(AppActivity appActivityItem) throws ServiceException {
+        log.info("getAppTaskList的appActivityItem: " + appActivityItem.toString());
+        QAppActivityTask activityTask = QAppActivityTask.appActivityTask;
+        Predicate predicate = activityTask.deleted.eq(false);
+        predicate = ExpressionUtils.and(predicate, activityTask.appActivity.id.eq(appActivityItem.getId()));
+        List<AppActivityTask> appActivityTaskList = jpaQueryFactory
+                .selectFrom(activityTask)
+                .where(predicate)
+                .fetch();
+        List<AppActivityTaskVO> AppActivityTaskVOList = new ArrayList<>();
+        for (AppActivityTask appActivityTaskItem: appActivityTaskList) {
+            AppActivityTaskVO appActivityTaskVO = new AppActivityTaskVO();
+            NewBeanUtils.copyProperties(appActivityTaskVO, appActivityTaskItem);
+            AppActivityTaskVOList.add(appActivityTaskVO);
+        }
+        return AppActivityTaskVOList;
+    }
+
+    public List<AppActivityAwardVO> getAppAwardList(AppActivity appActivityItem) throws ServiceException {
+        QAppActivityAward activityAward = QAppActivityAward.appActivityAward;
+        Predicate predicate = activityAward.deleted.eq(false);
+        predicate = ExpressionUtils.and(predicate, activityAward.appActivity.id.eq(appActivityItem.getId()));
+        List<AppActivityAward> appActivityAwardList = jpaQueryFactory
+                .selectFrom(activityAward)
+                .where(predicate)
+                .fetch();
+        List<AppActivityAwardVO> AppActivityAwardVOList = new ArrayList<>();
+        for (AppActivityAward appActivityAwardItem: appActivityAwardList) {
+            AppActivityAwardVO appActivityAwardVO = new AppActivityAwardVO();
+            NewBeanUtils.copyProperties(appActivityAwardVO, appActivityAwardItem);
+            AppActivityAwardVOList.add(appActivityAwardVO);
+        }
+        return AppActivityAwardVOList;
     }
 
     private int countSession(){

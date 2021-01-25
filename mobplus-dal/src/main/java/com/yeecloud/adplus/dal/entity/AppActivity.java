@@ -22,11 +22,13 @@ public class AppActivity extends AuditorEntity{
     private Integer id;
 
     /** 应用版本 */
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "n_app_version_id")
     private AppVersion appVersion;
 
     /** 应用渠道 */
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "n_channel_id")
     private Channel channel;
