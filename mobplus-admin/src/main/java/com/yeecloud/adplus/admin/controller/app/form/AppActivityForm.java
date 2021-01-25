@@ -1,5 +1,8 @@
 package com.yeecloud.adplus.admin.controller.app.form;
 
+import com.yeecloud.adplus.dal.entity.App;
+import com.yeecloud.adplus.dal.entity.AppVersion;
+import com.yeecloud.adplus.dal.entity.Channel;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -13,9 +16,15 @@ import javax.validation.constraints.NotNull;
 @Data
 public class AppActivityForm {
 
+    private App app;
+
+    private AppVersion appVersion;
+
     /** 应用版本 */
     @NotNull(message = "请输入应用版本")
     private Integer appVersionId;
+
+    private Channel channel;
 
     /** 应用渠道 */
     @NotNull(message = "请输入应用渠道")

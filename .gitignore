@@ -1,6 +1,6 @@
 .idea
 target
+logs
 *.iml
 /mobplus-admin/src/main/resources/static
-*.log
 *.yml
