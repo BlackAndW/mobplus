@@ -5,9 +5,24 @@
         :width="modalWidth"
         :visible="visible"
         :confirmLoading="confirmLoading"
+        @ok="onCancel"
         @cancel="onCancel"
         cancelText="关闭"
     >
+        <div class="add-modal" v-if="currentAppActivity!=null">
+            <a-button-group>
+                <a-button
+                    icon="sync"
+                    v-action="['app:activity:query']"
+                    @click="$refs.table.refresh(false)"
+                />
+                <a-button
+                    icon="plus"
+                    v-action="['app:activity:create']"
+                    @click="$refs.modal.add(currentAppActivity)"
+                >新增</a-button>
+            </a-button-group>
+        </div>
         <a-spin :spinning="confirmLoading">
             <s-table
                 bordered
@@ -25,12 +40,26 @@
                     onChange: onSelectChange
                 }"
             >
+                <template slot="taskType" slot-scope="text">
+                    <span v-if="text===1">新手任务</span>
+                    <span v-else-if="text===2">日常任务</span>
+                </template>
+                <template slot="taskStatus" slot-scope="text">
+                    <span v-if="text===1">开启</span>
+                    <span v-else-if="text===2">关闭</span>
+                </template>
                 <span slot="action" slot-scope="text, record">
                     <a
                         v-action="['app:activity:edit']"
                         @click="$refs.modal.edit(record, currentAppActivity)"
                     >编辑</a>
                     <a-divider type="vertical" />
+                    <a
+                        v-if="record.id != 0"
+                        v-action="['app:activity:delete']"
+                        @click="onDelete(record)">
+                        删除
+                    </a>
                 </span>
             </s-table>
         </a-spin>
@@ -48,17 +77,20 @@ const columns = [
     {
         title: '任务类别',
         dataIndex: 'taskType',
-        scopedSlots: { customRender: 'typeSlot' }
+        scopedSlots: { customRender: 'taskType' }
     },
     {
         title: '任务名称',
-        dataIndex: 'taskName',
-        scopedSlots: { customRender: 'typeSlot' }
+        dataIndex: 'taskName'
     },
     {
         title: '任务奖励金币',
-        dataIndex: 'taskBonusCoin',
-        scopedSlots: { customRender: 'ratioSlot' }
+        dataIndex: 'taskBonusCoin'
+    },
+    {
+        title: '任务状态',
+        dataIndex: 'status',
+        scopedSlots: { customRender: 'taskStatus' }
     },
     {
         title: '任务设置',
@@ -101,10 +133,10 @@ export default {
         }
     },
     methods: {
-        show: function (record, activityId) {
-            this.title = '活动名称：奖品测试';
+        show: function (record) {
+            this.title = '活动名称：' + record.name;
             this.model = record;
-            this.currentAppActivity = activityId;
+            this.currentAppActivity = record.id;
             this.reload();
             this.visible = true;
         },
@@ -144,11 +176,34 @@ export default {
                     this.selectedRows.push(ele);
                 }
             });
+        },
+        onDelete: function (record) {
+            var params = [];
+            if (record !== undefined) {
+                params.push(record.id);
+            }
+            this.$confirm({
+                title: '确认删除吗?',
+                okText: '确认',
+                cancelText: '取消',
+                onOk: async () => {
+                    try {
+                        const data = await this.$http.delete('/app/activity/task', params);
+                        if (data) {
+                            this.$message.success(data);
+                            this.$refs.table.refresh(true);
+                        }
+                    } catch (err) {}
+                }
+            });
         }
     }
 };
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+    .add-modal {
+        text-align: right;
+        margin-bottom: 10px;
+    }
 </style>

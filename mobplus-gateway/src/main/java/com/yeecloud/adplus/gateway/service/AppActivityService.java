@@ -2,7 +2,11 @@ package com.yeecloud.adplus.gateway.service;
 
 import com.yeecloud.adplus.dal.entity.AppActivity;
 
+import com.yeecloud.adplus.dal.entity.AppActivityAward;
+import com.yeecloud.adplus.dal.entity.AppActivityTask;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
+import com.yeecloud.adplus.gateway.controller.vo.AppActivityAwardVO;
+import com.yeecloud.adplus.gateway.controller.vo.AppActivityTaskVO;
 import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;

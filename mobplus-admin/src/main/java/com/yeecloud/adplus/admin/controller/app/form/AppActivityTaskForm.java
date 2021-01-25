@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.admin.controller.app.form;
 
+import com.yeecloud.adplus.dal.entity.AppActivity;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class AppActivityTaskForm {
+
+    private AppActivity appActivity;
 
     /** 任务类别 */
     @NotNull(message = "请选择任务类别")

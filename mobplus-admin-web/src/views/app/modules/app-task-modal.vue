@@ -2,6 +2,12 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
+                <a-form-item>
+                    <a-input
+                        type="hidden"
+                        v-decorator="[ 'appActivity.id', {initialValue: model.activityId}]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务类型">
                     <a-select
                         placeholder="==请选择任务类型=="
@@ -14,11 +20,6 @@
                         >{{ item.label }}</a-select-option>
                     </a-select>
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务类别">
-                    <a-input
-                        v-decorator="[ 'taskType', {initialValue: model.taskType, rules: [ { required: true, message: '请输入任务类别' }] }]"
-                    />
-                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务名称">
                     <a-input
                         v-decorator="[ 'taskName', {initialValue: model.taskName, rules: [ { required: true, message: '请输入任务名称' }] }]"
@@ -28,6 +29,12 @@
                     <a-input
                         v-decorator="[ 'taskBonusCoin', {initialValue: model.taskBonusCoin, rules: [ { required: true, message: '请输入任务奖励的金币' }] }]"
                     />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否开启任务">
+                    <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择是否开启任务' }]}]">
+                        <a-radio-button :value="1">开启</a-radio-button>
+                        <a-radio-button :value="2">关闭</a-radio-button>
+                    </a-radio-group>
                 </a-form-item>
             </a-form>
         </a-spin>
@@ -51,7 +58,7 @@ export default {
             form: this.$form.createForm(this),
             model: {},
             currentAppActivity: null,
-            TaskTypeList: [{ label: '新手任务', value: 1 }, { lable: '日常任务', value: 2 }],
+            TaskTypeList: [{ label: '新手任务', value: 1 }, { label: '日常任务', value: 2 }],
             func: () => {}
         };
     },
@@ -89,7 +96,6 @@ export default {
             const $self = this;
             // 触发表单验证
             this.form.validateFields((err, values) => {
-                console.log(values);
                 if (!err) {
                     $self.confirmLoading = true;
                     $self

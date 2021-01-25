@@ -39,9 +39,8 @@ public class AppActivityController {
         if (body != null && needCodec) {
             body = Codec.decode(body);
         }
-        Result response = new Result<>();
+        Result response;
         try {
-            log.info("JsonBody: " + body);
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
             List<AppActivityVO> appActivityVOList = appActivityService.getAppActivityList(form);
             SerializeConfig config = new SerializeConfig();
