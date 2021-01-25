@@ -11,10 +11,7 @@ import com.yeecloud.adplus.admin.controller.app.form.AppActivityTaskForm;
 import com.yeecloud.adplus.admin.service.AppActivityService;
 import com.yeecloud.adplus.admin.service.AppActivityTaskService;
 import com.yeecloud.adplus.dal.entity.*;
-import com.yeecloud.adplus.dal.repository.AdPositionRepository;
-import com.yeecloud.adplus.dal.repository.AppActivityAwardRepository;
-import com.yeecloud.adplus.dal.repository.AppActivityRepository;
-import com.yeecloud.adplus.dal.repository.AppActivityTaskRepository;
+import com.yeecloud.adplus.dal.repository.*;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import com.yeecloud.meeto.common.util.StringUtils;
@@ -46,6 +43,12 @@ public class AppActivityServiceImpl implements AppActivityService {
     private AppActivityAwardRepository appActivityAwardRepository;
 
     @Autowired
+    private ChannelRepository channelRepository;
+
+    @Autowired
+    private AppVersionRepository appVersionRepository;
+
+    @Autowired
     private JPAQueryFactory jpaQueryFactory;
 
     @Override
@@ -58,7 +61,7 @@ public class AppActivityServiceImpl implements AppActivityService {
             if (appId != null && appId > 0) {
                 predicate = ExpressionUtils.and(predicate, appActivity.app.id.eq(appId));
             }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
             return appActivityRepository.findAll(predicate, pagRequest);
         } catch (Throwable e) {
@@ -96,8 +99,12 @@ public class AppActivityServiceImpl implements AppActivityService {
     public void update(Integer id, AppActivityForm form) throws ServiceException {
         try {
             AppActivity entity = appActivityRepository.findById(id).orElse(null);
+            Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
+            AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
             if (entity != null && !entity.isDeleted()) {
                 NewBeanUtils.copyProperties(entity, form, true);
+                entity.setAppVersion(appVersion);
+                entity.setChannel(channel);
                 appActivityRepository.save(entity);
             }
         } catch (Throwable e) {
@@ -107,22 +114,26 @@ public class AppActivityServiceImpl implements AppActivityService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public void delete(Integer[] ids) throws ServiceException {
+    public void delete(Integer[] ids) {
         appActivityRepository.deleteById(ids);
     }
 
     @Override
     public Page<AppActivityTask> queryTask(Query query) throws ServiceException {
-        QAppActivityTask appActivityTask = QAppActivityTask.appActivityTask;
-        Predicate predicate = appActivityTask.deleted.eq(false);
+        try{
+            QAppActivityTask appActivityTask = QAppActivityTask.appActivityTask;
+            Predicate predicate = appActivityTask.deleted.eq(false);
 
-        Integer activityId = query.get("activityId", Integer.class);
-        if (activityId != null && activityId > 0){
-            predicate = ExpressionUtils.and(predicate, appActivityTask.appActivity.id.eq(activityId));
+            Integer activityId = query.get("activityId", Integer.class);
+            if (activityId != null && activityId > 0){
+                predicate = ExpressionUtils.and(predicate, appActivityTask.appActivity.id.eq(activityId));
+            }
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+            PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
+            return appActivityTaskRepository.findAll(predicate, pagRequest);
+        } catch (Throwable e) {
+            throw new ServiceException(e);
         }
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
-        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-        return appActivityTaskRepository.findAll(predicate, pagRequest);
     }
 
     @Override
@@ -172,16 +183,20 @@ public class AppActivityServiceImpl implements AppActivityService {
 
     @Override
     public Page<AppActivityAward> queryAward(Query query) throws ServiceException {
-        QAppActivityAward appActivityAward = QAppActivityAward.appActivityAward;
-        Predicate predicate = appActivityAward.deleted.eq(false);
+        try {
+            QAppActivityAward appActivityAward = QAppActivityAward.appActivityAward;
+            Predicate predicate = appActivityAward.deleted.eq(false);
 
-        Integer activityId = query.get("activityId", Integer.class);
-        if (activityId != null && activityId > 0){
-            predicate = ExpressionUtils.and(predicate, appActivityAward.appActivity.id.eq(activityId));
+            Integer activityId = query.get("activityId", Integer.class);
+            if (activityId != null && activityId > 0){
+                predicate = ExpressionUtils.and(predicate, appActivityAward.appActivity.id.eq(activityId));
+            }
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+            PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
+            return appActivityAwardRepository.findAll(predicate, pagRequest);
+        } catch (Throwable e) {
+            throw new ServiceException(e);
         }
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
-        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-        return appActivityAwardRepository.findAll(predicate, pagRequest);
     }
 
     @Override

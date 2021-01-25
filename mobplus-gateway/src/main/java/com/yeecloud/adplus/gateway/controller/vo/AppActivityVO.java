@@ -3,6 +3,7 @@ package com.yeecloud.adplus.gateway.controller.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: Leonard
@@ -35,4 +36,8 @@ public class AppActivityVO implements Serializable {
     private String remark;
 
     private Integer status;
+
+    private List<AppActivityTaskVO> taskList;
+
+    private List<AppActivityAwardVO> awardList;
 }

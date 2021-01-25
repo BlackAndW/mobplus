@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.dal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import javax.persistence.*;
 
@@ -21,6 +22,7 @@ public class AppActivityTask extends AuditorEntity{
     private Integer id;
 
     /** 所属活动 */
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "n_app_activity_id")
     private AppActivity appActivity;

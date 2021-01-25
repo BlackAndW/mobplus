@@ -21,6 +21,18 @@ public class AppActivity extends AuditorEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /** 应用版本 */
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "n_app_version_id")
+    private AppVersion appVersion;
+
+    /** 应用渠道 */
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "n_channel_id")
+    private Channel channel;
+
     /** 活动名称 */
     @Column(name = "c_name")
     private String name;
@@ -46,10 +58,6 @@ public class AppActivity extends AuditorEntity{
     /** 抽奖最少赠送的金币 */
     @Column(name = "min_bonus_coin")
     private Integer minBonusCoin;
-
-    /** 活动版本 */
-    @Column(name = "version")
-    private Integer version;
 
     @Column(name = "c_remark")
     private String remark;

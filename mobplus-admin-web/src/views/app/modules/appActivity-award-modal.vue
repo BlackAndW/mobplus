@@ -5,23 +5,25 @@
         :width="modalWidth"
         :visible="visible"
         :confirmLoading="confirmLoading"
-        @ok="onSubmit"
+        @ok="onCancel"
         @cancel="onCancel"
         cancelText="关闭"
     >
+        <div class="add-modal" v-if="currentAppActivity!=null">
+            <a-button-group>
+                <a-button
+                    icon="sync"
+                    v-action="['app:activity:query']"
+                    @click="$refs.table.refresh(false)"
+                />
+                <a-button
+                    icon="plus"
+                    v-action="['app:activity:create']"
+                    @click="$refs.modal.add(currentAppActivity)"
+                >新增</a-button>
+            </a-button-group>
+        </div>
         <a-spin :spinning="confirmLoading">
-            <!--
-            <a-alert :showIcon="true" style="margin-bottom: 10px">
-                <template slot="message">
-                    <span style="margin-right: 12px">
-                        已选择:
-                        <a style="font-weight: 600">{{
-                            selectedRows.length
-                        }}</a>
-                    </span>
-                </template>
-            </a-alert>
-            -->
             <s-table
                 bordered
                 ref="table"
@@ -38,8 +40,13 @@
                     onChange: onSelectChange
                 }"
             >
+            <template slot="awardType" slot-scope="text">
+                <span v-if="text===1">一等奖</span>
+                <span v-else-if="text===2">二等奖</span>
+                <span v-else-if="text===3">三等奖</span>
+            </template>
             <template slot="iconSlot" slot-scope="text">
-                    <a-avatar shape="square" :src="text" v-if="text && text.length > 0"/>
+                <a-avatar shape="square" :src="text" v-if="text && text.length > 0"/>
             </template>
             <span slot="action" slot-scope="text, record">
                 <a
@@ -64,7 +71,7 @@ const columns = [
     {
         title: '奖品类别',
         dataIndex: 'awardType',
-        scopedSlots: { customRender: 'typeSlot' }
+        scopedSlots: { customRender: 'awardType' }
     },
     {
         title: '奖品名称',
@@ -117,10 +124,10 @@ export default {
     },
     computed: {},
     methods: {
-        show: function (record, activityId) {
+        show: function (record) {
             this.title = record.name;
             this.model = record;
-            this.currentAppActivity = activityId;
+            this.currentAppActivity = record.id;
             this.reload();
             this.visible = true;
         },
@@ -165,6 +172,9 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+    .add-modal {
+        text-align: right;
+        margin-bottom: 10px;
+    }
 </style>

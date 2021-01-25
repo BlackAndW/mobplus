@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.admin.controller.app.form;
 
+import com.yeecloud.adplus.dal.entity.AppActivity;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class AppActivityAwardForm {
+
+    private AppActivity appActivity;
 
     /** 奖品类别 */
     @NotNull(message = "请输入奖品类别")
