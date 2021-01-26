@@ -39,8 +39,7 @@
                         <img slot="addonAfter" ref="captcha" class="form-image" :src="captchaUrl" @click="refreshCaptcha()" />
                         </a-input>
                     </a-form-item>
-                    
-                    <!-- 开发环境取消验证码 
+                    <!-- 开发环境取消验证码
                     <a-form-item class="form-item captcha">
                         <a-input
                             autocomplete="false"
