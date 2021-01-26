@@ -38,6 +38,8 @@ import java.util.Optional;
 @Service
 public class AppActivityServiceImpl implements AppActivityService {
 
+    private static String STATIC_URL = "http://api.siteps.cn/static";
+
     @Autowired
     AppActivityRepository appActivityRepository;
 
@@ -105,6 +107,7 @@ public class AppActivityServiceImpl implements AppActivityService {
         for (AppActivityAward appActivityAwardItem: appActivityAwardList) {
             AppActivityAwardVO appActivityAwardVO = new AppActivityAwardVO();
             NewBeanUtils.copyProperties(appActivityAwardVO, appActivityAwardItem);
+            appActivityAwardVO.setAwardImgPath(STATIC_URL + appActivityAwardVO.getAwardImgPath());
             AppActivityAwardVOList.add(appActivityAwardVO);
         }
         return AppActivityAwardVOList;
