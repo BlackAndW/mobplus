@@ -88,6 +88,10 @@ const columns = [
         dataIndex: 'taskBonusCoin'
     },
     {
+        title: '任务功能名',
+        dataIndex: 'taskFunctionName'
+    },
+    {
         title: '任务状态',
         dataIndex: 'status',
         scopedSlots: { customRender: 'taskStatus' }

@@ -30,6 +30,16 @@
                         v-decorator="[ 'taskBonusCoin', {initialValue: model.taskBonusCoin, rules: [ { required: true, message: '请输入任务奖励的金币' }] }]"
                     />
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务功能code">
+                    <a-input
+                        v-decorator="[ 'taskFunctionCode', {initialValue: model.taskFunctionCode, rules: [ { required: true, message: '请输入任务功能code' }] }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务功能名">
+                    <a-input
+                        v-decorator="[ 'taskFunctionName', {initialValue: model.taskFunctionName, rules: [ { required: true, message: '请输入任务功能名' }] }]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否开启任务">
                     <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择是否开启任务' }]}]">
                         <a-radio-button :value="1">开启</a-radio-button>

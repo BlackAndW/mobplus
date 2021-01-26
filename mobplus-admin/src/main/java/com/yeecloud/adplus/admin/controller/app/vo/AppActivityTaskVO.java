@@ -19,6 +19,12 @@ public class AppActivityTaskVO implements Serializable {
 
     private Integer activityId;
 
+    /** 任务功能code */
+    private Integer taskFunctionCode;
+
+    /** 任务功能名 */
+    private String taskFunctionName;
+
     /** 任务类别 */
     private int taskType;
 

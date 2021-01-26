@@ -27,13 +27,13 @@ public class AppActivityTask extends AuditorEntity{
     @JoinColumn(name = "n_app_activity_id")
     private AppActivity appActivity;
 
-    /** 任务功能id */
+    /** 任务功能code */
     @Column(name = "task_function_code")
     private Integer taskFunctionCode;
 
     /** 任务功能名 */
     @Column(name = "task_function_name")
-    private Integer taskFunctionName;
+    private String taskFunctionName;
 
     /** 任务类别 */
     @Column(name = "task_type")
