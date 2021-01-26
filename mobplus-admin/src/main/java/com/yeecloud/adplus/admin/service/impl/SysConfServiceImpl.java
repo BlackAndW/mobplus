@@ -149,18 +149,17 @@ public class SysConfServiceImpl implements SysConfService {
     @Async
     @Override
     public void refreshAsync() {
-//        开发环境取消自动刷新配置
-//        Map<String, String> tmpCache = new HashMap<>();
-//
-//        QSysConf sysConf = QSysConf.sysConf;
-//        Predicate predicate = ExpressionUtils.and(sysConf.deleted.eq(false), sysConf.status.goe(Constants.STATE_ON));
-//        this.sysConfRepository.findAll(predicate);
-//        List<SysConf> list = this.sysConfRepository.findAll();
-//        for (SysConf obj : list) {
-//            tmpCache.put(obj.getKey(), obj.getValue());
-//        }
-//        this.configureCache = tmpCache;
-//        log.debug("configuration refreshed!");
+        Map<String, String> tmpCache = new HashMap<>();
+
+        QSysConf sysConf = QSysConf.sysConf;
+        Predicate predicate = ExpressionUtils.and(sysConf.deleted.eq(false), sysConf.status.goe(Constants.STATE_ON));
+        this.sysConfRepository.findAll(predicate);
+        List<SysConf> list = this.sysConfRepository.findAll();
+        for (SysConf obj : list) {
+            tmpCache.put(obj.getKey(), obj.getValue());
+        }
+        this.configureCache = tmpCache;
+        log.debug("configuration refreshed!");
     }
 
     @Override

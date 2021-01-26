@@ -63,9 +63,9 @@ public class AuthController {
     public Result login(@RequestBody @Valid LoginForm form, BindingResult bindingResult) {
         log.info("LoginForm: " + form);
 //        开发环境省去验证码验证
-//        if (!CaptchaController.validate(form.getCaptcha())) {
-//            bindingResult.addError(new FieldError("LoginForm", "captcha", "请输入正确的验证码"));
-//        }
+        if (!CaptchaController.validate(form.getCaptcha())) {
+            bindingResult.addError(new FieldError("LoginForm", "captcha", "请输入正确的验证码"));
+        }
 
         if (bindingResult.hasErrors()) {
             String message = String.format("登陆失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());

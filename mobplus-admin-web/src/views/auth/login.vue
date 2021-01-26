@@ -26,7 +26,7 @@
             </a-form-item>
             <!-- <a-row :gutter="0">
                 <a-col :span="14"> -->
-                    <!-- 此为生产环境，需要验证码 
+                    <!-- 此为生产环境，需要验证码-->
                     <a-form-item class="form-item captcha">
                         <a-input
                             autocomplete="false"
@@ -39,8 +39,8 @@
                         <img slot="addonAfter" ref="captcha" class="form-image" :src="captchaUrl" @click="refreshCaptcha()" />
                         </a-input>
                     </a-form-item>
-                    -->
-                    <!-- 开发环境取消验证码 -->
+                    
+                    <!-- 开发环境取消验证码 
                     <a-form-item class="form-item captcha">
                         <a-input
                             autocomplete="false"
@@ -52,7 +52,8 @@
                         >
                         <img slot="addonAfter" ref="captcha" class="form-image" :src="captchaUrl" @click="refreshCaptcha()" />
                         </a-input>
-                    </a-form-item>                    
+                    </a-form-item>
+                    -->
                 <!-- </a-col>
                 <a-col :span="10">
                     <img @click="refreshCaptcha()" class="form-image" :src="captchaUrl" style="float:right" />
