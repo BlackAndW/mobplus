@@ -2,14 +2,13 @@ package com.yeecloud.adplus.dal.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.yeecloud.meeto.common.util.StringUtils;
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author: Huang
@@ -26,18 +25,22 @@ public class AppConfig extends AuditorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "n_app_id")
     private App app;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "n_app_project_id")
     private AppProject appProject;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "n_app_version_id")
     private AppVersion appVersion;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "n_channel_id")
     private Channel channel;
@@ -61,7 +64,7 @@ public class AppConfig extends AuditorEntity {
     private Integer status;
 
     @Transient
-    public Map<String, Object> getParameters() {
+    public HashMap getParameters() {
         if (StringUtils.isNotBlank(this.getConf())) {
             try {
                 return JSON.parseObject(this.getConf(), HashMap.class);

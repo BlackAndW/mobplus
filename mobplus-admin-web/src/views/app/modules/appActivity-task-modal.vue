@@ -40,6 +40,17 @@
                     onChange: onSelectChange
                 }"
             >
+                <template slot="taskFunctionName" slot-scope="text">
+                    <span v-if="text===1">拨号</span>
+                    <span v-else-if="text===2">定位</span>
+                    <span v-else-if="text===3">弹窗</span>
+                    <span v-else-if="text===4">清理</span>
+                    <span v-else-if="text===5">加速</span>
+                    <span v-else-if="text===6">杀毒</span>
+                    <span v-else-if="text===7">微信</span>
+                    <span v-else-if="text===8">降温</span>
+                    <span v-else-if="text===9">网络优化</span>
+                </template>
                 <template slot="taskType" slot-scope="text">
                     <span v-if="text===1">新手任务</span>
                     <span v-else-if="text===2">日常任务</span>
@@ -89,7 +100,8 @@ const columns = [
     },
     {
         title: '任务功能名',
-        dataIndex: 'taskFunctionName'
+        dataIndex: 'taskFunctionCode',
+        scopedSlots: { customRender: 'taskFunctionName' }
     },
     {
         title: '任务状态',
@@ -131,11 +143,7 @@ export default {
             model: {}
         };
     },
-    computed: {
-        AdType: function () {
-            return this.$DictFilterExclude(this.$AdType, [0]);
-        }
-    },
+    computed: {},
     methods: {
         show: function (record) {
             this.title = '活动名称：' + record.name;

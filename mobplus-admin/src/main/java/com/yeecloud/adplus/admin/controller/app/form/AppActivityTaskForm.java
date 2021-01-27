@@ -19,10 +19,6 @@ public class AppActivityTaskForm {
     @NotNull(message = "请输入任务功能code")
     private Integer taskFunctionCode;
 
-    /** 任务功能名 */
-    @NotBlank(message = "请输入任务功能名")
-    private String taskFunctionName;
-
     /** 任务类别 */
     @NotNull(message = "请选择任务类别")
     private Integer taskType;

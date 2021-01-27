@@ -30,15 +30,17 @@
                         v-decorator="[ 'taskBonusCoin', {initialValue: model.taskBonusCoin, rules: [ { required: true, message: '请输入任务奖励的金币' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务功能code">
-                    <a-input
-                        v-decorator="[ 'taskFunctionCode', {initialValue: model.taskFunctionCode, rules: [ { required: true, message: '请输入任务功能code' }] }]"
-                    />
-                </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务功能名">
-                    <a-input
-                        v-decorator="[ 'taskFunctionName', {initialValue: model.taskFunctionName, rules: [ { required: true, message: '请输入任务功能名' }] }]"
-                    />
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="任务功能">
+                    <a-select
+                        placeholder="==请选择任务功能=="
+                        v-decorator="['taskFunctionCode', {initialValue: model.taskFunctionCode, rules: [{ required: true, message: '请选择任务功能'}]} ]"
+                    >
+                        <a-select-option
+                            v-for="item in TaskFunctionList"
+                            :key="item.value"
+                            :value="item.value"
+                        >{{ item.label }}</a-select-option>
+                    </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否开启任务">
                     <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择是否开启任务' }]}]">
@@ -54,6 +56,7 @@
 <script>
 import { mixinForm } from '@/utils/mixin';
 import { EDrawer } from '@/components';
+import { taskFunctionList } from '@/utils/taskFunction.js';
 
 export default {
     mixins: [mixinForm],
@@ -69,6 +72,7 @@ export default {
             model: {},
             currentAppActivity: null,
             TaskTypeList: [{ label: '新手任务', value: 1 }, { label: '日常任务', value: 2 }],
+            TaskFunctionList: taskFunctionList,
             func: () => {}
         };
     },
