@@ -13,10 +13,12 @@ import org.hibernate.service.spi.ServiceException;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,5 +52,10 @@ public class AppActivityController {
             throw new ServiceException(e.getMessage());
         }
         return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
+    }
+
+    @RequestMapping("/today")
+    public long getToday() {
+        return new Date().getTime();
     }
 }
