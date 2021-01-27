@@ -31,10 +31,6 @@ public class AppActivityTask extends AuditorEntity{
     @Column(name = "task_function_code")
     private Integer taskFunctionCode;
 
-    /** 任务功能名 */
-    @Column(name = "task_function_name")
-    private String taskFunctionName;
-
     /** 任务类别 */
     @Column(name = "task_type")
     private Integer taskType;

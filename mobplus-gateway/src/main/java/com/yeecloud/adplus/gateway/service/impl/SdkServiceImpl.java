@@ -77,21 +77,39 @@ public class SdkServiceImpl implements SdkService {
             vo.setUmengAppKey(umengKey);
         }
         // 获取应用对应广告平台的配置
-        List<AppAdvertiser> advertiserList = appAdvertiserRepository.findByApp(app);
-        for (AppAdvertiser appAdvertiser : advertiserList) {
-            if (appAdvertiser.isDeleted()) {
-                continue;
-            }
-            AdvertiserCfgVO advertiserCfgVO = new AdvertiserCfgVO();
-            advertiserCfgVO.setAppId(appAdvertiser.getAppId());
-            advertiserCfgVO.setAppKey(appAdvertiser.getAppKey());
-            advertiserCfgVO.setAppName(appAdvertiser.getAppName());
-
-            // 添加广告平台列表
-            vo.getAdvertiserList().put(appAdvertiser.getAdvertiser().getCode(), advertiserCfgVO);
-
-        }
+        addAdvertiserList(vo, app);
         // 获取应用的所有展示位
+        addAppPositionList(vo, app);
+        return vo;
+    }
+
+    @Override
+    public SdkCfgVO getSdkCfgEn(DeviceForm form) throws ServiceException {
+        deviceService.createOrUpdateOpenDevice(form);
+        // 根据安卓端请求的值查找对应的应用
+        String appId = form.getAppId();
+        App app = appRepository.findByAppId(appId);
+        if (app == null || app.isDeleted()) {
+            throw new ServiceException("The application does not exist, please reconfigure the application!");
+        }
+        // 构造配置参数
+        SdkCfgVO vo = new SdkCfgVO();
+        // 获取应用对应广告平台的配置
+        addAdvertiserList(vo, app);
+        // 获取应用的所有展示位
+        addAppPositionList(vo, app);
+        return vo;
+    }
+
+    private Integer getCacheValue(String key, Integer value) {
+        Integer v = configureService.getValueByKey(key, Integer.class);
+        if (v == null) {
+            v = value;
+        }
+        return v;
+    }
+
+    private void addAppPositionList(SdkCfgVO vo, App app) throws ServiceException {
         List<AppPosition> appPositionList = appPositionRepository.findByApp(app);
         if (appPositionList.isEmpty()) {
             throw new ServiceException("应用没有配置展示位，请先进行配置");
@@ -120,22 +138,9 @@ public class SdkServiceImpl implements SdkService {
             }
             vo.getAdPosList().put(appPosition.getCode(), appPosCfgVO);
         }
-
-        return vo;
     }
 
-    @Override
-    public SdkCfgVO getSdkCfgEn(DeviceForm form) throws ServiceException {
-        deviceService.createOrUpdateOpenDevice(form);
-        // 根据安卓端请求的值查找对应的应用
-        String appId = form.getAppId();
-        App app = appRepository.findByAppId(appId);
-        if (app == null || app.isDeleted()) {
-            throw new ServiceException("The application does not exist, please reconfigure the application!");
-        }
-        // 构造配置参数
-        SdkCfgVO vo = new SdkCfgVO();
-        // 获取应用对应广告平台的配置
+    private void addAdvertiserList(SdkCfgVO vo, App app) {
         List<AppAdvertiser> advertiserList = appAdvertiserRepository.findByApp(app);
         for (AppAdvertiser appAdvertiser : advertiserList) {
             if (appAdvertiser.isDeleted()) {
@@ -148,46 +153,6 @@ public class SdkServiceImpl implements SdkService {
 
             // 添加广告平台列表
             vo.getAdvertiserList().put(appAdvertiser.getAdvertiser().getCode(), advertiserCfgVO);
-
         }
-        // 获取应用的所有展示位
-        List<AppPosition> appPositionList = appPositionRepository.findByApp(app);
-        if (appPositionList.isEmpty()) {
-            throw new ServiceException("The application has not configured the display position, please configure it first!");
-        }
-        for (AppPosition appPosition : appPositionList) {
-            if (appPosition.isDeleted()) {
-                continue;
-            }
-            if (appPosition.getStatus()==2){
-                continue;
-            }
-            AppPosCfgVO appPosCfgVO = new AppPosCfgVO();
-            // 获取展示位绑定的广告位
-            // appPosCfgVO.setParams(appPosition.getParameters());
-            List<AppPositionAdPosition> adPositionList = appPosition.getAdPosList();
-            for (AppPositionAdPosition adPosition : adPositionList) {
-                if (adPosition.isDeleted()){
-                    continue;
-                }
-                AdPositionVO adPositionVO = new AdPositionVO();
-                adPositionVO.setAdvertiser(adPosition.getAdPosition().getAdvertiser().getCode());
-                adPositionVO.setPosId(adPosition.getAdPosition().getCode());
-                adPositionVO.setRatio(adPosition.getRatio());
-
-                appPosCfgVO.getPositionList().add(adPositionVO);
-            }
-            vo.getAdPosList().put(appPosition.getCode(), appPosCfgVO);
-        }
-
-        return vo;
-    }
-
-    private Integer getCacheValue(String key, Integer value) {
-        Integer v = configureService.getValueByKey(key, Integer.class);
-        if (v == null) {
-            v = value;
-        }
-        return v;
     }
 }
