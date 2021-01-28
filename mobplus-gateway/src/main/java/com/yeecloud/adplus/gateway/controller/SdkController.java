@@ -33,25 +33,25 @@ public class SdkController {
      * 国内
      */
     @PostMapping("/cfg")
-    public Result getSdkCfg(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m, HttpServletRequest request) {
+    public String getSdkCfg(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m, HttpServletRequest request) {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
         }
         log.debug("ReqFromApp:{}", body);
-        Result response;
+        String response = "";
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
             form.setRemoteIp(ParamUtils.getIpAddr(request));
             SdkCfgVO vo = sdkService.getSdkCfg(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = Result.SUCCESS(vo);
+            response = JSON.toJSONString(Result.SUCCESS(vo), config);
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
         log.debug("RespToApp:{}", response);
-        return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
+        return needCodec ? Codec.encode(response) : response;
     }
 
     /**
