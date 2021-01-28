@@ -77,6 +77,7 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
+            loading: false,
             currentAppActivity: null,
             AwardTypeList: [{ 'label': '一等奖', 'value': 1 }, { 'label': '二等奖', 'value': 2 }, { 'label': '三等奖', 'value': 3 }],
             func: () => {}

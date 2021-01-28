@@ -78,9 +78,13 @@
                         :lazy="true"
                         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                     >
-                        <template slot="statusSlot" slot-scope="text">
-                            <span v-if="text===1">开启</span>
-                            <span v-else-if="text===2">关闭</span>
+                        <template slot="statusSlot" slot-scope="text, record">
+                           <a-switch
+                            checked-children="开"
+                            un-checked-children="关"
+                            :key="text"
+                            :default-checked="text === 1 ? true : false"
+                            @change="statusCheckChange(record)" />
                         </template>
                         <span slot="actionAward" slot-scope="text, record">
                             <a
@@ -204,8 +208,8 @@ export default {
             selectedRows: [],
             // 加载数据方法
             loadData: this.loadDataList,
-
             // 分类树数据
+            statusCheck: true,
             currentApp: null,
             treeloading: false,
             appTreeData: [],
@@ -217,13 +221,17 @@ export default {
     mounted () {
         this.loadAppTreeData();
     },
-    computed: {
-        AdType: function () {
-            return this.$DictFilterExclude(this.$AdType, [0]);
-        }
-    },
+    computed: {},
     methods: {
-         onDelete: function (record) {
+        statusCheckChange (record) {
+            console.log(record);
+            record.status = record.status === 1 ? 2 : 1;
+            this.$http.put(
+                url + '/' + record.id,
+                record
+            );
+        },
+        onDelete: function (record) {
             var params = [];
             if (record !== undefined) {
                 params.push(record.id);
