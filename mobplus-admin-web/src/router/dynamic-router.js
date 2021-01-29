@@ -45,7 +45,8 @@ const constantRouterComponents = {
     AppPositionList: () => import('@/views/app/appPosition-list'),
     AppAdvertiserList: () => import('@/views/app/appAdvertiser-list'),
     AppMobileConfList: () => import('@/views/app/appMobileConf-list'),
-    AppActivity: () => import('@/views/app/appActivity-list')
+    AppActivity: () => import('@/views/app/appActivity-list'),
+    AppFunction: () => import('@/views/app/appFunction-list')
 
 };
 

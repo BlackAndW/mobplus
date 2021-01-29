@@ -42,7 +42,7 @@ public class AppPositionController {
         Result response;
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
-            List resultMap = appPositionService.getAppPositionConfList(form);
+            List resultMap = appPositionService.getAdTypeConfList(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
             response = Result.SUCCESS(resultMap);

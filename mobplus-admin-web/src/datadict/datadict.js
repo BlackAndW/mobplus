@@ -23,7 +23,8 @@ export const AdType = [
     { value: 4, label: '插屏视频--InterstitialVideo' },
     { value: 5, label: '原生模板--NativeExpress' },
     { value: 6, label: '激励视频--RewardVideo' },
-    { value: 7, label: 'Draw信息流--Draw' }
+    { value: 7, label: 'Draw信息流--Draw' },
+    { value: 8, label: 'Draw横版信息流--Draw' }
 ];
 
 export const RecommendedType = [
