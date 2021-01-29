@@ -16,5 +16,5 @@ import java.util.Map;
  */
 public interface AppPositionService {
 
-    List getAppPositionConfList(DeviceForm form) throws ServiceException;
+    List getAdTypeConfList(DeviceForm form) throws ServiceException;
 }
