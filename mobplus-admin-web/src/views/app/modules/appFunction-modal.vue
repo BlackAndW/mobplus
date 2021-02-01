@@ -48,7 +48,7 @@
                 <a-row v-for="(k, index) in adTypeList" :key="index">
                     <a-col :md="12" :sm="24">
                     <a-form-item :label="index === 0 ? '广告类型' : ''" :required="true" :labelCol="{ span: 10 }" :wrapperCol="{ span: 14 ,offset: index>0?10:0 }">
-                            <a-select placeholder="请选择广告类型" v-decorator="[adTypeList[index].id, { initialValue: adTypeSelectList[0].value, rules: [ { required: true, message: '请选择广告类型' }] }]">
+                            <a-select placeholder="请选择广告类型" v-decorator="[adTypeList[index].id, { initialValue: adTypeList[index].value, rules: [ { required: true, message: '请选择广告类型' }] }]">
                                 <a-select-option
                                     v-for="item in adTypeSelectList"
                                     :key="item.value"
@@ -111,6 +111,7 @@ export default {
         add: function (currentApp) {
             this.title = '添加功能';
             this.model = {};
+            this.adTypeList = [{ 'id': 'adType-0', 'value': 1 }];
             this.model.app = currentApp.key;
             this.url = '/app/function';
             this.func = this.$http.post;
