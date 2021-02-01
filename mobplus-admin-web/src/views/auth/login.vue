@@ -26,14 +26,14 @@
             </a-form-item>
             <!-- <a-row :gutter="0">
                 <a-col :span="14"> -->
-                    <!-- 此为生产环境，需要验证码-->
+                    <!-- 此为生产环境，暂时也去掉验证码-->
                     <a-form-item class="form-item captcha">
                         <a-input
                             autocomplete="false"
                             placeholder="请输入验证码"
                             v-decorator="[
                                 'captcha',
-                                {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}
+                                {rules: [{ required: false, message: '请输入验证码' }], validateTrigger: 'blur'}
                             ]"
                         >
                         <img slot="addonAfter" ref="captcha" class="form-image" :src="captchaUrl" @click="refreshCaptcha()" />

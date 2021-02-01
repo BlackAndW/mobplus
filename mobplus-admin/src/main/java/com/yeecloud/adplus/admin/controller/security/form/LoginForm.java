@@ -20,6 +20,6 @@ public class LoginForm {
     private String userName;
     @NotEmpty(message = "密码不能为空")
     private String passwd;
-    @NotEmpty(message = "验证码不能为空")
+//    @NotEmpty(message = "验证码不能为空")
     private String captcha;
 }

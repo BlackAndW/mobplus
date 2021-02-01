@@ -159,7 +159,7 @@ public class SysConfServiceImpl implements SysConfService {
             tmpCache.put(obj.getKey(), obj.getValue());
         }
         this.configureCache = tmpCache;
-        log.debug("configuration refreshed!");
+        // log.debug("configuration refreshed!");
     }
 
     @Override
