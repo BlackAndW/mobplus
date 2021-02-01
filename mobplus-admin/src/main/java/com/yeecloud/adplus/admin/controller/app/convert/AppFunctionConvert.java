@@ -19,6 +19,10 @@ public interface AppFunctionConvert {
 
     @Mappings({
             @Mapping(target = "adTypeList", source = "adTypeConf"),
+            @Mapping(target = "appVersionId", source = "appVersion.id"),
+            @Mapping(target = "versionCode", source = "appVersion.code"),
+            @Mapping(target = "channelId", source = "channel.id"),
+            @Mapping(target = "channelName", source = "channel.name")
     })
 
     AppFunctionVO convert(AppFunction appActivity);

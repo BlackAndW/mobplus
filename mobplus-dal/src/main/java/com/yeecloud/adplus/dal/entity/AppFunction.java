@@ -23,6 +23,22 @@ public class AppFunction extends AuditorEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /** 功能code */
+    @Column(name = "n_function_code")
+    private Integer functionCode;
+
+    /** 应用版本 */
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "n_app_version_id")
+    private AppVersion appVersion;
+
+    /** 应用渠道 */
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "n_channel_id")
+    private Channel channel;
+
     /** 所属应用 */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

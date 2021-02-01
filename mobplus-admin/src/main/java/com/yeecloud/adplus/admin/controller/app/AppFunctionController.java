@@ -5,6 +5,8 @@ import com.yeecloud.adplus.admin.controller.app.form.AppFunctionForm;
 import com.yeecloud.adplus.admin.controller.app.vo.AppFunctionVO;
 import com.yeecloud.adplus.admin.service.AppFunctionService;
 import com.yeecloud.adplus.dal.entity.AppFunction;
+import com.yeecloud.adplus.dal.entity.AppVersion;
+import com.yeecloud.adplus.dal.entity.Channel;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.PageInfo;
@@ -57,6 +59,8 @@ public class AppFunctionController {
     @RequiresPermissions("app:function:create")
     public Result create(@RequestBody @Valid AppFunctionForm form, BindingResult bindingResult) throws ServiceException {
         log.info("Form: " + form);
+//        AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
+//        Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
         if (bindingResult.hasErrors()){
             return Result.FAILURE(getErrorMessage(bindingResult));
         }

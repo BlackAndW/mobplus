@@ -5,18 +5,50 @@
                 <a-form-item>
                     <a-input
                         type="hidden"
-                        v-decorator="[ 'app.id', {initialValue: model.app}]"
+                        v-decorator="[ 'appId', {initialValue: model.app}]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="功能名称">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="配置名称">
                     <a-input
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入功能名称' }] }]"
                     />
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="功能名称">
+                    <a-select
+                        placeholder="==请选择功能=="
+                        v-decorator="['functionCode', {initialValue: model.functionCode, rules: [{ required: true, message: '请选择功能'}]} ]"
+                    >
+                        <a-select-option
+                            v-for="item in functionList"
+                            :key="item.value"
+                            :value="item.value"
+                        >{{ item.label }}</a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="版本">
+                    <a-select placeholder="请选择版本" style="width:200px" v-decorator="[ 'appVersionId', {initialValue: model.appVersionId, rules: [ { required: true, message: '请选择版本' }]}]">
+                        <a-select-option
+                            v-for="appVersion in appVersionList"
+                            :key="appVersion.id"
+                            :value="appVersion.id"
+                        >{{ appVersion.name }}     {{ appVersion.code }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="渠道">
+                    <a-select placeholder="请选择渠道" style="width:200px" v-decorator="[ 'channelId', {initialValue: model.channelId, rules: [ { required: true, message: '请选择渠道' }]}]">
+                        <a-select-option
+                            v-for="channel in channelList"
+                            :key="channel.id"
+                            :value="channel.id"
+                        >{{ channel.name }}     {{ channel.code }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
                 <a-row v-for="(k, index) in adTypeList" :key="index">
                     <a-col :md="12" :sm="24">
                     <a-form-item :label="index === 0 ? '广告类型' : ''" :required="true" :labelCol="{ span: 10 }" :wrapperCol="{ span: 14 ,offset: index>0?10:0 }">
-                            <a-select placeholder="请选择广告类型" v-decorator="[adTypeList[index].id, { initialValue: adTypeList[index].value, rules: [ { required: true, message: '请选择广告类型' }] }]">
+                            <a-select placeholder="请选择广告类型" v-decorator="[adTypeList[index].id, { initialValue: adTypeSelectList[0].value, rules: [ { required: true, message: '请选择广告类型' }] }]">
                                 <a-select-option
                                     v-for="item in adTypeSelectList"
                                     :key="item.value"
@@ -59,7 +91,9 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-            adTypeList: [],
+            adTypeList: [{ 'id': 'adType-0', 'value': 1 }],
+            appVersionList: {},
+            channelList: {},
             func: () => {}
         };
     },
@@ -68,6 +102,9 @@ export default {
     computed: {
         adTypeSelectList: function () {
             return this.$DictFilterExclude(this.$AdType, [0]);
+        },
+        functionList: function () {
+            return this.$DictFilterExclude(this.$FunctionType, [0]);
         }
     },
     methods: {
@@ -79,19 +116,21 @@ export default {
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.visible = true;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         edit: function (record, currentApp) {
             this.title = '编辑功能:' + record.id;
             this.model = record;
             this.model.app = currentApp.key;
-            console.log(record.adTypeList);
-            // this.adTypeList = JSON.parse(record.adTypeList);
-            this.convertList(record.adTypeList);
-            console.log(this.adTypeList);
+            // 深拷贝一份新的对象
+            this.adTypeList = JSON.parse(JSON.stringify(record.adTypeList));
             this.url = '/app/function/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
             this.visible = true;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         close: function (success) {
             this.$emit('close', success || false);
@@ -101,17 +140,16 @@ export default {
         onCancel: function () {
             this.close(false);
         },
-        convertList(params) {
-            this.adTypeList = [];
-            params.forEach((item, index) => {
-                item = JSON.parse(item);
-                console.log(item);
-                this.adTypeList.push(item);
+        loadChannelList: async function () {
+            this.channelList = await this.$http.get('/release/channel/sct', {});
+        },
+        loadAppVersionList: async function (currentApp) {
+            this.appVersionList = await this.$http.get('/app/version/sct', {
+                appId: currentApp.key
             });
-            console.log(this.adTypeList);
         },
         addList () {
-            // 取数组的最后一项，默认是‘adType0’
+            // 取数组的最后一项，默认是‘adType-0’
             const item = this.adTypeList[this.adTypeList.length - 1].id;
             // 去掉adType然后+1，这样保证新增的项始终不会和其他项重复，且有规律
             const maxNum = parseInt(item.replace('adType-', '')) + 1;

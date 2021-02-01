@@ -2,9 +2,11 @@ package com.yeecloud.adplus.admin.controller.app.form;
 
 import com.alibaba.fastjson.JSONArray;
 import com.yeecloud.adplus.dal.entity.App;
+import com.yeecloud.adplus.dal.entity.Channel;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author: Leonard
@@ -14,7 +16,19 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class AppFunctionForm {
 
-    private App app;
+    @NotNull
+    private Integer appId;
+
+    @NotNull(message = "请选择功能")
+    private Integer functionCode;
+
+    /** 应用版本 */
+    @NotNull(message = "请输入应用版本")
+    private Integer appVersionId;
+
+    /** 应用渠道 */
+    @NotNull(message = "请输入应用渠道")
+    private Integer channelId;
 
     /** 功能名称 */
     @NotBlank(message = "请输入功能名称")

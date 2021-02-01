@@ -43,10 +43,34 @@ public class AppPositionServiceImpl implements AppPositionService {
         if (app == null || app.isDeleted()) {
             throw new ServiceException("应用不存在，请重新配置应用");
         }
+        QAppConfig appConfig = QAppConfig.appConfig;
+        Predicate predicate = appConfig.deleted.eq(false);
+        predicate = ExpressionUtils.and(predicate, appConfig.status.eq(2));
+        predicate = ExpressionUtils.and(predicate, appConfig.app.appId.eq(form.getAppId()));
+        predicate = ExpressionUtils.and(predicate, appConfig.appVersion.code.eq(form.getPkgVersion()));
+        predicate = ExpressionUtils.and(predicate, appConfig.channel.code.eq(form.getChannel()));
+        AppConfig appConfigPO = jpaQueryFactory.selectFrom(appConfig).where(predicate).fetchOne();
+        List resultList = new ArrayList();
+
+        if (null != appConfigPO) {
+            log.info("conf: " + appConfigPO.getConf());
+            resultList = JSONArray.parseArray(appConfigPO.getConf());
+        }
+        return resultList;
+    }
+
+    @Override
+    public List getAdTypeConfListNew(DeviceForm form) throws ServiceException {
+        App app = appRepository.findByAppId(form.getAppId());
+        if (app == null || app.isDeleted()) {
+            throw new ServiceException("应用不存在，请重新配置应用");
+        }
         QAppFunction appFunction = QAppFunction.appFunction;
         Predicate predicate = appFunction.deleted.eq(false);
 
         predicate = ExpressionUtils.and(predicate, appFunction.app.id.eq(app.getId()));
+        predicate = ExpressionUtils.and(predicate, appFunction.channel.code.eq(form.getChannel()));
+        predicate = ExpressionUtils.and(predicate, appFunction.appVersion.code.eq(form.getPkgVersion()));
         List<AppFunctionVO> appFunctionVOList = new ArrayList<>();
         List<AppFunction> resultList = jpaQueryFactory.selectFrom(appFunction).where(predicate).fetch();
 

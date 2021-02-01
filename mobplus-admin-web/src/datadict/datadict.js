@@ -27,6 +27,18 @@ export const AdType = [
     { value: 8, label: 'Draw横版信息流--Draw' }
 ];
 
+export const FunctionType = [
+    { value: 0, label: '所有' },
+    { value: 1, label: '垃圾清理' },
+    { value: 2, label: '手机加速' },
+    { value: 3, label: '微信清理' },
+    { value: 4, label: 'QQ清理' },
+    { value: 5, label: '病毒优化' },
+    { value: 6, label: '网络优化' },
+    { value: 7, label: '手机降温' },
+    { value: 8, label: '手机省电' }
+];
+
 export const RecommendedType = [
     { value: 0, label: '不限' },
     { value: 1, label: '热门爆款' },
