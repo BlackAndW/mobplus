@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import {
-    GeneralStatus, SysCategoryStatus, AdType, GameStatus, RecommendedType, ChannelType, GenStatus
+    GeneralStatus, SysCategoryStatus, AdType, FunctionType, GameStatus, RecommendedType, ChannelType, GenStatus
 } from './datadict';
 
 Vue.prototype.$GeneralStatus = GeneralStatus;// 通用状态  用户, 角色
 Vue.prototype.$AdType = AdType;
+Vue.prototype.$FunctionType = FunctionType;
 Vue.prototype.$SysCategoryStatus = SysCategoryStatus;
 Vue.prototype.$GameStatus = GameStatus;
 Vue.prototype.$RecommendedType = RecommendedType;

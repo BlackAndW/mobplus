@@ -4,9 +4,11 @@ import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.yeecloud.adplus.admin.controller.app.form.AppFunctionForm;
 import com.yeecloud.adplus.admin.service.AppFunctionService;
-import com.yeecloud.adplus.dal.entity.AppFunction;
-import com.yeecloud.adplus.dal.entity.QAppFunction;
+import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.AppFunctionRepository;
+import com.yeecloud.adplus.dal.repository.AppRepository;
+import com.yeecloud.adplus.dal.repository.AppVersionRepository;
+import com.yeecloud.adplus.dal.repository.ChannelRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,15 @@ public class AppFunctionServiceImpl implements AppFunctionService {
     @Autowired
     AppFunctionRepository appFunctionRepository;
 
+    @Autowired
+    AppRepository appRepository;
+
+    @Autowired
+    AppVersionRepository appVersionRepository;
+
+    @Autowired
+    ChannelRepository channelRepository;
+
     @Override
     public Page<AppFunction> query(Query query) throws ServiceException {
         try {
@@ -40,7 +51,7 @@ public class AppFunctionServiceImpl implements AppFunctionService {
             if (null != appId && appId > 0){
                 predicate = ExpressionUtils.and(predicate, appFunction.app.id.eq(appId));
             }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "id"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
             return appFunctionRepository.findAll(predicate, pagRequest);
         } catch (Throwable e) {
@@ -64,11 +75,21 @@ public class AppFunctionServiceImpl implements AppFunctionService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void create(AppFunctionForm form) throws ServiceException {
-        AppFunction entity = new AppFunction();
-        NewBeanUtils.copyProperties(entity, form, true);
-        entity.setAdTypeConf(form.getAdTypeList());
+        log.info("Form :" + form);
+        AppFunction appFunction = new AppFunction();
+        NewBeanUtils.copyProperties(appFunction, form, true);
+        appFunction.setAdTypeConf(form.getAdTypeList());
         try {
-            appFunctionRepository.save(entity);
+            App app = appRepository.findById(form.getAppId()).orElse(null);
+            AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
+            Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
+            if (null != app && null != appVersion && null != channel){
+                appFunction.setApp(app);
+                appFunction.setAppVersion(appVersion);
+                appFunction.setChannel(channel);
+                appFunctionRepository.save(appFunction);
+            }
+
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
@@ -78,11 +99,17 @@ public class AppFunctionServiceImpl implements AppFunctionService {
     @Transactional(rollbackFor = Throwable.class)
     public void update(Integer id, AppFunctionForm form) throws ServiceException {
         try {
-            AppFunction entity = appFunctionRepository.findById(id).orElse(null);
-            if (entity != null && !entity.isDeleted()) {
-                NewBeanUtils.copyProperties(entity, form, true);
-                entity.setAdTypeConf(form.getAdTypeList());
-                appFunctionRepository.save(entity);
+            App app = appRepository.findById(form.getAppId()).orElse(null);
+            AppFunction appFunction = appFunctionRepository.findById(id).orElse(null);
+            Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
+            AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
+            if (appFunction != null && !appFunction.isDeleted() && null != app && null != appVersion && null != channel) {
+                NewBeanUtils.copyProperties(appFunction, form, true);
+                appFunction.setAdTypeConf(form.getAdTypeList());
+                appFunction.setApp(app);
+                appFunction.setAppVersion(appVersion);
+                appFunction.setChannel(channel);
+                appFunctionRepository.save(appFunction);
             }
         } catch (Throwable e) {
             throw new ServiceException(e);

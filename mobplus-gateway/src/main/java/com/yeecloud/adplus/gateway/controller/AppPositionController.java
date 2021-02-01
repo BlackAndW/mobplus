@@ -38,7 +38,6 @@ public class AppPositionController {
         if (body != null && needCodec) {
             body = Codec.decode(body);
         }
-        log.debug("ReqFromApp:{}", body);
         Result response;
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
@@ -50,6 +49,24 @@ public class AppPositionController {
             throw new org.hibernate.service.spi.ServiceException(e.getMessage());
         }
         return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
+    }
 
+    @RequestMapping("/positionNew")
+    public Result getAppPositionListNew (@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
+        boolean needCodec = m == null || m.trim().length() == 0;
+        if (body != null && needCodec) {
+            body = Codec.decode(body);
+        }
+        Result response;
+        try {
+            DeviceForm form = JSON.parseObject(body, DeviceForm.class);
+            List resultMap = appPositionService.getAdTypeConfListNew(form);
+            SerializeConfig config = new SerializeConfig();
+            config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
+            response = Result.SUCCESS(resultMap);
+        } catch (Throwable e) {
+            throw new org.hibernate.service.spi.ServiceException(e.getMessage());
+        }
+        return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
     }
 }

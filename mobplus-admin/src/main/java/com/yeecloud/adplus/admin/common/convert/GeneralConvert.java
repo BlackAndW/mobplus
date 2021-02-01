@@ -55,10 +55,10 @@ public class GeneralConvert {
         return null;
     }
 
-    public List<String> json2List(String content) {
+    public List<Object> json2List(String content) {
         try {
             if (content != null && StringUtils.isNotBlank(content)) {
-                return JSON.parseArray(content, String.class);
+                return JSON.parseArray(content, Object.class);
             }
         } catch (JSONException e) {
             log.error(e.getMessage(), e);

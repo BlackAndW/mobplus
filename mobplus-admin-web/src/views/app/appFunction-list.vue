@@ -57,11 +57,26 @@
                         :lazy="true"
                         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                     >
-                        <!--
+                        <template slot="functionNameSlot" slot-scope="text">
+                            <span
+                                v-for="item in FunctionType"
+                                v-if="item.value === text"
+                                :key="item.value"
+                            > {{ item.label }}</span>
+                        </template>
                         <span slot="adTypeListSlot" slot-scope="text, record">
-                            {{ adTypeList }}
+                            <div
+                                v-for="adTypeItem in record.adTypeList"
+                                :key="adTypeItem.id"
+                                :value="adTypeItem.value"
+                            >
+                                <span
+                                    v-for="item in AdType"
+                                    v-if="item.value === adTypeItem.value"
+                                    :key="item.value"
+                                > --{{ item.label }}--</span>
+                            </div>
                         </span>
-                        -->
                         <span slot="action" slot-scope="text, record">
                             <a
                                 v-action="['app:function:edit']"
@@ -90,17 +105,25 @@ import AppFunctionModal from '@/views/app/modules/appFunction-modal';
 
 const columns = [
     {
-        title: '功能名称',
+        title: '配置名称',
         dataIndex: 'name'
     },
     {
-        title: '广告展示类型列表',
-        dataIndex: 'adTypeList'
-        // scopedSlots: { customRender: 'adTypeListSlot' }
+        title: '功能名称',
+        dataIndex: 'functionCode',
+        scopedSlots: { customRender: 'functionNameSlot' }
     },
     {
-        title: '广告展示类型名称',
-        dataIndex: 'this.adTypeListVO',
+        title: '版本',
+        dataIndex: 'versionCode'
+    },
+    {
+        title: '渠道',
+        dataIndex: 'channelName'
+    },
+    {
+        title: '广告展示类型列表',
+        dataIndex: 'adTypeList',
         scopedSlots: { customRender: 'adTypeListSlot' }
     },
     {
@@ -135,7 +158,6 @@ export default {
             loadData: this.loadDataList,
             // 分类树数据
             adTypeNameList: '',
-            adTypeListVO: 'test',
             currentApp: null,
             treeloading: false,
             appTreeData: []
@@ -145,17 +167,15 @@ export default {
     mounted () {
         this.loadAppTreeData();
     },
-    computed: {},
-    methods: {
-        loadAdTypeNameList (adTypeList) {
-            console.log(adTypeList);
-            // adTypeList.forEach((itemConf, index) => {
-            //     this.$AdType.forEach((item, index) => {
-            //     if (item.value === itemConf.value)
-            //         adTypeNameList += this.$AdType.label + '||'
-            //     });
-            // });
+    computed: {
+        AdType: function () {
+            return this.$DictFilterExclude(this.$AdType, [0]);
         },
+        FunctionType: function () {
+            return this.$DictFilterExclude(this.$FunctionType, [0]);
+        }
+    },
+    methods: {
         onDelete: function (record) {
             var params = [];
             if (record !== undefined) {

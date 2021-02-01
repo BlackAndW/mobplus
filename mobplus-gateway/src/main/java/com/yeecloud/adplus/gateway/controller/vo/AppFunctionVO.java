@@ -18,5 +18,7 @@ public class AppFunctionVO implements Serializable {
 
     private String name;
 
+    private Integer functionCode;
+
     private List adTypeList;
 }

@@ -86,13 +86,15 @@ public class AppActivityServiceImpl implements AppActivityService {
     @Transactional(rollbackFor = Throwable.class)
     public void create(AppActivityForm form) throws ServiceException {
         AppActivity appActivity = new AppActivity();
-        AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
-        Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
         NewBeanUtils.copyProperties(appActivity, form, true);
         try {
-            appActivity.setAppVersion(appVersion);
-            appActivity.setChannel(channel);
-            appActivityRepository.save(appActivity);
+            AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
+            Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
+            if ( null != appVersion && null != channel) {
+                appActivity.setAppVersion(appVersion);
+                appActivity.setChannel(channel);
+                appActivityRepository.save(appActivity);
+            }
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
@@ -105,7 +107,7 @@ public class AppActivityServiceImpl implements AppActivityService {
             AppActivity entity = appActivityRepository.findById(id).orElse(null);
             Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
             AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
-            if (entity != null && !entity.isDeleted()) {
+            if (entity != null && !entity.isDeleted() && null != appVersion && null != channel) {
                 NewBeanUtils.copyProperties(entity, form, true);
                 entity.setAppVersion(appVersion);
                 entity.setChannel(channel);

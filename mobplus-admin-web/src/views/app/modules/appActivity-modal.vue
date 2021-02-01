@@ -5,7 +5,7 @@
                 <a-form-item>
                     <a-input
                         type="hidden"
-                        v-decorator="[ 'app.id', {initialValue: model.app}]"
+                        v-decorator="[ 'appId', {initialValue: model.app}]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="活动名称">
