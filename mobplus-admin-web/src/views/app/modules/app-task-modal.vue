@@ -56,7 +56,7 @@
 <script>
 import { mixinForm } from '@/utils/mixin';
 import { EDrawer } from '@/components';
-import { taskFunctionList } from '@/utils/taskFunction.js';
+import { taskFunctionList } from '@/datadict/datadict.js';
 
 export default {
     mixins: [mixinForm],

@@ -39,6 +39,18 @@ export const FunctionType = [
     { value: 8, label: '手机省电' }
 ];
 
+export const taskFunctionList = [
+    { value: 1, label: '拨号' },
+    { value: 2, label: '定位' },
+    { value: 3, label: '弹窗' },
+    { value: 4, label: '清理' },
+    { value: 5, label: '加速' },
+    { value: 6, label: '杀毒' },
+    { value: 7, label: '微信' },
+    { value: 8, label: '降温' },
+    { value: 9, label: '网络优化' }
+];
+
 export const RecommendedType = [
     { value: 0, label: '不限' },
     { value: 1, label: '热门爆款' },
