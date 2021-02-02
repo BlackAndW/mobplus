@@ -43,6 +43,9 @@ public class AppActivityServiceImpl implements AppActivityService {
     private AppActivityAwardRepository appActivityAwardRepository;
 
     @Autowired
+    private AppRepository appRepository;
+
+    @Autowired
     private ChannelRepository channelRepository;
 
     @Autowired
@@ -88,9 +91,11 @@ public class AppActivityServiceImpl implements AppActivityService {
         AppActivity appActivity = new AppActivity();
         NewBeanUtils.copyProperties(appActivity, form, true);
         try {
+            App app = appRepository.findById(form.getAppId()).orElse(null);
             AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
             Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
-            if ( null != appVersion && null != channel) {
+            if ( null != app && null != appVersion && null != channel) {
+                appActivity.setApp(app);
                 appActivity.setAppVersion(appVersion);
                 appActivity.setChannel(channel);
                 appActivityRepository.save(appActivity);
@@ -104,14 +109,15 @@ public class AppActivityServiceImpl implements AppActivityService {
     @Transactional(rollbackFor = Throwable.class)
     public void update(Integer id, AppActivityForm form) throws ServiceException {
         try {
-            AppActivity entity = appActivityRepository.findById(id).orElse(null);
+            AppActivity appActivity = appActivityRepository.findById(id).orElse(null);
+            App app = appRepository.findById(form.getAppId()).orElse(null);
             Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
             AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
-            if (entity != null && !entity.isDeleted() && null != appVersion && null != channel) {
-                NewBeanUtils.copyProperties(entity, form, true);
-                entity.setAppVersion(appVersion);
-                entity.setChannel(channel);
-                appActivityRepository.save(entity);
+            if (appActivity != null && !appActivity.isDeleted() && null != app && null != appVersion && null != channel) {
+                NewBeanUtils.copyProperties(appActivity, form, true);
+                appActivity.setAppVersion(appVersion);
+                appActivity.setChannel(channel);
+                appActivityRepository.save(appActivity);
             }
         } catch (Throwable e) {
             throw new ServiceException(e);

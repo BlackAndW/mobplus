@@ -224,6 +224,7 @@ export default {
     computed: {},
     methods: {
         statusCheckChange (record) {
+            record.appId = this.currentApp.key;
             console.log(record);
             record.status = record.status === 1 ? 2 : 1;
             this.$http.put(
