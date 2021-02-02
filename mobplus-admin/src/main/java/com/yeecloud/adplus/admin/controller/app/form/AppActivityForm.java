@@ -16,15 +16,11 @@ import javax.validation.constraints.NotNull;
 @Data
 public class AppActivityForm {
 
-    private App app;
-
-    private AppVersion appVersion;
+    private Integer appId;
 
     /** 应用版本 */
     @NotNull(message = "请输入应用版本")
     private Integer appVersionId;
-
-    private Channel channel;
 
     /** 应用渠道 */
     @NotNull(message = "请输入应用渠道")
