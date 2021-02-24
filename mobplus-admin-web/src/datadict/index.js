@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import {
-    GeneralStatus, SysCategoryStatus, AdType, FunctionType, GameStatus, RecommendedType, ChannelType, GenStatus
+    GeneralStatus, SysCategoryStatus, AdType, FunctionType, GameStatus, RecommendedType, ChannelType, GenStatus,
+    CountryList
 } from './datadict';
 
 Vue.prototype.$GeneralStatus = GeneralStatus;// 通用状态  用户, 角色
@@ -11,6 +12,7 @@ Vue.prototype.$GameStatus = GameStatus;
 Vue.prototype.$RecommendedType = RecommendedType;
 Vue.prototype.$ChannelType = ChannelType;
 Vue.prototype.$GenStatus = GenStatus;
+Vue.prototype.$CountryList = CountryList;
 
 export const Gender = [
     { value: 0, label: '女' },

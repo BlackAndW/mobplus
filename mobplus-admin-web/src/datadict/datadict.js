@@ -73,3 +73,15 @@ export const GenStatus = [
     { value: 1, label: '未启用' },
     { value: 2, label: '已启用' }
 ];
+
+export const CountryList = [
+    { name: '美国', value: 'US', iconUrl: 'flag_us.png', id: 1 },
+    { name: '英国', value: 'GB', iconUrl: 'flag_gb.png', id: 2 },
+    { name: '德国', value: 'DE', iconUrl: 'flag_de.png', id: 3 },
+    { name: '意大利', value: 'IT', iconUrl: 'flag_it.png', id: 4 },
+    // { name: '新加坡', value: 'SG', iconUrl: 'flag_us.png', id: 5 },
+    { name: '香港', value: 'HK', iconUrl: 'flag_hk.png', id: 6 },
+    { name: '日本', value: 'JP', iconUrl: 'flag_jp.png', id: 7 },
+    { name: '韩国', value: 'KR', iconUrl: 'flag_kr.png', id: 8 },
+    { name: '新加坡', value: 'SG', iconUrl: 'flag_sg.png', id: 9 }
+];
