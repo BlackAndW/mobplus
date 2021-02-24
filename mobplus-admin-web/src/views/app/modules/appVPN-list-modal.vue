@@ -9,17 +9,17 @@
         @cancel="onCancel"
         cancelText="关闭"
     >
-        <div class="add-modal" v-if="currentAppActivity!=null">
+        <div class="add-modal">
             <a-button-group>
                 <a-button
                     icon="sync"
-                    v-action="['app:activity:query']"
+                    v-action="['app:config:query']"
                     @click="$refs.table.refresh(false)"
                 />
                 <a-button
                     icon="plus"
-                    v-action="['app:activity:create']"
-                    @click="$refs.modal.add(currentAppActivity)"
+                    v-action="['app:config:create']"
+                    @click="$refs.modal.add()"
                 >新增</a-button>
             </a-button-group>
         </div>
@@ -40,54 +40,57 @@
                     onChange: onSelectChange
                 }"
             >
-            <template slot="awardType" slot-scope="text">
-                <span v-if="text===1">一等奖</span>
-                <span v-else-if="text===2">二等奖</span>
-                <span v-else-if="text===3">三等奖</span>
-            </template>
             <template slot="iconSlot" slot-scope="text">
                 <a-avatar shape="square" :src="text" v-if="text && text.length > 0"/>
             </template>
+            <template slot="statusSlot" slot-scope="text">
+                <span v-if="text === 1">暂停</span>
+                <span v-else-if="text === 2">启用</span>
+            </template>
             <span slot="action" slot-scope="text, record">
                 <a
-                    v-action="['app:activity:edit']"
-                    @click="$refs.modal.edit(record, currentAppActivity)"
+                    v-action="['app:config:edit']"
+                    @click="$refs.modal.edit(record)"
                 >编辑</a>
                 <a-divider type="vertical" />
             </span>
             </s-table>
         </a-spin>
         </a-modal>
-        <app-award-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
+        <appVPN-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
     </div>
 </template>
 
 <script>
 import { mixinDevice } from '@/utils/mixin';
 import { STable, ETag } from '@/components';
-import AppAwardModal from '@/views/app/modules/app-award-modal';
+import AppVPNModal from '@/views/app/modules/appVPN-modal';
 
 const columns = [
     {
-        title: '奖品类别',
-        dataIndex: 'awardType',
-        scopedSlots: { customRender: 'awardType' }
+        title: '节点名称',
+        dataIndex: 'serverName'
     },
     {
-        title: '奖品名称',
-        dataIndex: 'awardName'
+        title: '城市',
+        dataIndex: 'region'
     },
     {
-        title: '奖品图片',
-        dataIndex: 'awardImgPath',
+        title: '图标',
+        dataIndex: 'b04',
         scopedSlots: { customRender: 'iconSlot' }
     },
     {
-        title: '奖品碎片',
-        dataIndex: 'awardPiece'
+        title: '网速',
+        dataIndex: 'b05'
     },
     {
-        title: '奖品设置',
+        title: '节点状态',
+        dataIndex: 'status',
+        scopedSlots: { customRender: 'statusSlot' }
+    },
+    {
+        title: '节点设置',
         dataIndex: 'action',
         align: 'center',
         scopedSlots: { customRender: 'action' }
@@ -99,11 +102,11 @@ export default {
     components: {
         STable,
         ETag,
-        AppAwardModal
+        AppVPNModal
     },
     data () {
         return {
-            title: '活动名称：奖品测试',
+            title: '节点',
             modalWidth: 900,
             visible: false,
             confirmLoading: false,
@@ -117,17 +120,12 @@ export default {
             selectedRows: [],
 
             loadData: this.loadDataList,
-            currentAppActivity: null,
-            // ad pos
             model: {}
         };
     },
     computed: {},
     methods: {
         show: function (record) {
-            this.title = record.name;
-            this.model = record;
-            this.currentAppActivity = record.id;
             this.reload();
             this.visible = true;
         },
@@ -142,9 +140,7 @@ export default {
             this.selectedRows = [];
         },
         loadDataList: function (params) {
-            return this.$http.get(
-                '/app/activity/award?activityId=' + this.model.id
-            );
+            return this.$http.get('/app/vpn');
         },
         reload: function () {
             if (this.$refs.table) {

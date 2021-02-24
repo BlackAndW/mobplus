@@ -100,11 +100,18 @@
                                 @click="onDelete(record)"
                             >删除</a>
                         </span>
+                        <span slot="actionVPN" slot-scope="text, record">
+                            <a
+                                v-action="['app:config:edit']"
+                                @click="$refs.VPNmodal.show(record,currentApp)"
+                            >编辑</a>
+                        </span>
                     </s-table>
                 </a-card>
             </a-col>
         </a-row>
         <appMobileConf-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
+        <appVPN-list-modal ref="VPNmodal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
     </div>
 </template>
 
@@ -112,6 +119,7 @@
 import { mixinDevice } from '@/utils/mixin';
 import { STable, STree, ETag } from '@/components';
 import AppMobileConfModal from '@/views/app/modules/appMobileConf-modal';
+import AppVPNListModal from '@/views/app/modules/appVPN-list-modal';
 
 const columns = [
     { title: '配置名称', dataIndex: 'name' },
@@ -135,6 +143,12 @@ const columns = [
     }
 ];
 
+const vpnColumn = {
+    title: 'VPN管理',
+    align: 'center',
+    scopedSlots: { customRender: 'actionVPN' }
+};
+
 const url = '/app/mobile/conf';
 export default {
     mixins: [mixinDevice],
@@ -142,7 +156,8 @@ export default {
         STable,
         STree,
         ETag,
-        AppMobileConfModal
+        AppMobileConfModal,
+        AppVPNListModal
     },
     data () {
         return {
@@ -206,6 +221,14 @@ export default {
         },
         onQueryDict: function (item) {
             this.currentApp = item;
+            if (this.currentApp.title.indexOf('vpn') !== -1) {
+                if (columns.length === 6) {
+                    columns.push(vpnColumn);
+                }
+            } else {
+                columns.splice(6, 1);
+            }
+            console.log(this.currentApp);
             this.$refs.table.refresh(true);
         },
         loadAppTreeData: async function () {
