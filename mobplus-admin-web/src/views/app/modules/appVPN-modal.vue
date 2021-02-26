@@ -14,7 +14,7 @@
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="国家">
-                    <a-select placeholder="请选择国家" style="width:200px" v-decorator="[ 'countryCode', {initialValue: model.countryCode, rules: [ { required: true, message: '请选择国家' }]}]">
+                    <a-select placeholder="请选择国家" @change="handleCountryChange" style="width:200px" v-decorator="[ 'countryCode', {initialValue: model.countryCode, rules: [ { required: true, message: '请选择国家' }]}]">
                         <a-select-option
                             v-for="country in countryList"
                             :key="country.id"
@@ -26,6 +26,18 @@
                         </a-select-option>
                     </a-select>
                 </a-form-item>
+                <div v-show="false">
+                    <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="节点英文名">
+                        <a-input
+                            v-decorator="[ 'b02', {initialValue: model.b02}]"
+                        />
+                    </a-form-item>
+                    <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="节点说明">
+                        <a-input
+                            v-decorator="[ 'b03', {initialValue: model.b03}]"
+                        />
+                    </a-form-item>
+                </div>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="地区">
                     <a-input
                         v-decorator="[ 'region', {initialValue: model.region, rules: [ { required: true, message: '请输入地区名称' }] }]"
@@ -78,6 +90,8 @@ export default {
             loading: false,
             countryList: CountryList,
             disabledIP: false,
+            name_en: '',
+            summary_en: '',
             func: () => {}
         };
     },
@@ -111,26 +125,15 @@ export default {
         onCancel: function () {
             this.close(false);
         },
-        handleChange (info) {
-            if (info.file.status === 'uploading') {
-                this.loading = true;
-                return;
+        handleCountryChange (value) {
+            for (const item of this.countryList) {
+                if (item.value === value) {
+                    this.form.setFieldsValue({
+                        b02: item.name_en,
+                        b03: item.summary_en
+                    });
+                }
             }
-            if (info.file.status === 'done') {
-                this.model.b04 = info.file.response.result.url;
-                this.loading = false;
-            }
-        },
-        beforeUpload (icon) {
-            const isPicture = icon.type === 'image/jpg' || icon.type === 'image/png' || icon.type === 'image/gif' || icon.type === 'image/jpeg' || icon.type === 'image/bmp';
-            if (!isPicture) {
-                this.$message.error('只能上传图片格式');
-            }
-            const isLt2M = icon.size / 1024 / 1024 < 2;
-            if (!isLt2M) {
-                this.$message.error('缩略图大小必须小于2MB');
-            }
-            return isPicture && isLt2M;
         },
         onSubmit: function () {
             const $self = this;

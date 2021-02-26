@@ -221,14 +221,14 @@ export default {
         },
         onQueryDict: function (item) {
             this.currentApp = item;
-            if (this.currentApp.title.indexOf('vpn') !== -1) {
+            // 根据app名称判断，带有vpn的应用添加配置列
+            if (this.currentApp.title.toLocaleLowerCase().indexOf('vpn') !== -1) {
                 if (columns.length === 6) {
                     columns.push(vpnColumn);
                 }
             } else {
                 columns.splice(6, 1);
             }
-            console.log(this.currentApp);
             this.$refs.table.refresh(true);
         },
         loadAppTreeData: async function () {

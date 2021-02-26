@@ -72,7 +72,7 @@ const columns = [
         dataIndex: 'serverName'
     },
     {
-        title: '城市',
+        title: '地区',
         dataIndex: 'region'
     },
     {
