@@ -75,13 +75,13 @@ export const GenStatus = [
 ];
 
 export const CountryList = [
-    { name: '美国', value: 'US', iconUrl: 'flag_us.png', id: 1 },
-    { name: '英国', value: 'GB', iconUrl: 'flag_gb.png', id: 2 },
-    { name: '德国', value: 'DE', iconUrl: 'flag_de.png', id: 3 },
-    { name: '意大利', value: 'IT', iconUrl: 'flag_it.png', id: 4 },
-    // { name: '新加坡', value: 'SG', iconUrl: 'flag_us.png', id: 5 },
-    { name: '香港', value: 'HK', iconUrl: 'flag_hk.png', id: 6 },
-    { name: '日本', value: 'JP', iconUrl: 'flag_jp.png', id: 7 },
-    { name: '韩国', value: 'KR', iconUrl: 'flag_kr.png', id: 8 },
-    { name: '新加坡', value: 'SG', iconUrl: 'flag_sg.png', id: 9 }
+    { name: '美国', value: 'US', name_en: 'United States', summary_en: 'San Francisco', iconUrl: 'flag_us.png', id: 1 },
+    { name: '英国', value: 'GB', name_en: 'United Kindom', summary_en: 'London', iconUrl: 'flag_gb.png', id: 2 },
+    { name: '德国', value: 'DE', name_en: 'Germany', summary_en: 'Frankfurt', iconUrl: 'flag_de.png', id: 3 },
+    { name: '意大利', value: 'IT', name_en: 'Italy', summary_en: 'Milan', iconUrl: 'flag_it.png', id: 4 },
+    // { name: '新加坡', value: 'SG', name_en: 'United States', summary_en: 'San Francisco AWS', iconUrl: 'flag_us.png', id: 5 },
+    { name: '香港', value: 'HK', name_en: 'Hong Kong', summary_en: 'Hong Kong', iconUrl: 'flag_hk.png', id: 6 },
+    { name: '日本', value: 'JP', name_en: 'Japan', summary_en: 'Tokyo', iconUrl: 'flag_jp.png', id: 7 },
+    { name: '韩国', value: 'KR', name_en: 'Korea', summary_en: 'Seoul', iconUrl: 'flag_kr.png', id: 8 },
+    { name: '新加坡', value: 'SG', name_en: 'Singapore', summary_en: 'Singapore', iconUrl: 'flag_sg.png', id: 9 }
 ];
