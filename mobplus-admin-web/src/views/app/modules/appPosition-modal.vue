@@ -8,17 +8,6 @@
                         v-decorator="[ 'app.id', {initialValue: model.app}]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="广告类型">
-                    <a-select
-                        placeholder="==请选择广告类型=="
-                        v-decorator="['type.id', {initialValue: model.type, rules: [{ required: true, message: '请选择广告类型'}]} ]"
-                    >
-                        <a-select-option
-                            v-for="item in AdType"
-                            :key="item.value"
-                            :value="item.value"
-                        >{{ item.label }}</a-select-option>
-                    </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="展示位代码">
                     <a-input

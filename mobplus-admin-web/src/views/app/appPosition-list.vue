@@ -67,9 +67,6 @@
                         :lazy="true"
                         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                     >
-                        <template slot="typeSlot" slot-scope="text">
-                            {{ $GetDictLabel($AdType, text) }}
-                        </template>
                         <template slot="timeSlot" slot-scope="text">
                             {{ text | moment }}
                         </template>
@@ -132,11 +129,6 @@ const columns = [
     {
         title: '展示位名称',
         dataIndex: 'name'
-    },
-    {
-        title: '类型',
-        dataIndex: 'type',
-        scopedSlots: { customRender: 'typeSlot' }
     },
     {
         title: '是否展示广告',

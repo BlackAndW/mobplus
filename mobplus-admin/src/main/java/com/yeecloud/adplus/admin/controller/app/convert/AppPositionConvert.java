@@ -17,9 +17,10 @@ import java.util.List;
 public interface AppPositionConvert {
     @Mappings({
             @Mapping(target = "appId", source = "app.id"),
-            @Mapping(target = "appName", source = "app.name"),
-            @Mapping(target = "type", source = "type.id"),
-            @Mapping(target = "typeName", source = "type.name")
+            @Mapping(target = "appName", source = "app.name")
+//            @Mapping(target = "type", source = "type.id"),
+//            @Mapping(target = "typeName", source = "type.name")
+//            @Mapping(target = "type", ignore = true)
     })
     AppPositionVO convert(AppPosition appPosition);
 

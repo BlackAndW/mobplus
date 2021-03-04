@@ -18,8 +18,6 @@ public class AppPositionVO implements Serializable {
     private String appName;
     private String code;
     private String name;
-    private Integer type;
-    private String typeName;
     private Integer status;
 
     private Integer createdBy;

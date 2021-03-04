@@ -43,10 +43,10 @@ public class AdPositionServiceImpl implements AdPositionService {
             if (advId != null && advId > 0) {
                 predicate = ExpressionUtils.and(predicate, adPosition.advertiser.id.eq(advId));
             }
-            Integer type = query.get("type", Integer.class);
-            if (type != null && type > 0) {
-                predicate = ExpressionUtils.and(predicate, adPosition.type.id.eq(type));
-            }
+//            Integer type = query.get("type", Integer.class);
+//            if (type != null && type > 0) {
+//                predicate = ExpressionUtils.and(predicate, adPosition.type.id.eq(type));
+//            }
             String code = query.get("code", String.class);
             if (StringUtils.isNotBlank(code)) {
                 predicate = ExpressionUtils.and(predicate, adPosition.code.like(code + "%"));

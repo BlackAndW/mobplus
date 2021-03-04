@@ -10,5 +10,8 @@ import lombok.Data;
 @Data
 public class AppPositionAdPositionForm {
     private AdPosition adPos;
+    private String advName;
     private Integer ratio;
+    private Boolean ratioFlag;
+    private Integer typeRatio;
 }

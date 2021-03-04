@@ -177,10 +177,6 @@ export default {
             this.selectedRowKeys = selectedRowKeys;
             this.selectedRows = selectedRows;
         },
-        handleCellChange (value, key, column, record) {
-            record[column] = value;
-            this.$refs.table.$forceUpdate();
-        },
         dataChanged (data) {
             data.forEach(ele => {
                 if (ele.checked) {

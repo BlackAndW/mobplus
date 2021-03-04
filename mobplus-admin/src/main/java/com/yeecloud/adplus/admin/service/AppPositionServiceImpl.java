@@ -6,6 +6,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.app.convert.AppPosAdPosConvert;
 import com.yeecloud.adplus.admin.controller.app.form.AppPositionAdPositionForm;
+import com.yeecloud.adplus.admin.controller.app.vo.AppPositionAdPositionVO;
 import com.yeecloud.adplus.dal.entity.AppPosition;
 import com.yeecloud.adplus.dal.entity.AppPositionAdPosition;
 import com.yeecloud.adplus.dal.entity.QAppPosition;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author: Huang
@@ -53,10 +56,10 @@ public class AppPositionServiceImpl implements AppPositionService {
             if (appId != null && appId > 0) {
                 predicate = ExpressionUtils.and(predicate, appPosition.app.id.eq(appId));
             }
-            Integer type = query.get("type", Integer.class);
-            if (type != null && type > 0) {
-                predicate = ExpressionUtils.and(predicate, appPosition.type.id.eq(type));
-            }
+//            Integer type = query.get("type", Integer.class);
+//            if (type != null && type > 0) {
+//                predicate = ExpressionUtils.and(predicate, appPosition.type.id.eq(type));
+//            }
             Integer status = query.get("status", Integer.class);
             if (status != null && status > 0) {
                 predicate = ExpressionUtils.and(predicate, appPosition.status.eq(status));
@@ -89,14 +92,14 @@ public class AppPositionServiceImpl implements AppPositionService {
     @Override
     public void create(AppPosition form) throws ServiceException {
         try {
-            // 判断广告类型是否为插屏视频
-            if (form.getType().getId().equals(4)){
-                form.setParams("{\"style\":3}");
-            }
-            // 判断广告类型是否为插屏
-            if (form.getType().getId().equals(3)){
-                form.setParams("{\"style\":1}");
-            }
+//            // 判断广告类型是否为插屏视频
+//            if (form.getType().getId().equals(4)){
+//                form.setParams("{\"style\":3}");
+//            }
+//            // 判断广告类型是否为插屏
+//            if (form.getType().getId().equals(3)){
+//                form.setParams("{\"style\":1}");
+//            }
             appPositionRepository.save(form);
         } catch (Throwable e) {
             throw new ServiceException(e);
@@ -107,14 +110,14 @@ public class AppPositionServiceImpl implements AppPositionService {
     public void update(Integer id, AppPosition form) throws ServiceException {
         try {
             AppPosition entity = appPositionRepository.findById(id).orElse(null);
-            // 判断广告类型是否为插屏视频
-            if (form.getType().getId().equals(4)){
-                form.setParams("{\"style\":3}");
-            }
-            // 判断广告类型是否为插屏
-            if (form.getType().getId().equals(3)){
-                form.setParams("{\"style\":1}");
-            }
+//            // 判断广告类型是否为插屏视频
+//            if (form.getType().getId().equals(4)){
+//                form.setParams("{\"style\":3}");
+//            }
+//            // 判断广告类型是否为插屏
+//            if (form.getType().getId().equals(3)){
+//                form.setParams("{\"style\":1}");
+//            }
             if (entity != null && !entity.isDeleted()) {
                 NewBeanUtils.copyProperties(entity, form, true);
                 appPositionRepository.save(entity);
@@ -138,9 +141,19 @@ public class AppPositionServiceImpl implements AppPositionService {
         }
         appPositionAdPositionRepository.deleteByAppPosition(appPosition);
         List<AppPositionAdPosition> adPosList = Lists.newArrayList();
-        list.stream().forEach(form -> {
+
+        // 过滤出可修改的权重项
+        List<AppPositionAdPositionForm> ratioList = list.stream().filter(AppPositionAdPositionForm::getRatioFlag).collect(Collectors.toList());
+        System.out.println(ratioList);
+        list.forEach(form -> {
             AppPositionAdPosition pos = appPosAdPosConvert.convert(form);
             pos.setAppPosition(appPosition);
+            // 设置平台权重
+            ratioList.forEach(item -> {
+                if (item.getAdvName().equals(form.getAdvName())) {
+                    pos.setRatio(item.getRatio());
+                }
+            });
             adPosList.add(pos);
         });
         appPositionAdPositionRepository.saveAll(adPosList);

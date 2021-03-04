@@ -29,8 +29,11 @@ public class AppPositionAdPosition extends AuditorEntity {
     @JoinColumn(name = "n_ad_pos_id")
     private AdPosition adPosition;
 
-    /** 优先级 最小为1, 否则取不到 */
+    /** 平台权重 优先级 最小为1, 否则取不到 */
     @Column(name = "n_ratio")
     private Integer ratio = 1;
 
+    /** 类型权重 优先级 最小为1, 否则取不到 */
+    @Column(name = "n_type_ratio")
+    private Integer typeRatio = 1;
 }

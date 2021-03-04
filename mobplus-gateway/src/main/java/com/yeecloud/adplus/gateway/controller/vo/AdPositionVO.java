@@ -16,4 +16,5 @@ public class AdPositionVO implements Serializable {
     private String posId;
     private int ratio;
     private int adType;
+    private int typeRatio;
 }

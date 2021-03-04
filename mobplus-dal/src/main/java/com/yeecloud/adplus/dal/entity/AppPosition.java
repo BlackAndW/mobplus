@@ -41,11 +41,10 @@ public class AppPosition extends AuditorEntity {
     @Column(name = "c_name")
     private String name;
 
-    /** 广告位类型 */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "n_type")
-    private AdType type;
-
+//    /** 广告位类型 */
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "n_type")
+//    private AdType type;
 
     @Column(name = "n_status")
     private Integer status;

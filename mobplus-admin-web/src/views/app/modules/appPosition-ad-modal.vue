@@ -38,11 +38,21 @@
             >
                 <template slot="ratioSlot" slot-scope="text, record">
                     <a-input-number
+                        v-if="record.ratioFlag"
                         :min="1"
                         :max="99"
                         style="margin: -5px 0"
                         :value="text || 1"
-                        @change="val => handleCellChange(val, record.key, 'ratio', record)"
+                        @change="val => handleCellChange(val, 'ratio', record)"
+                    />
+                </template>
+                <template slot="typeRatioSlot" slot-scope="text, record">
+                    <a-input-number
+                        :min="1"
+                        :max="99"
+                        style="margin: -5px 0"
+                        :value="text || 1"
+                        @change="val => handleTypeCellChange(val, 'typeRatio', record)"
                     />
                 </template>
                 <template slot="typeSlot" slot-scope="text">
@@ -60,17 +70,24 @@ import { STable, ETag } from '@/components';
 const columns = [
     { title: '广告位代码', dataIndex: 'adPos.code', width: 155 },
     { title: '广告位名称', dataIndex: 'adPos.name' },
-    { title: '所属平台', dataIndex: 'adPos.advName' },
+    { title: '所属平台', dataIndex: 'adPos.advName', width: 100 },
     {
         title: '类型',
+        width: 200,
         dataIndex: 'adPos.type',
         scopedSlots: { customRender: 'typeSlot' }
     },
     {
-        title: '权重',
+        title: '平台权重',
+        width: 120,
         dataIndex: 'ratio',
-        width: 108,
         scopedSlots: { customRender: 'ratioSlot' }
+    },
+    {
+        title: '类型权重',
+        width: 120,
+        dataIndex: 'typeRatio',
+        scopedSlots: { customRender: 'typeRatioSlot' }
     }
 ];
 
@@ -83,7 +100,7 @@ export default {
     data () {
         return {
             title: '关联广告位',
-            modalWidth: 900,
+            modalWidth: 1000,
             visible: false,
             confirmLoading: false,
 
@@ -126,11 +143,15 @@ export default {
         onSubmit: function () {
             const params = [];
             this.selectedRows.forEach(ele => {
+                console.log(ele);
                 params.push({
                     adPos: {
                         id: ele.adPos.id
                     },
-                    ratio: ele.ratio
+                    advName: ele.adPos.advName,
+                    ratio: ele.ratio,
+                    ratioFlag: ele.ratioFlag,
+                    typeRatio: ele.typeRatio
                 });
             });
             if (params.length === 0) {
@@ -169,7 +190,11 @@ export default {
             this.selectedRowKeys = selectedRowKeys;
             this.selectedRows = selectedRows;
         },
-        handleCellChange (value, key, column, record) {
+        handleCellChange (value, column, record) {
+            record[column] = value;
+            this.$refs.table.$forceUpdate();
+        },
+        handleTypeCellChange (value, column, record) {
             record[column] = value;
             this.$refs.table.$forceUpdate();
         },
