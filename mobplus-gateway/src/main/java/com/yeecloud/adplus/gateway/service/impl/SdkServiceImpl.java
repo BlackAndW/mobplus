@@ -79,7 +79,7 @@ public class SdkServiceImpl implements SdkService {
         // 获取应用对应广告平台的配置
         addAdvertiserList(vo, app);
         // 获取应用的所有展示位
-        addAppPositionList(vo, app);
+        addAppPositionList(vo, app, false);
         return vo;
     }
 
@@ -97,7 +97,7 @@ public class SdkServiceImpl implements SdkService {
         // 获取应用对应广告平台的配置
         addAdvertiserList(vo, app);
         // 获取应用的所有展示位
-        addAppPositionList(vo, app);
+        addAppPositionList(vo, app, true);
         return vo;
     }
 
@@ -109,9 +109,12 @@ public class SdkServiceImpl implements SdkService {
         return v;
     }
 
-    private void addAppPositionList(SdkCfgVO vo, App app) throws ServiceException {
+    private void addAppPositionList(SdkCfgVO vo, App app, Boolean isEn) throws ServiceException {
         List<AppPosition> appPositionList = appPositionRepository.findByApp(app);
         if (appPositionList.isEmpty()) {
+            if (isEn) {
+                throw new ServiceException("The application has not configured the display position, please configure it first!");
+            }
             throw new ServiceException("应用没有配置展示位，请先进行配置");
         }
         for (AppPosition appPosition : appPositionList) {
@@ -132,7 +135,9 @@ public class SdkServiceImpl implements SdkService {
                 AdPositionVO adPositionVO = new AdPositionVO();
                 adPositionVO.setAdvertiser(adPosition.getAdPosition().getAdvertiser().getCode());
                 adPositionVO.setPosId(adPosition.getAdPosition().getCode());
+                adPositionVO.setAdType(adPosition.getAdPosition().getType().getId());
                 adPositionVO.setRatio(adPosition.getRatio());
+                adPositionVO.setTypeRatio(adPosition.getTypeRatio());
 
                 appPosCfgVO.getPositionList().add(adPositionVO);
             }

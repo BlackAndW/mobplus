@@ -22,6 +22,7 @@ public interface AppPosAdPosConvert {
             @Mapping(target = "id", source = "adPosition.id"),
             @Mapping(target = "adPos", source = "adPosition"),
             @Mapping(target = "ratio", source = "appPositionAdPosition.ratio"),
+            @Mapping(target = "typeRatio", source = "appPositionAdPosition.typeRatio")
     })
     AppPositionAdPositionVO convert(AdPosition adPosition, AppPositionAdPosition appPositionAdPosition);
 

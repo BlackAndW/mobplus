@@ -27,9 +27,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * @author: Huang
@@ -110,7 +110,6 @@ public class AppPositionController {
         }
         Map<String, Object> params = Maps.newHashMap();
         params.put("pageSize", Integer.MAX_VALUE);
-        params.put("type", position.getType().getId());
         params.put("appId", position.getApp().getId());
 
         // 将相同名字的广告位和展示位筛选出来
@@ -119,16 +118,32 @@ public class AppPositionController {
 
         Set<Integer> existsAdPosSet = Sets.newHashSet();
         List<AppPositionAdPositionVO> resultList = Lists.newArrayList();
-        position.getAdPosList().stream().forEach(appPosAdPos -> {
+
+        // 添加中间表已存在的数据
+        position.getAdPosList().forEach(appPosAdPos -> {
             existsAdPosSet.add(appPosAdPos.getAdPosition().getId());
             resultList.add(appPosAdPosConvert.convert(appPosAdPos));
         });
+        // 根据name，appId查询未关联到中间表的数据，并添加到resultList
         Page<AdPosition> page = adPositionService.query(new Query(params));
         page.stream().forEach(adPosition -> {
             if (!existsAdPosSet.contains(adPosition.getId())) {
-                resultList.add(new AppPositionAdPositionVO(adPosition.getId(), false, adPositionConvert.convert(adPosition), 1));
+                resultList.add(new AppPositionAdPositionVO(adPosition.getId(), false, adPositionConvert.convert(adPosition), 1, 1));
             }
         });
+        // 将新的resultList按广告平台重新排序
+        Collections.sort(resultList);
+        // 统计每个平台包含的广告类型个数
+        Map<Integer, Long> typeSize = resultList.stream().collect(Collectors.groupingBy(
+                (AppPositionAdPositionVO vo) ->
+                    vo.getAdPos().getAdvId(), Collectors.counting()
+        ));
+        // 标记每个平台的第一项为可修改的权重项
+        int index = 0;
+        for (Map.Entry<Integer, Long> entry: typeSize.entrySet()) {
+            resultList.get(index).setRatioFlag(true);
+            index += entry.getValue();
+        }
         PageInfo<AppPositionAdPositionVO> pageInfo = new PageInfo<>(1, resultList.size(), resultList.size(), resultList);
         return Result.SUCCESS(pageInfo);
     }
