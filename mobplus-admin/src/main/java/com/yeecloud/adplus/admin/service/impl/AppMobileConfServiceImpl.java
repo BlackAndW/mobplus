@@ -5,6 +5,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.app.form.AppMobileConfForm;
 import com.yeecloud.adplus.admin.service.AppMobileConfService;
+import com.yeecloud.adplus.admin.util.BaseUtil;
 import com.yeecloud.adplus.dal.entity.AppMobileConf;
 import com.yeecloud.adplus.dal.entity.QAppMobileConf;
 import com.yeecloud.adplus.dal.repository.AppMobileConfRepository;
@@ -79,7 +80,7 @@ public class AppMobileConfServiceImpl implements AppMobileConfService {
     public void create(AppMobileConfForm form) throws ServiceException {
         try {
             AppMobileConf appMobileConf = new AppMobileConf();
-            NewBeanUtils.copyProperties(appMobileConf, form, true);
+            copyAppMobileConfValue(appMobileConf, form);
             appMobileConfRepository.save(appMobileConf);
         } catch (Throwable e) {
             throw new ServiceException(e);
@@ -92,7 +93,7 @@ public class AppMobileConfServiceImpl implements AppMobileConfService {
         try {
             AppMobileConf appMobileConf = appMobileConfRepository.findById(id).orElse(null);
             if (appMobileConf != null && !appMobileConf.isDeleted()) {
-                NewBeanUtils.copyProperties(appMobileConf, form, true);
+                copyAppMobileConfValue(appMobileConf, form);
                 appMobileConfRepository.save(appMobileConf);
             }
         } catch (Throwable e) {
@@ -108,5 +109,11 @@ public class AppMobileConfServiceImpl implements AppMobileConfService {
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
+    }
+
+    private void copyAppMobileConfValue (AppMobileConf appMobileConf, AppMobileConfForm form) {
+        NewBeanUtils.copyProperties(appMobileConf, form, true);
+        appMobileConf.setAppVersionList(BaseUtil.formatList2String(form.getAppVersionCheckList()));
+        appMobileConf.setChannelList(BaseUtil.formatList2String(form.getChannelCheckList()));
     }
 }

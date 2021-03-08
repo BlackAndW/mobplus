@@ -3,6 +3,7 @@ package com.yeecloud.adplus.admin.controller.app.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: Huang
@@ -21,4 +22,9 @@ public class AppMobileConfVO implements Serializable {
     private Long createdAt;
     private Long modifiedAt;
 
+    /** 应用版本 */
+    private List<String> appVersionCheckList;
+
+    /** 应用渠道 */
+    private List<String> channelCheckList;
 }

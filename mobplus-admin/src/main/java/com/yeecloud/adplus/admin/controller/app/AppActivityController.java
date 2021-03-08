@@ -187,11 +187,11 @@ public class AppActivityController {
 
     private void formatString2List (List<AppActivityVO> appActivityVOList, List<AppActivity> result) {
         result.forEach( resultItem ->
-                appActivityVOList.forEach(appActivityVO -> {
-                    if (resultItem.getId().equals(appActivityVO.getId())) {
-                        appActivityVO.setAppVersionCheckList(Arrays.asList(resultItem.getAppVersionList().split("\\|")));
-                        appActivityVO.setChannelCheckList(Arrays.asList(resultItem.getChannelList().split("\\|")));
-                    }
+            appActivityVOList.forEach(appActivityVO -> {
+                if (resultItem.getId().equals(appActivityVO.getId())) {
+                    appActivityVO.setAppVersionCheckList(Arrays.asList(resultItem.getAppVersionList().split("\\|")));
+                    appActivityVO.setChannelCheckList(Arrays.asList(resultItem.getChannelList().split("\\|")));
+                }
         }));
     }
 }

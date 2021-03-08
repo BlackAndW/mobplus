@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +85,17 @@ public class AppMobileConfController {
 
     private PageInfo<AppMobileConfVO> convert(Page<AppMobileConf> result) {
         List<AppMobileConfVO> resultList = appMobileConfConvert.convert(result.getContent());
+        formatString2List(resultList, result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
 
+    private void formatString2List (List<AppMobileConfVO> appMobileConfVOList, List<AppMobileConf> result) {
+        result.forEach(resultItem ->
+            appMobileConfVOList.forEach(appMobileConfVO -> {
+                if (resultItem.getId().equals(appMobileConfVO.getId())) {
+                    appMobileConfVO.setAppVersionCheckList(Arrays.asList(resultItem.getAppVersionList().split("\\|")));
+                    appMobileConfVO.setChannelCheckList(Arrays.asList(resultItem.getChannelList().split("\\|")));
+                }
+            }));
+    }
 }

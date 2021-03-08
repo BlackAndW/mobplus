@@ -69,12 +69,14 @@ public class AppPositionServiceImpl implements AppPositionService {
         Predicate predicate = appFunction.deleted.eq(false);
 
         predicate = ExpressionUtils.and(predicate, appFunction.app.id.eq(app.getId()));
-        predicate = ExpressionUtils.and(predicate, appFunction.channel.code.eq(form.getChannel()));
-        predicate = ExpressionUtils.and(predicate, appFunction.appVersion.code.eq(form.getPkgVersion()));
         List<AppFunctionVO> appFunctionVOList = new ArrayList<>();
         List<AppFunction> resultList = jpaQueryFactory.selectFrom(appFunction).where(predicate).fetch();
 
         resultList.forEach(resultListItem ->{
+            if (!resultListItem.getAppVersionList().contains(form.getPkgVersion())
+                    || !resultListItem.getChannelList().contains(form.getChannel())) {
+                return;
+            }
             AppFunctionVO appFunctionVO = new AppFunctionVO();
             NewBeanUtils.copyProperties(appFunctionVO, resultListItem);
             List adTypeList = JSONArray.parseArray(resultListItem.getAdTypeConf());

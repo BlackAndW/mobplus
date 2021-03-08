@@ -26,6 +26,14 @@ public class AppMobileConf extends AuditorEntity {
     @JoinColumn(name = "n_app_id")
     private App app;
 
+    /** 应用版本 */
+    @Column(name = "n_app_version_list")
+    private String appVersionList;
+
+    /** 应用渠道 */
+    @Column(name = "n_channel_list")
+    private String channelList;
+
     @Column(name = "c_name")
     private String name;
 

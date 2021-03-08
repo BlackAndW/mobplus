@@ -17,6 +17,39 @@
                         v-decorator="[ 'value', {initialValue: model.value, rules: [ { required: true, message: '请输入配置值' }]}]"
                     />
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="版本">
+                    <a-checkbox-group
+                        v-decorator="[ 'appVersionCheckList', {initialValue: model.appVersionCheckList, rules: [ { required: true, message: '请选择版本' }] }]">
+                        <a-row class="checkbox-width">
+                            <a-col
+                                v-for="appVersion in appVersionList"
+                                :key="appVersion.id"
+                                span="6">
+                                    <a-checkbox
+                                        :value="appVersion.code"
+                                        >{{ appVersion.code }}
+                                    </a-checkbox>
+                            </a-col>
+                        </a-row>
+                    </a-checkbox-group>
+                    </a-select>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="渠道">
+                    <a-checkbox-group
+                        v-decorator="[ 'channelCheckList', {initialValue: model.channelCheckList, rules: [ { required: true, message: '请选择渠道' }] }]">
+                        <a-row class="checkbox-width">
+                            <a-col
+                                v-for="channel in channelList"
+                                :key="channel.id"
+                                span="6">
+                                    <a-checkbox
+                                        :value="channel.code"
+                                        >{{ channel.name }}
+                                    </a-checkbox>
+                            </a-col>
+                        </a-row>
+                    </a-checkbox-group>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
                     <a-textarea :rows="4" v-decorator="[ 'remark', {initialValue: model.remark}]" />
                 </a-form-item>
@@ -54,10 +87,13 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
+            appVersionList: {},
+            channelList: {},
             func: () => {}
         };
     },
     mounted () {
+
     },
     methods: {
         add: function (currentApp) {
@@ -68,6 +104,8 @@ export default {
             this.model.app = currentApp.key;
             this.url = '/app/mobile/conf';
             this.visible = true;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         edit: function (record, currentApp) {
             this.title = '编辑配置';
@@ -77,6 +115,8 @@ export default {
             this.func = this.$http.put;
             this.confirmLoading = false;
             this.visible = true;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         close: function (success) {
             this.$emit('close', success || false);
@@ -85,6 +125,14 @@ export default {
         },
         onCancel: function () {
             this.close(false);
+        },
+        loadChannelList: async function () {
+            this.channelList = await this.$http.get('/release/channel/sct', {});
+        },
+        loadAppVersionList: async function (currentApp) {
+            this.appVersionList = await this.$http.get('/app/version/sct', {
+                appId: currentApp.key
+            });
         },
         onSubmit: function () {
             const $self = this;
@@ -111,5 +159,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+    .checkbox-width {
+        width: 400px;
+    }
 </style>
