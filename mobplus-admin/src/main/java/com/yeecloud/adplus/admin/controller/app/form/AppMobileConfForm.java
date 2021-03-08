@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author: Huang
@@ -20,6 +21,15 @@ public class AppMobileConfForm {
     private String key;
     @NotBlank(message = "请输入配置值")
     private String value;
+
+    /** 应用版本 */
+    @NotNull(message = "请选择应用版本")
+    private List<String> appVersionCheckList;
+
+    /** 应用渠道 */
+    @NotNull(message = "请选择应用渠道")
+    private List<String> channelCheckList;
+
     private String remark;
     @NotNull(message = "请选择状态")
     private Integer status;

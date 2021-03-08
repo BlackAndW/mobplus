@@ -102,14 +102,12 @@ public class AppFunctionController {
      * @param result
      */
     private void formatString2List (List<AppFunctionVO> appFunctionVOList, List<AppFunction> result) {
-        System.out.println(result.toString());
         result.forEach( resultItem ->
-                appFunctionVOList.forEach(appFunctionVO -> {
-                    if (resultItem.getId().equals(appFunctionVO.getId())) {
-                        appFunctionVO.setAppVersionCheckList(Arrays.asList(resultItem.getAppVersionList().split("\\|")));
-                        appFunctionVO.setChannelCheckList(Arrays.asList(resultItem.getChannelList().split("\\|")));
-                        System.out.println(appFunctionVO);
-                    }
+            appFunctionVOList.forEach(appFunctionVO -> {
+                if (resultItem.getId().equals(appFunctionVO.getId())) {
+                    appFunctionVO.setAppVersionCheckList(Arrays.asList(resultItem.getAppVersionList().split("\\|")));
+                    appFunctionVO.setChannelCheckList(Arrays.asList(resultItem.getChannelList().split("\\|")));
+                }
         }));
     }
 }

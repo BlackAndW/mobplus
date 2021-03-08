@@ -136,6 +136,10 @@ public class AppConfigServiceImpl implements AppConfigService {
             if (appMobileConf.isDeleted()) {
                 continue;
             }
+            if (!appMobileConf.getAppVersionList().contains(form.getPkgVersion())
+                    || !appMobileConf.getChannelList().contains(form.getChannel())) {
+                continue;
+            }
             if (appMobileConf.getStatus() == 1) {
                 result.put(appMobileConf.getKey(), "0");
             } else {
