@@ -15,7 +15,7 @@
             <a-col :span="20">
                 <a-card :bordered="true" class="card-list">
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['app:project:query']">
+                        <div class="l" v-action="['app:project:query']" v-if="currentApp!=null">
                             <a-form-item label="版本">
                                 <a-select placeholder="版本" v-model="queryParam.appVersionId" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>

@@ -23,16 +23,10 @@ public class AppFunctionVO implements Serializable {
     private Integer functionCode;
 
     /** 应用版本 */
-    private Integer appVersionId;
+    private List<String> appVersionCheckList;
 
     /** 应用渠道 */
-    private Integer channelId;
-
-    /** 应用版本号 */
-    private String versionCode;
-
-    /** 应用渠道名 */
-    private String channelName;
+    private List<String> channelCheckList;
 
     private List<Object> adTypeList;
 

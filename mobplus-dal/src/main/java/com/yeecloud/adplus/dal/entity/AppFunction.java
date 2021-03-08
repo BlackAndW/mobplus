@@ -28,16 +28,12 @@ public class AppFunction extends AuditorEntity{
     private Integer functionCode;
 
     /** 应用版本 */
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "n_app_version_id")
-    private AppVersion appVersion;
+    @Column(name = "n_app_version_list")
+    private String appVersionList;
 
     /** 应用渠道 */
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "n_channel_id")
-    private Channel channel;
+    @Column(name = "n_channel_list")
+    private String channelList;
 
     /** 所属应用 */
     @JsonIgnore

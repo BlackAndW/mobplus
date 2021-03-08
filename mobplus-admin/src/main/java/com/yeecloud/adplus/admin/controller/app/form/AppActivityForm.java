@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author: Leonard
@@ -19,12 +20,12 @@ public class AppActivityForm {
     private Integer appId;
 
     /** 应用版本 */
-    @NotNull(message = "请输入应用版本")
-    private Integer appVersionId;
+    @NotNull(message = "请选择应用版本")
+    private List<String> appVersionCheckList;
 
     /** 应用渠道 */
-    @NotNull(message = "请输入应用渠道")
-    private Integer channelId;
+    @NotNull(message = "请选择应用渠道")
+    private List<String> channelCheckList;
 
     /** 活动名称 */
     @NotBlank(message = "请输入活动名称")

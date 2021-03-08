@@ -16,7 +16,7 @@
                 <a-card :bordered="true" class="card-list">
                     <!--       -->
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['app:config:query']">
+                        <div class="l" v-action="['app:config:query']" v-if="currentApp!=null">
                             <a-form-item label="状态">
                                 <a-select placeholder="状态" v-model="queryParam.status" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>

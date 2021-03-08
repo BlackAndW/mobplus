@@ -21,17 +21,25 @@ public class AppActivity extends AuditorEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+//    /** 应用版本 */
+//    @JsonIgnore
+//    @OneToOne
+//    @JoinColumn(name = "n_app_version_id")
+//    private AppVersion appVersion;
+//
+//    /** 应用渠道 */
+//    @JsonIgnore
+//    @OneToOne
+//    @JoinColumn(name = "n_channel_id")
+//    private Channel channel;
+
     /** 应用版本 */
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "n_app_version_id")
-    private AppVersion appVersion;
+    @Column(name = "n_app_version_list")
+    private String appVersionList;
 
     /** 应用渠道 */
-    @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "n_channel_id")
-    private Channel channel;
+    @Column(name = "n_channel_list")
+    private String channelList;
 
     /** 活动名称 */
     @Column(name = "c_name")

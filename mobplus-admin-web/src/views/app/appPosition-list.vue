@@ -16,7 +16,7 @@
                 <a-card :bordered="true" class="card-list">
                     <!--       -->
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['app:position:query']">
+                        <div class="l" v-action="['app:position:query']" v-if="currentApp!=null">
                             <a-form-item>
                                 <a-input
                                     type="text"

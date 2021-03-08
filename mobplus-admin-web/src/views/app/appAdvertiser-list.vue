@@ -15,17 +15,17 @@
             <a-col :span="20">
                 <a-card :bordered="true" class="card-list">
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['app:advertiser:query']">
-                        <a-form-item label="广告平台">
-                            <a-select placeholder="请选择广告平台" v-model="queryParam.advId" style="width:150px">
-                                <a-select-option :value="0">不限</a-select-option>
-                                <a-select-option
-                                    v-for="adv in advList"
-                                    :key="adv.id"
-                                    :value="adv.id"
-                                >{{ adv.name }}</a-select-option>
-                            </a-select>
-                        </a-form-item>
+                        <div class="l" v-action="['app:advertiser:query']" v-if="currentApp!=null">
+                            <a-form-item label="广告平台">
+                                <a-select placeholder="请选择广告平台" v-model="queryParam.advId" style="width:150px">
+                                    <a-select-option :value="0">不限</a-select-option>
+                                    <a-select-option
+                                        v-for="adv in advList"
+                                        :key="adv.id"
+                                        :value="adv.id"
+                                    >{{ adv.name }}</a-select-option>
+                                </a-select>
+                            </a-form-item>
                             <a-form-item>
                                 <a-button
                                     type="primary"
