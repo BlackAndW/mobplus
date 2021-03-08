@@ -16,33 +16,33 @@
                 <a-card :bordered="true" class="card-list">
                     <!--       -->
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['ad:position:query']">
+                        <div class="l" v-action="['ad:position:query']" v-if="currentApp!=null">
                             <a-form-item label="广告类型">
-                        <a-select placeholder="广告类型" v-model="queryParam.type" style="width:120px">
-                            <a-select-option :value="0">不限</a-select-option>
-                            <a-select-option
-                                v-for="item in AdType"
-                                :key="item.value"
-                                :value="item.value"
-                            >{{ item.label }}</a-select-option>
-                        </a-select>
-                    </a-form-item>
-                    <a-form-item label="广告平台">
-                        <a-select placeholder="请选择广告平台" v-model="queryParam.advId" style="width:150px">
-                            <a-select-option :value="0">不限</a-select-option>
-                            <a-select-option
-                                v-for="adv in advList"
-                                :key="adv.id"
-                                :value="adv.id"
-                            >{{ adv.name }}</a-select-option>
-                        </a-select>
-                    </a-form-item>
-                    <a-form-item label="广告位">
-                        <a-input type="text" placeholder="广告位代码" v-model="queryParam.code" />
-                    </a-form-item>
-                    <a-form-item>
-                        <a-button type="primary" icon="search" @click="$refs.table.refresh(true)">查询</a-button>
-                    </a-form-item>
+                                <a-select placeholder="广告类型" v-model="queryParam.type" style="width:120px">
+                                    <a-select-option :value="0">不限</a-select-option>
+                                    <a-select-option
+                                        v-for="item in AdType"
+                                        :key="item.value"
+                                        :value="item.value"
+                                    >{{ item.label }}</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item label="广告平台">
+                                <a-select placeholder="请选择广告平台" v-model="queryParam.advId" style="width:150px">
+                                    <a-select-option :value="0">不限</a-select-option>
+                                    <a-select-option
+                                        v-for="adv in advList"
+                                        :key="adv.id"
+                                        :value="adv.id"
+                                    >{{ adv.name }}</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item label="广告位">
+                                <a-input type="text" placeholder="广告位代码" v-model="queryParam.code" />
+                            </a-form-item>
+                            <a-form-item>
+                                <a-button type="primary" icon="search" @click="$refs.table.refresh(true)">查询</a-button>
+                            </a-form-item>
                         </div>
                         <div class="r" v-if="currentApp!=null">
                             <a-button-group>

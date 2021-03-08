@@ -38,8 +38,6 @@ import java.util.Optional;
 @Service
 public class AppActivityServiceImpl implements AppActivityService {
 
-    private static String STATIC_URL = "http://api.siteps.cn/static";
-
     @Autowired
     AppActivityRepository appActivityRepository;
 
@@ -58,8 +56,6 @@ public class AppActivityServiceImpl implements AppActivityService {
         QAppActivity appActivity = QAppActivity.appActivity;
         Predicate predicate = appActivity.deleted.eq(false);
         predicate = ExpressionUtils.and(predicate, appActivity.app.id.eq(app.getId()));
-        predicate = ExpressionUtils.and(predicate, appActivity.channel.code.eq(form.getChannel()));
-        predicate = ExpressionUtils.and(predicate, appActivity.appVersion.code.eq(form.getPkgVersion()));
         List<AppActivity> appActivityList = jpaQueryFactory
                 .selectFrom(appActivity)
                 .where(predicate)
@@ -67,6 +63,10 @@ public class AppActivityServiceImpl implements AppActivityService {
         List<AppActivityVO> appActivityVOList = new ArrayList<>();
         log.info("appActivityList: " + appActivityList.toString());
         for(AppActivity appActivityItem : appActivityList){
+            if (!appActivityItem.getAppVersionList().contains(form.getPkgVersion())
+                    || !appActivityItem.getChannelList().contains(form.getChannel())) {
+                continue;
+            }
             AppActivityVO appActivityVO = new AppActivityVO();
             NewBeanUtils.copyProperties(appActivityVO, appActivityItem);
             appActivityVO.setSessionCount(countSession());
@@ -107,6 +107,7 @@ public class AppActivityServiceImpl implements AppActivityService {
         for (AppActivityAward appActivityAwardItem: appActivityAwardList) {
             AppActivityAwardVO appActivityAwardVO = new AppActivityAwardVO();
             NewBeanUtils.copyProperties(appActivityAwardVO, appActivityAwardItem);
+            String STATIC_URL = "http://api.siteps.cn/static";
             appActivityAwardVO.setAwardImgPath(STATIC_URL + appActivityAwardVO.getAwardImgPath());
             AppActivityAwardVOList.add(appActivityAwardVO);
         }

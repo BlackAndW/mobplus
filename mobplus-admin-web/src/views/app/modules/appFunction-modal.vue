@@ -26,24 +26,37 @@
                     </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="版本">
-                    <a-select placeholder="请选择版本" style="width:200px" v-decorator="[ 'appVersionId', {initialValue: model.appVersionId, rules: [ { required: true, message: '请选择版本' }]}]">
-                        <a-select-option
-                            v-for="appVersion in appVersionList"
-                            :key="appVersion.id"
-                            :value="appVersion.id"
-                        >{{ appVersion.name }}     {{ appVersion.code }}
-                        </a-select-option>
+                    <a-checkbox-group
+                        v-decorator="[ 'appVersionCheckList', {initialValue: model.appVersionCheckList, rules: [ { required: true, message: '请选择版本' }] }]">
+                        <a-row class="checkbox-width">
+                            <a-col
+                                v-for="appVersion in appVersionList"
+                                :key="appVersion.id"
+                                span="6">
+                                    <a-checkbox
+                                        :value="appVersion.code"
+                                        >{{ appVersion.code }}
+                                    </a-checkbox>
+                            </a-col>
+                        </a-row>
+                    </a-checkbox-group>
                     </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="渠道">
-                    <a-select placeholder="请选择渠道" style="width:200px" v-decorator="[ 'channelId', {initialValue: model.channelId, rules: [ { required: true, message: '请选择渠道' }]}]">
-                        <a-select-option
-                            v-for="channel in channelList"
-                            :key="channel.id"
-                            :value="channel.id"
-                        >{{ channel.name }}     {{ channel.code }}
-                        </a-select-option>
-                    </a-select>
+                    <a-checkbox-group
+                        v-decorator="[ 'channelCheckList', {initialValue: model.channelCheckList, rules: [ { required: true, message: '请选择渠道' }] }]">
+                        <a-row class="checkbox-width">
+                            <a-col
+                                v-for="channel in channelList"
+                                :key="channel.id"
+                                span="6">
+                                    <a-checkbox
+                                        :value="channel.code"
+                                        >{{ channel.name }}
+                                    </a-checkbox>
+                            </a-col>
+                        </a-row>
+                    </a-checkbox-group>
                 </a-form-item>
                 <a-row v-for="(k, index) in adTypeList" :key="index">
                     <a-col :md="12" :sm="24">
@@ -195,9 +208,7 @@ export default {
                         str = '{"id":"' + this.adTypeList[0].id + '","value": ' + this.form.getFieldValue(this.adTypeList[0].id) + '}';
                     }
                     str = '[' + str + ']';
-                    console.log('JSON数组' + str);
                     values.adTypeList = str;
-                    console.log(values);
 
                     $self.confirmLoading = true;
                     $self
@@ -222,5 +233,9 @@ export default {
 <style scoped>
     .dynamic-delete-button {
         margin-top: 8px;
+    }
+
+    .checkbox-width {
+        width: 400px;
     }
 </style>

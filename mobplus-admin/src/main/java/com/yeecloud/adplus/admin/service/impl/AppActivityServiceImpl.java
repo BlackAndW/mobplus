@@ -10,6 +10,7 @@ import com.yeecloud.adplus.admin.controller.app.form.AppActivityForm;
 import com.yeecloud.adplus.admin.controller.app.form.AppActivityTaskForm;
 import com.yeecloud.adplus.admin.service.AppActivityService;
 import com.yeecloud.adplus.admin.service.AppActivityTaskService;
+import com.yeecloud.adplus.admin.util.BaseUtil;
 import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.*;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -46,12 +47,6 @@ public class AppActivityServiceImpl implements AppActivityService {
     private AppRepository appRepository;
 
     @Autowired
-    private ChannelRepository channelRepository;
-
-    @Autowired
-    private AppVersionRepository appVersionRepository;
-
-    @Autowired
     private JPAQueryFactory jpaQueryFactory;
 
     @Override
@@ -61,8 +56,16 @@ public class AppActivityServiceImpl implements AppActivityService {
             Predicate predicate = appActivity.deleted.eq(false);
 
             Integer appId = query.get("appId", Integer.class);
+            String channelCode = query.get("channelCode", String.class);
+            String appVersionCode = query.get("appVersionCode", String.class);
             if (appId != null && appId > 0) {
                 predicate = ExpressionUtils.and(predicate, appActivity.app.id.eq(appId));
+            }
+            if (!StringUtils.isEmpty(channelCode) && !channelCode.equals("0")) {
+                predicate = ExpressionUtils.and(predicate, appActivity.channelList.like("%" + channelCode + "%"));
+            }
+            if (!StringUtils.isEmpty(appVersionCode) && !appVersionCode.equals("0")) {
+                predicate = ExpressionUtils.and(predicate, appActivity.appVersionList.like("%" + appVersionCode + "%"));
             }
             Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
@@ -89,15 +92,11 @@ public class AppActivityServiceImpl implements AppActivityService {
     @Transactional(rollbackFor = Throwable.class)
     public void create(AppActivityForm form) throws ServiceException {
         AppActivity appActivity = new AppActivity();
-        NewBeanUtils.copyProperties(appActivity, form, true);
         try {
             App app = appRepository.findById(form.getAppId()).orElse(null);
-            AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
-            Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
-            if ( null != app && null != appVersion && null != channel) {
+            if ( null != app) {
                 appActivity.setApp(app);
-                appActivity.setAppVersion(appVersion);
-                appActivity.setChannel(channel);
+                copyAppActivityValue(appActivity, form);
                 appActivityRepository.save(appActivity);
             }
         } catch (Throwable e) {
@@ -111,12 +110,8 @@ public class AppActivityServiceImpl implements AppActivityService {
         try {
             AppActivity appActivity = appActivityRepository.findById(id).orElse(null);
             App app = appRepository.findById(form.getAppId()).orElse(null);
-            Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
-            AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
-            if (appActivity != null && !appActivity.isDeleted() && null != app && null != appVersion && null != channel) {
-                NewBeanUtils.copyProperties(appActivity, form, true);
-                appActivity.setAppVersion(appVersion);
-                appActivity.setChannel(channel);
+            if (appActivity != null && !appActivity.isDeleted() && null != app) {
+                copyAppActivityValue(appActivity, form);
                 appActivityRepository.save(appActivity);
             }
         } catch (Throwable e) {
@@ -255,4 +250,11 @@ public class AppActivityServiceImpl implements AppActivityService {
     public void deleteAward(Integer[] ids) throws ServiceException {
         appActivityAwardRepository.deleteById(ids);
     }
+
+    private void copyAppActivityValue(AppActivity appActivity, AppActivityForm form) {
+        NewBeanUtils.copyProperties(appActivity, form, true);
+        appActivity.setAppVersionList(BaseUtil.formatList2String(form.getAppVersionCheckList()));
+        appActivity.setChannelList(BaseUtil.formatList2String(form.getChannelCheckList()));
+    }
+
 }

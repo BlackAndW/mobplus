@@ -16,6 +16,7 @@ import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
+import com.yeecloud.meeto.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -174,10 +177,21 @@ public class AppActivityController {
 
     private PageInfo<AppActivityVO> convert(Page<AppActivity> result) {
         List<AppActivityVO> resultList = appActivityConvert.convert(result.getContent());
+        formatString2List(resultList, result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
 
     private String getErrorMessage(BindingResult bindingResult){
         return String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
+    }
+
+    private void formatString2List (List<AppActivityVO> appActivityVOList, List<AppActivity> result) {
+        result.forEach( resultItem ->
+                appActivityVOList.forEach(appActivityVO -> {
+                    if (resultItem.getId().equals(appActivityVO.getId())) {
+                        appActivityVO.setAppVersionCheckList(Arrays.asList(resultItem.getAppVersionList().split("\\|")));
+                        appActivityVO.setChannelCheckList(Arrays.asList(resultItem.getChannelList().split("\\|")));
+                    }
+        }));
     }
 }

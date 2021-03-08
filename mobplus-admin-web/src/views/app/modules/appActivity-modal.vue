@@ -33,17 +33,54 @@
                         v-decorator="[ 'minBonusCoin', {initialValue: model.minBonusCoin, rules: [ { required: true, message: '请输入单次抽取金币下限' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="版本">
+                <a-form-item
+                    :labelCol="labelCol"
+                    :wrapperCol="wrapperCol"
+                    label="版本">
+                        <a-checkbox-group
+                            v-decorator="[ 'appVersionCheckList', {initialValue: model.appVersionCheckList, rules: [ { required: true, message: '请选择版本' }] }]">
+                            <a-row class="checkbox-width">
+                                <a-col
+                                    v-for="appVersion in appVersionList"
+                                    :key="appVersion.id"
+                                    span="6">
+                                        <a-checkbox
+                                            :value="appVersion.code"
+                                            >{{ appVersion.code }}
+                                        </a-checkbox>
+                                </a-col>
+                            </a-row>
+                        </a-checkbox-group>
+                    <!--
                     <a-select placeholder="请选择版本" style="width:200px" v-decorator="[ 'appVersionId', {initialValue: model.appVersionId, rules: [ { required: true, message: '请选择版本' }]}]">
                         <a-select-option
                             v-for="appVersion in appVersionList"
                             :key="appVersion.id"
                             :value="appVersion.id"
-                        >{{ appVersion.name }}     {{ appVersion.code }}
+                        >{{ appVersion.code }}
                         </a-select-option>
                     </a-select>
+                    -->
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="渠道">
+                <a-form-item
+                    :labelCol="labelCol"
+                    :wrapperCol="wrapperCol"
+                    label="渠道">
+                        <a-checkbox-group
+                            v-decorator="[ 'channelCheckList', {initialValue: model.channelCheckList, rules: [ { required: true, message: '请选择渠道' }] }]">
+                            <a-row class="checkbox-width">
+                                <a-col
+                                    v-for="channel in channelList"
+                                    :key="channel.id"
+                                    span="6">
+                                        <a-checkbox
+                                            :value="channel.code"
+                                            >{{ channel.name }}
+                                        </a-checkbox>
+                                </a-col>
+                            </a-row>
+                        </a-checkbox-group>
+                    <!--
                     <a-select placeholder="请选择渠道" style="width:200px" v-decorator="[ 'channelId', {initialValue: model.channelId, rules: [ { required: true, message: '请选择渠道' }]}]">
                         <a-select-option
                             v-for="channel in channelList"
@@ -52,6 +89,7 @@
                         >{{ channel.name }}     {{ channel.code }}
                         </a-select-option>
                     </a-select>
+                    -->
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否开启活动">
                     <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择是否开启活动' }]}]">
@@ -80,7 +118,6 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-
             appVersionList: {},
             channelList: {},
             func: () => {}
@@ -134,6 +171,7 @@ export default {
             this.form.validateFields((err, values) => {
                 if (!err) {
                     $self.confirmLoading = true;
+                    console.log(values);
                     $self
                         .func($self.url, values)
                         .then(data => {
@@ -153,5 +191,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+    .checkbox-width {
+        width: 400px;
+    }
 </style>

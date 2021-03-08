@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -59,8 +60,6 @@ public class AppFunctionController {
     @RequiresPermissions("app:function:create")
     public Result create(@RequestBody @Valid AppFunctionForm form, BindingResult bindingResult) throws ServiceException {
         log.info("Form: " + form);
-//        AppVersion appVersion = appVersionRepository.findById(form.getAppVersionId()).orElse(null);
-//        Channel channel = channelRepository.findById(form.getChannelId()).orElse(null);
         if (bindingResult.hasErrors()){
             return Result.FAILURE(getErrorMessage(bindingResult));
         }
@@ -88,10 +87,29 @@ public class AppFunctionController {
 
     private PageInfo<AppFunctionVO> convert(Page<AppFunction> result) {
         List<AppFunctionVO> resultList = appFunctionConvert.convert(result.getContent());
+        System.out.println(resultList);
+        formatString2List(resultList, result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
 
     private String getErrorMessage(BindingResult bindingResult){
         return String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
+    }
+
+    /**
+     * 将结果集里的String转换为VO对象的List<String>
+     * @param appFunctionVOList
+     * @param result
+     */
+    private void formatString2List (List<AppFunctionVO> appFunctionVOList, List<AppFunction> result) {
+        System.out.println(result.toString());
+        result.forEach( resultItem ->
+                appFunctionVOList.forEach(appFunctionVO -> {
+                    if (resultItem.getId().equals(appFunctionVO.getId())) {
+                        appFunctionVO.setAppVersionCheckList(Arrays.asList(resultItem.getAppVersionList().split("\\|")));
+                        appFunctionVO.setChannelCheckList(Arrays.asList(resultItem.getChannelList().split("\\|")));
+                        System.out.println(appFunctionVO);
+                    }
+        }));
     }
 }

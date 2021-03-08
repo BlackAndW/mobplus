@@ -16,13 +16,34 @@
                 <a-card :bordered="true" class="card-list">
                     <!--       -->
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['app:function:query']">
+                        <div class="l" v-action="['app:function:query']" v-if="currentApp!=null">
                             <a-form-item>
                                 <a-input
                                     type="text"
                                     placeholder="请输入关键字"
                                     v-model="queryParam.keyword"
                                 />
+                            </a-form-item>
+                            <a-form-item label="渠道名称">
+                                <a-select placeholder="渠道名称" v-model="queryParam.channelCode" style="width:120px">
+                                    <a-select-option :value="0">不限</a-select-option>
+                                    <a-select-option
+                                        v-for="channel in channelList"
+                                        :key="channel.id"
+                                        :value="channel.code"
+                                    >{{ channel.name }}</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item label="版本">
+                                <a-select placeholder="版本" v-model="queryParam.appVersionCode" style="width:120px">
+                                    <a-select-option :value="0">不限</a-select-option>
+                                    <a-select-option
+                                        v-for="appVersion in appVersionList"
+                                        :key="appVersion.id"
+                                        :value="appVersion.code"
+                                    >{{ appVersion.code }}
+                                    </a-select-option>
+                                </a-select>
                             </a-form-item>
                             <a-form-item>
                                 <a-button
@@ -114,14 +135,6 @@ const columns = [
         scopedSlots: { customRender: 'functionNameSlot' }
     },
     {
-        title: '版本',
-        dataIndex: 'versionCode'
-    },
-    {
-        title: '渠道',
-        dataIndex: 'channelName'
-    },
-    {
         title: '广告展示类型列表',
         dataIndex: 'adTypeList',
         scopedSlots: { customRender: 'adTypeListSlot' }
@@ -160,6 +173,8 @@ export default {
             adTypeNameList: '',
             currentApp: null,
             treeloading: false,
+            channelList: [],
+            appVersionList: [],
             appTreeData: []
         };
     },
@@ -201,10 +216,20 @@ export default {
             this.selectedRows = selectedRows;
         },
         loadDataList: function (params) {
+            this.loadAppVersionList(this.currentApp.key);
+            this.loadChannelList(this.currentApp.key);
             return this.$http.get(
                 url + '?appId=' + this.currentApp.key,
                 Object.assign(params, this.queryParam)
             );
+        },
+        loadAppVersionList: async function (appId) {
+            this.appVersionList = await this.$http.get('/app/version/sct', {
+                appId: appId
+            });
+        },
+        loadChannelList: async function () {
+            this.channelList = await this.$http.get('/release/channel/sct', {});
         },
         onQueryDict: function (item) {
             this.currentApp = item;

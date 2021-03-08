@@ -16,7 +16,7 @@
                 <a-card :bordered="true" class="card-list">
                     <!--       -->
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['app:activity:query']">
+                        <div class="l" v-action="['app:activity:query']" v-if="currentApp!=null">
                             <a-form-item>
                                 <a-input
                                     type="text"
@@ -25,22 +25,22 @@
                                 />
                             </a-form-item>
                             <a-form-item label="渠道名称">
-                                <a-select placeholder="渠道名称" v-model="queryParam.channelId" style="width:120px">
+                                <a-select placeholder="渠道名称" v-model="queryParam.channelCode" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option
                                         v-for="channel in channelList"
                                         :key="channel.id"
-                                        :value="channel.id"
+                                        :value="channel.code"
                                     >{{ channel.name }}</a-select-option>
                                 </a-select>
                             </a-form-item>
                             <a-form-item label="版本">
-                                <a-select placeholder="版本" v-model="queryParam.appVersionId" style="width:120px">
+                                <a-select placeholder="版本" v-model="queryParam.appVersionCode" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option
                                         v-for="appVersion in appVersionList"
                                         :key="appVersion.id"
-                                        :value="appVersion.id"
+                                        :value="appVersion.code"
                                     >{{ appVersion.code }}
                                     </a-select-option>
                                 </a-select>
@@ -134,14 +134,6 @@ const columns = [
     {
         title: '活动名称',
         dataIndex: 'name'
-    },
-    {
-        title: '版本',
-        dataIndex: 'versionCode'
-    },
-    {
-        title: '渠道',
-        dataIndex: 'channelName'
     },
     {
         title: '抽奖次数',
@@ -268,9 +260,11 @@ export default {
             this.appVersionList = await this.$http.get('/app/version/sct', {
                 appId: appId
             });
+            console.log(this.appVersionList);
         },
         loadChannelList: async function () {
             this.channelList = await this.$http.get('/release/channel/sct', {});
+            console.log(this.channelList);
         },
         onQueryDict: function (item) {
             this.currentApp = item;
