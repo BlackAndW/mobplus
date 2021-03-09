@@ -81,7 +81,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
                 Predicate or = ExpressionUtils.or(sysPerm.code.like(express), sysPerm.name.like(express));
                 predicate = ExpressionUtils.and(predicate, or);
             }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "sort"));
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "sort"), new Sort.Order(Sort.Direction.ASC, "createdAt"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
             Page<SysPermission> page = sysPermissionRepository.findAll(predicate, pagRequest);
             return transform(page);
