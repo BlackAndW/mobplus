@@ -116,8 +116,8 @@ public class ShiroConfiguration {
     @Bean(name = "sessionManager")
     public DefaultWebSessionManager sessionManager() {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-        // 设置session过期时间3600s
-        sessionManager.setGlobalSessionTimeout(3600000L);
+        // 设置session过期时间一天
+        sessionManager.setGlobalSessionTimeout(3600000*24L);
         return sessionManager;
     }
 
