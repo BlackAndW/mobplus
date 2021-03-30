@@ -113,7 +113,6 @@ export default {
             selectedRows: [],
 
             loadData: this.loadDataList,
-
             // ad pos
             model: {}
         };
@@ -125,7 +124,7 @@ export default {
     },
     methods: {
         show: function (record) {
-            this.title = '关联广告位 展示位:' + record.name + ' 类型:' + record.typeName;
+            this.title = '关联广告位 展示位:' + record.name;
             this.model = record;
             this.reload();
             this.visible = true;
@@ -192,6 +191,13 @@ export default {
         },
         handleCellChange (value, column, record) {
             record[column] = value;
+            // 修改平台权重时，同平台的其他行也会一并修改
+            const dataList = this.$refs.table._data.localDataSource;
+            dataList.forEach(item => {
+                if (item.adPos.advName === record.adPos.advName) {
+                    item.ratio = value;
+                }
+            });
             this.$refs.table.$forceUpdate();
         },
         handleTypeCellChange (value, column, record) {
