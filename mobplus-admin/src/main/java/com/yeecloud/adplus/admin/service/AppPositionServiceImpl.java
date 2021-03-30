@@ -142,18 +142,9 @@ public class AppPositionServiceImpl implements AppPositionService {
         appPositionAdPositionRepository.deleteByAppPosition(appPosition);
         List<AppPositionAdPosition> adPosList = Lists.newArrayList();
 
-        // 过滤出可修改的权重项
-        List<AppPositionAdPositionForm> ratioList = list.stream().filter(AppPositionAdPositionForm::getRatioFlag).collect(Collectors.toList());
-        System.out.println(ratioList);
         list.forEach(form -> {
             AppPositionAdPosition pos = appPosAdPosConvert.convert(form);
             pos.setAppPosition(appPosition);
-            // 设置平台权重
-            ratioList.forEach(item -> {
-                if (item.getAdvName().equals(form.getAdvName())) {
-                    pos.setRatio(item.getRatio());
-                }
-            });
             adPosList.add(pos);
         });
         appPositionAdPositionRepository.saveAll(adPosList);
