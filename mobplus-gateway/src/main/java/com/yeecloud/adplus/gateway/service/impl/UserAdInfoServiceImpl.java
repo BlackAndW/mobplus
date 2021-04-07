@@ -25,7 +25,12 @@ public class UserAdInfoServiceImpl implements UserAdInfoService {
     @Async
     @Override
     public synchronized void createOrUpdateInfo(UserAdInfoForm userForm, String userIp) {
+        log.info("用户广告统计：" + userForm.toString());
         try {
+            //临时去除为null的数据
+            if (userForm.getAppId() == null) {
+                return;
+            }
             UserAdInfo userAdInfo = userAdInfoRepository.findFirstByUuidOrderByCreatedAtDesc(userForm.getUuid());
 
             //判断是否需要新增一条记录

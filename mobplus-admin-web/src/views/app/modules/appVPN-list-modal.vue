@@ -47,6 +47,10 @@
                 <span v-if="text === 1">暂停</span>
                 <span v-else-if="text === 2">启用</span>
             </template>
+            <template slot="typeSlot" slot-scope="text">
+                <span v-if="text === 0">普通节点</span>
+                <span v-else-if="text === 1">VIP节点</span>
+            </template>
             <span slot="action" slot-scope="text, record">
                 <a
                     v-action="['app:config:edit']"
@@ -88,6 +92,11 @@ const columns = [
         title: '节点状态',
         dataIndex: 'status',
         scopedSlots: { customRender: 'statusSlot' }
+    },
+    {
+        title: '节点类型',
+        dataIndex: 'type',
+        scopedSlots: { customRender: 'typeSlot' }
     },
     {
         title: '节点设置',
