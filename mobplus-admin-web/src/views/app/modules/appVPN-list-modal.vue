@@ -9,6 +9,13 @@
         @cancel="onCancel"
         cancelText="关闭"
     >
+        <div>
+            <a-tabs default-active-key="0" v-model="queryParam.type" @change="callbackTabs">
+                <a-tab-pane key="0" tab="普通节点"></a-tab-pane>
+                <a-tab-pane key="1" tab="VIP节点"></a-tab-pane>
+                <a-tab-pane key="2" tab="备用节点"></a-tab-pane>
+            </a-tabs>
+        </div>
         <div class="add-modal">
             <a-button-group>
                 <a-button
@@ -93,11 +100,11 @@ const columns = [
         dataIndex: 'status',
         scopedSlots: { customRender: 'statusSlot' }
     },
-    {
-        title: '节点类型',
-        dataIndex: 'type',
-        scopedSlots: { customRender: 'typeSlot' }
-    },
+    // {
+    //     title: '节点类型',
+    //     dataIndex: 'type',
+    //     scopedSlots: { customRender: 'typeSlot' }
+    // },
     {
         title: '节点设置',
         dataIndex: 'action',
@@ -121,7 +128,7 @@ export default {
             confirmLoading: false,
 
             // 查询参数
-            queryParam: {},
+            queryParam: { 'type': '0' },
             // 表头
             columns,
             // 选中记录
@@ -149,7 +156,7 @@ export default {
             this.selectedRows = [];
         },
         loadDataList: function (params) {
-            return this.$http.get('/app/vpn');
+            return this.$http.get('/app/vpn/?', Object.assign(params, this.queryParam));
         },
         reload: function () {
             if (this.$refs.table) {
@@ -159,6 +166,9 @@ export default {
         onSelectChange: function (selectedRowKeys, selectedRows) {
             this.selectedRowKeys = selectedRowKeys;
             this.selectedRows = selectedRows;
+        },
+        callbackTabs: function () {
+            this.reload();
         },
         dataChanged (data) {
             data.forEach(ele => {

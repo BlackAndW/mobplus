@@ -83,6 +83,10 @@
                             </a-col>
                         </a-row>
                         <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
+                        <template slot="advSlot" slot-scope="text, record">
+                            <span>{{ text }}</span><br />
+                            <span v-if="record.advName == 'mintegral'">unitId: {{ record.mintegralUnitId }} </span>
+                        </template>
                         <template slot="typeSlot" slot-scope="text">
                             {{ $GetDictLabel($AdType, text) }}
                         </template>
@@ -121,7 +125,9 @@ const columns = [
     },
     {
         title: '广告平台',
-        dataIndex: 'advName'
+        dataIndex: 'advName',
+        scopedSlots: { customRender: 'advSlot' }
+
     },
     {
         title: '类型',

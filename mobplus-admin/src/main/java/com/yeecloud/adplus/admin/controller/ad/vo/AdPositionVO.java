@@ -21,6 +21,7 @@ public class AdPositionVO implements Serializable {
     private String name;
     private Integer type;
     private String typeName;
+    private String mintegralUnitId;
     private String remark;
 
     private Integer createdBy;

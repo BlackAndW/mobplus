@@ -14,6 +14,7 @@ public class AdPositionVO implements Serializable {
     @JSONField(name = "adv")
     private String advertiser;
     private String posId;
+    private String unitId;
     private int ratio;
     private int adType;
     private int typeRatio;

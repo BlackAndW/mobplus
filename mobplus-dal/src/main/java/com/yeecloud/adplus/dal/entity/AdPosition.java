@@ -53,6 +53,12 @@ public class AdPosition extends AuditorEntity {
     private AdType type;
 
     /**
+     * mintegral单元id
+     */
+    @Column(name = "n_mintegral_unit_id")
+    private String mintegralUnitId;
+
+    /**
      * 备注
      */
     @Column(name = "c_remark")
