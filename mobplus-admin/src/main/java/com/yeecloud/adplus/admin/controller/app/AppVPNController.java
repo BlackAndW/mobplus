@@ -72,8 +72,8 @@ public class AppVPNController {
 
     @GetMapping
     @RequiresPermissions("app:config:query")
-    public Result list() throws ServiceException, IOException {
-        final Request request = new Request.Builder().url(VPN_URL + "/app/api/v1/c03/list").get().build();
+    public Result list(@RequestParam Integer type) throws ServiceException, IOException {
+        final Request request = new Request.Builder().url(VPN_URL + "/app/api/v1/c03/list?type=" + type).get().build();
         Response response = buildNoVerifyClient().newCall(request).execute();
         JSONObject jsonObject = JSONObject.parseObject(response.body().string());
         return Result.SUCCESS(getDataResult(jsonObject));

@@ -135,6 +135,7 @@ public class SdkServiceImpl implements SdkService {
                 AdPositionVO adPositionVO = new AdPositionVO();
                 adPositionVO.setAdvertiser(adPosition.getAdPosition().getAdvertiser().getCode());
                 adPositionVO.setPosId(adPosition.getAdPosition().getCode());
+                adPositionVO.setUnitId(adPosition.getAdPosition().getMintegralUnitId());
                 adPositionVO.setAdType(adPosition.getAdPosition().getType().getId());
                 adPositionVO.setRatio(adPosition.getRatio());
                 adPositionVO.setTypeRatio(adPosition.getTypeRatio());

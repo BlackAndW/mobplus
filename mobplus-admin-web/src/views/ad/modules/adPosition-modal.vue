@@ -43,6 +43,11 @@
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入广告位名称' }] }]"
                     />
                 </a-form-item>
+                <a-form-item v-if="model.advName == 'mintegral'" :labelCol="labelCol" :wrapperCol="wrapperCol" label="mintegral单元id">
+                    <a-input
+                        v-decorator="[ 'mintegralUnitId', {initialValue: model.mintegralUnitId, rules: [ { required: true, message: '请输入mintegral单元id' }] }]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
                     <a-textarea :rows="4" v-decorator="[ 'remark', {initialValue: model.remark}]" />
                 </a-form-item>

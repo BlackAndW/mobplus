@@ -36,6 +36,10 @@
                     onChange: onSelectChange
                 }"
             >
+                <template slot="advSlot" slot-scope="text, record">
+                    <span>{{ text }}</span><br />
+                    <span v-if="record.adPos.advName == 'mintegral'">unitId: {{ record.adPos.mintegralUnitId }} </span>
+                </template>
                 <template slot="ratioSlot" slot-scope="text, record">
                     <a-input-number
                         v-if="record.ratioFlag"
@@ -70,7 +74,12 @@ import { STable, ETag } from '@/components';
 const columns = [
     { title: '广告位代码', dataIndex: 'adPos.code', width: 155 },
     { title: '广告位名称', dataIndex: 'adPos.name' },
-    { title: '所属平台', dataIndex: 'adPos.advName', width: 100 },
+    {
+        title: '所属平台',
+        dataIndex: 'adPos.advName',
+        width: 125,
+        scopedSlots: { customRender: 'advSlot' }
+    },
     {
         title: '类型',
         width: 200,
