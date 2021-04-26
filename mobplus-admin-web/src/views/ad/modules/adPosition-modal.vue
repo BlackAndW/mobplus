@@ -11,6 +11,7 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="广告平台">
                     <a-select
                         placeholder="==请选择广告平台=="
+                        @change="isMintegral"
                         v-decorator="['advertiser.id', {initialValue: model.advId, rules: [{ required: true, message: '请选择广告平台'}]} ]"
                     >
                         <a-select-option
@@ -43,7 +44,7 @@
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入广告位名称' }] }]"
                     />
                 </a-form-item>
-                <a-form-item v-if="model.advName == 'mintegral'" :labelCol="labelCol" :wrapperCol="wrapperCol" label="mintegral单元id">
+                <a-form-item v-if="model.advName == 'mintegral' || mintegralFlag" :labelCol="labelCol" :wrapperCol="wrapperCol" label="mintegral单元id">
                     <a-input
                         v-decorator="[ 'mintegralUnitId', {initialValue: model.mintegralUnitId, rules: [ { required: true, message: '请输入mintegral单元id' }] }]"
                     />
@@ -73,6 +74,7 @@ export default {
             form: this.$form.createForm(this),
             model: {},
             advList: [],
+            mintegralFlag: false,
             func: () => {}
         };
     },
@@ -89,6 +91,7 @@ export default {
             this.title = '添加广告位：' + currentApp.title;
             this.func = this.$http.post;
             this.confirmLoading = false;
+            this.mintegralFlag = false;
             this.model = {};
             this.model.app = currentApp.key;
             this.url = '/ad/position';
@@ -101,6 +104,7 @@ export default {
             this.url = '/ad/position/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
+            this.mintegralFlag = false;
             this.visible = true;
         },
         close: function (success) {
@@ -110,6 +114,9 @@ export default {
         },
         onCancel: function () {
             this.close(false);
+        },
+        isMintegral (params) {
+            params === 5 ? this.mintegralFlag = true : this.mintegralFlag = false;
         },
         onSubmit: function () {
             const $self = this;
