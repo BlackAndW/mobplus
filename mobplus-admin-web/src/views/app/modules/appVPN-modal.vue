@@ -69,6 +69,7 @@
                     <a-radio-group button-style="solid" v-decorator="[ 'type', {initialValue: model.type || 0, rules: [ { required: true, message: '请选择节点类型' }]}]">
                         <a-radio-button :value="0">普通节点</a-radio-button>
                         <a-radio-button :value="1">VIP节点</a-radio-button>
+                        <a-radio-button :value="2">备用节点</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
             </a-form>
