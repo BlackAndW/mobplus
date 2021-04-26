@@ -56,7 +56,7 @@ public class AdPosition extends AuditorEntity {
      * mintegral单元id
      */
     @Column(name = "n_mintegral_unit_id")
-    private String mintegralUnitId;
+    private String mintegralUnitId = "";
 
     /**
      * 备注
