@@ -46,8 +46,10 @@ const constantRouterComponents = {
     AppAdvertiserList: () => import('@/views/app/appAdvertiser-list'),
     AppMobileConfList: () => import('@/views/app/appMobileConf-list'),
     AppActivity: () => import('@/views/app/appActivity-list'),
-    AppFunction: () => import('@/views/app/appFunction-list')
+    AppFunction: () => import('@/views/app/appFunction-list'),
 
+    // 数据管理
+    VpnAccountLog: () => import('@/views/dataManager/vpnAccount-log')
 };
 
 // 前端未找到页面路由（固定不用改）
