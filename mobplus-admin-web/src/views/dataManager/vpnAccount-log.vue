@@ -34,6 +34,13 @@
                             <a-form-item>
                                 <a-input
                                     type="text"
+                                    placeholder="请输入地区"
+                                    v-model="queryParam.region"
+                                />
+                            </a-form-item>
+                            <a-form-item>
+                                <a-input
+                                    type="text"
                                     placeholder="请输入城市"
                                     v-model="queryParam.city"
                                 />
@@ -93,11 +100,15 @@ import { STable, STree, ETag } from '@/components';
 const columns = [
     {
         title: 'ip地址',
-        dataIndex: 'userIp'
+        dataIndex: 'ip'
     },
     {
         title: '所属国家',
         dataIndex: 'country'
+    },
+    {
+        title: '所属地区',
+        dataIndex: 'region'
     },
     {
         title: '所属城市',

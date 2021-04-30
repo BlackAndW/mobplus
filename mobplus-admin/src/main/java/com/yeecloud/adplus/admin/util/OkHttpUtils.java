@@ -19,8 +19,8 @@ import java.security.cert.X509Certificate;
  */
 public class OkHttpUtils {
 
-    public final static String VPN_URL = "https://api.turbovpns.com";
-//    public final static String VPN_URL = "http://localhost:9092";
+//    public final static String VPN_URL = "https://api.turbovpns.com";
+    public final static String VPN_URL = "http://localhost:9092";
 
     public static JSONObject getGETResponse(Request request, boolean data) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
