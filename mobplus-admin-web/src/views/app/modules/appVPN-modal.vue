@@ -43,20 +43,22 @@
                         v-decorator="[ 'region', {initialValue: model.region, rules: [ { required: true, message: '请输入地区名称' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="网速">
-                    <a-input
-                        v-decorator="[ 'b05', {initialValue: model.b05, rules: [ { required: true, message: '请输入网速' }] }]"
-                    />
-                </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优先级">
-                    <a-input
-                        v-decorator="[ 'ratio', {initialValue: model.ratio, rules: [ { required: true, message: '请输入优先级（最高为1）' }] }]"
-                    />
-                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="域名">
                     <a-input
                         :disabled="disabledIP"
                         v-decorator="[ 'ipAddr', {initialValue: model.ipAddr, rules: [ { required: true, message: '请输入节点域名' }] }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优先级">
+                    <a-input
+                        placeholder="1(最高)"
+                        v-decorator="[ 'ratio', {initialValue: model.ratio, rules: [ { required: false }] }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="最大连接数">
+                    <a-input
+                        placeholder="80"
+                        v-decorator="[ 'maxConn', {initialValue: model.maxConn, rules: [ { required: false }] }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否开启节点">

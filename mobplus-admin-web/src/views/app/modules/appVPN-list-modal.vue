@@ -88,19 +88,14 @@ const columns = [
         scopedSlots: { customRender: 'iconSlot' }
     },
     {
-        title: '网速',
-        dataIndex: 'b05'
-    },
-    {
         title: '节点状态',
         dataIndex: 'status',
         scopedSlots: { customRender: 'statusSlot' }
     },
-    // {
-    //     title: '节点类型',
-    //     dataIndex: 'type',
-    //     scopedSlots: { customRender: 'typeSlot' }
-    // },
+    {
+        title: '在线人数',
+        dataIndex: 'onlineConn'
+    },
     {
         title: '节点设置',
         dataIndex: 'action',
