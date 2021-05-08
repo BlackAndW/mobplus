@@ -2,10 +2,7 @@ package com.yeecloud.adplus.admin.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.admin.controller.app.AppVPNController;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -22,15 +19,20 @@ public class OkHttpUtils {
 //    public final static String VPN_URL = "https://api.turbovpns.com";
     public final static String VPN_URL = "http://localhost:9092";
 
-    public static JSONObject getGETResponse(Request request, boolean data) throws IOException {
+    public static JSONObject getGETResponseData(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         JSONObject jsonObject = JSONObject.parseObject(response.body().string());
         return getDataResult(jsonObject);
     }
 
-    public static JSONObject getGETResponse(Request request) throws IOException {
+    public static JSONObject getGETResponseJSON(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         return JSONObject.parseObject(response.body().string());
+    }
+
+    public static String getGETResponse(Request request) throws IOException {
+        Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
+        return response.body().string();
     }
 
     public static OkHttpClient buildNoVerifyClient() {
