@@ -71,6 +71,12 @@
                                     </a-button-group>
                                 </div>
                             </a-form-item>
+                            <div class="download">
+                                <a-button
+                                    @click="downloadFile"
+                                >导出</a-button><br />
+                                <a v-if="downloadUrl != ''" :href="downloadUrl" download>Excel下载</a>
+                            </div>                            
                         </div>
                     </a-form>
                     <!--       -->
@@ -150,6 +156,7 @@ export default {
             loadData: this.loadDataList,
             // 分类树数据
             currentApp: null,
+            downloadUrl: '',
             treeloading: false,
             appTreeData: []
         };
@@ -199,6 +206,15 @@ export default {
             this.currentApp = item;
             this.$refs.table.refresh(true);
         },
+        downloadFile (params) {
+            const requestUrl = url + '/data2excel';
+            this.$http.get(
+                requestUrl + '?appId=' + this.currentApp.key,
+                Object.assign(params, this.queryParam)
+            ).then(res => {
+                this.downloadUrl = res;
+            });
+        },
         loadAppTreeData: async function () {
             this.treeloading = true;
             try {
@@ -228,4 +244,7 @@ export default {
 </script>
 
 <style lang="less">
+    .download {
+        float: right;
+    }
 </style>

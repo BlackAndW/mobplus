@@ -41,7 +41,7 @@ public class AppVPNController {
     @RequiresPermissions("app:config:query")
     public Result serverList(@RequestParam Integer type) throws ServiceException, IOException {
         final Request request = new Request.Builder().url(OkHttpUtils.VPN_URL + "/app/api/v1/c03/list?type=" + type).get().build();
-        return Result.SUCCESS(OkHttpUtils.getGETResponse(request, true));
+        return Result.SUCCESS(OkHttpUtils.getGETResponseData(request));
     }
 
     @PostMapping
