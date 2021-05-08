@@ -73,10 +73,10 @@
                             </a-form-item>
                             <div class="download">
                                 <a-button
+                                    icon="download"
                                     @click="downloadFile"
                                 >导出</a-button><br />
-                                <a v-if="downloadUrl != ''" :href="downloadUrl" download>Excel下载</a>
-                            </div>                            
+                            </div>
                         </div>
                     </a-form>
                     <!--       -->
@@ -213,6 +213,8 @@ export default {
                 Object.assign(params, this.queryParam)
             ).then(res => {
                 this.downloadUrl = res;
+                console.log(this.downloadUrl);
+                window.location.href = this.downloadUrl;
             });
         },
         loadAppTreeData: async function () {
