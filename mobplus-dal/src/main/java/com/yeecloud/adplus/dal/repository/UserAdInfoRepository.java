@@ -13,5 +13,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserAdInfoRepository extends JpaRepository<UserAdInfo, Integer>, QuerydslPredicateExecutor<UserAdInfo> {
 
-    UserAdInfo findFirstByUuidOrderByCreatedAtDesc(String uuid);
 }

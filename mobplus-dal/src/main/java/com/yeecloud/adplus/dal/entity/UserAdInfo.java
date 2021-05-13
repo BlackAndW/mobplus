@@ -31,6 +31,10 @@ public class UserAdInfo extends AuditorEntity {
     @Column(name = "n_uuid")
     private String uuid;
 
+    /** 广告位id */
+    @Column(name = "n_app_position_code")
+    private String appPositionCode;
+
     /** 广告渠道 */
     @Column(name = "n_ad_channel")
     private String adChannel;
