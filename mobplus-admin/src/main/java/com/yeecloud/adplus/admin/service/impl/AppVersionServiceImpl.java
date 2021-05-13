@@ -5,10 +5,8 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.app.form.AppVersionForm;
 import com.yeecloud.adplus.admin.service.AppVersionService;
-import com.yeecloud.adplus.dal.entity.App;
-import com.yeecloud.adplus.dal.entity.AppProject;
-import com.yeecloud.adplus.dal.entity.AppVersion;
-import com.yeecloud.adplus.dal.entity.QAppVersion;
+import com.yeecloud.adplus.dal.entity.*;
+import com.yeecloud.adplus.dal.repository.AppConfigRepository;
 import com.yeecloud.adplus.dal.repository.AppProjectRepository;
 import com.yeecloud.adplus.dal.repository.AppVersionRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -37,6 +35,9 @@ public class AppVersionServiceImpl implements AppVersionService {
 
     @Autowired
     private AppProjectRepository appProjectRepository;
+
+    @Autowired
+    private AppConfigRepository appConfigRepository;
 
     @Override
     public Page<AppVersion> query(Query query) throws ServiceException {
@@ -113,15 +114,18 @@ public class AppVersionServiceImpl implements AppVersionService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void delete(Integer[] ids) throws ServiceException {
-        // 删除版本时，需要判断该版本下是否存在项目
+        // 删除版本时，（不）需要判断该版本下是否存在项目
         for (int id : ids) {
             AppVersion appVersion = appVersionRepository.findById(id).orElse(null);
             List<AppProject> appProjectList = appProjectRepository.findAllByAppVersionAndDeleted(appVersion, false);
-            if (appProjectList.isEmpty()) {
-                appVersionRepository.deleteById(id);
-            } else {
-                throw new ServiceException("当前删除的版本中还存在正在使用的版本，请修改后再进行操作");
+            if (!appProjectList.isEmpty()) {
+                for (AppProject appProject : appProjectList) {
+                    AppConfig appConfig = appConfigRepository.findByAppProject(appProject);
+                    appConfigRepository.deleteById(appConfig.getId());
+                    appProjectRepository.deleteById(appProject.getId());
+                }
             }
+            appVersionRepository.deleteById(id);
         }
     }
 }

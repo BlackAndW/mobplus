@@ -165,17 +165,12 @@ public class AppProjectServiceImpl implements AppProjectService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void delete(Integer[] ids) throws ServiceException {
-        // 删除应用项目时需要判断当前应用项目的配置是否设为未启用
+        // 删除应用项目时（不）需要判断当前应用项目的配置是否设为未启用
         for (int id : ids) {
             AppProject appProject = appProjectRepository.findById(id).orElse(null);
             AppConfig appConfig = appConfigRepository.findByAppProject(appProject);
-            if (appConfig.getStatus() == 2) {
-                throw new ServiceException("当前删除的项目中存在还在使用的项目，请修改后再进行操作");
-            } else {
-                appProjectRepository.deleteById(id);
-                appConfigRepository.deleteById(appConfig.getId());
-            }
+            appProjectRepository.deleteById(id);
+            appConfigRepository.deleteById(appConfig.getId());
         }
-
     }
 }
