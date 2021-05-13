@@ -18,6 +18,10 @@ public class UserAdInfoForm {
     @NotNull
     private String uuid;
 
+    private boolean clear;
+
+    private String appPositionCode;
+
     private String adChannel;
 
     private Integer adRequestCount;
