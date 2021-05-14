@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.gateway.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
@@ -69,6 +70,31 @@ public class SdkController {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
             form.setRemoteIp(ParamUtils.getIpAddr(request));
             SdkCfgVO vo = sdkService.getSdkCfgEn(form);
+            SerializeConfig config = new SerializeConfig();
+            config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
+            response = JSON.toJSONString(Result.SUCCESS(vo), config);
+        } catch (Throwable e) {
+            throw new ServiceException(e.getMessage());
+        }
+        log.debug("RespToApp:{}", response);
+        return needCodec ? Codec.encode(response) : response;
+    }
+
+    /**
+     * 合并后的新接口
+     */
+    @PostMapping("/appPosition")
+    public String getAppPosition(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m, HttpServletRequest request) {
+        boolean needCodec = m == null || m.trim().length() == 0;
+        if (body != null && needCodec) {
+            body = Codec.decode(body);
+        }
+        log.debug("ReqFromApp:{}", body);
+        String response = "";
+        try {
+            DeviceForm form = JSON.parseObject(body, DeviceForm.class);
+            form.setRemoteIp(ParamUtils.getIpAddr(request));
+            SdkCfgVO vo = sdkService.getPosList(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
             response = JSON.toJSONString(Result.SUCCESS(vo), config);

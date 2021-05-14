@@ -1,18 +1,13 @@
 package com.yeecloud.adplus.gateway.service.impl;
 
-import com.yeecloud.adplus.dal.entity.App;
-import com.yeecloud.adplus.dal.entity.AppAdvertiser;
-import com.yeecloud.adplus.dal.entity.AppPosition;
-import com.yeecloud.adplus.dal.entity.AppPositionAdPosition;
+import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.AppAdvertiserRepository;
 import com.yeecloud.adplus.dal.repository.AppPositionAdPositionRepository;
 import com.yeecloud.adplus.dal.repository.AppPositionRepository;
 import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
-import com.yeecloud.adplus.gateway.controller.vo.AdPositionVO;
-import com.yeecloud.adplus.gateway.controller.vo.AdvertiserCfgVO;
-import com.yeecloud.adplus.gateway.controller.vo.AppPosCfgVO;
-import com.yeecloud.adplus.gateway.controller.vo.SdkCfgVO;
+import com.yeecloud.adplus.gateway.controller.vo.*;
+import com.yeecloud.adplus.gateway.service.AppConfigService;
 import com.yeecloud.adplus.gateway.service.DeviceService;
 import com.yeecloud.adplus.gateway.service.SdkService;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -34,6 +29,9 @@ public class SdkServiceImpl implements SdkService {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private AppConfigService appConfigService;
 
     @Autowired
     private ConfigureService configureService;
@@ -98,6 +96,25 @@ public class SdkServiceImpl implements SdkService {
         addAdvertiserList(vo, app);
         // 获取应用的所有展示位
         addAppPositionList(vo, app, true);
+        return vo;
+    }
+
+    @Override
+    public SdkCfgVO getPosList(DeviceForm form) throws ServiceException {
+        deviceService.createOrUpdateOpenDevice(form);
+        AppConfigVOV2 appConfigVOV2 = appConfigService.getAppProjectConfigV2(form);
+        // 根据安卓端请求的值查找对应的应用
+        String appId = form.getAppId();
+        App app = appRepository.findByAppId(appId);
+        if (app == null || app.isDeleted()) {
+            throw new ServiceException("The application does not exist, please reconfigure the application!");
+        }
+        // 构造配置参数
+        SdkCfgVO vo = new SdkCfgVO();
+        // 获取应用的所有展示位
+        if (appConfigVOV2.getAdSwitch() == 1) {
+            addAppPositionList(vo, app, true);
+        }
         return vo;
     }
 

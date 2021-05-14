@@ -54,5 +54,6 @@ public class AppActivityForm {
     private String remark;
 
     @NotNull(message = "请选择应用状态")
+
     private Integer status;
 }
