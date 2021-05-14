@@ -13,4 +13,6 @@ public interface SdkService {
     SdkCfgVO getSdkCfg(DeviceForm form)throws ServiceException;
 
     SdkCfgVO getSdkCfgEn(DeviceForm form)throws ServiceException;
+
+    SdkCfgVO getPosList(DeviceForm form)throws ServiceException;
 }
