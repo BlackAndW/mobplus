@@ -2,7 +2,7 @@
     <div>
         <a-row :gutter="12">
             <a-col :span="4">
-                <a-card :bordered="true" title="应用信息" class="tree-list" :loading="treeloading">
+                <a-card :bordered="true" title="应用信息" :loading="treeloading">
                     <a-icon
                         slot="extra"
                         type="sync"
@@ -20,36 +20,22 @@
                             <a-form-item>
                                 <a-input
                                     type="text"
-                                    placeholder="请输入用户ip"
+                                    placeholder="用户ip"
                                     v-model="queryParam.userIp"
                                 />
                             </a-form-item>
                             <a-form-item>
                                 <a-input
                                     type="text"
-                                    placeholder="请输入国家"
-                                    v-model="queryParam.country"
+                                    placeholder="展示位代码"
+                                    v-model="queryParam.appPositionCode"
                                 />
                             </a-form-item>
                             <a-form-item>
                                 <a-input
                                     type="text"
-                                    placeholder="请输入地区"
-                                    v-model="queryParam.region"
-                                />
-                            </a-form-item>
-                            <a-form-item>
-                                <a-input
-                                    type="text"
-                                    placeholder="请输入城市"
-                                    v-model="queryParam.city"
-                                />
-                            </a-form-item>
-                            <a-form-item>
-                                <a-input
-                                    type="text"
-                                    placeholder="请输入节点名"
-                                    v-model="queryParam.serverName"
+                                    placeholder="广告平台"
+                                    v-model="queryParam.adChannel"
                                 />
                             </a-form-item>
                             <a-form-item>
@@ -108,23 +94,27 @@ import { STable, STree, ETag } from '@/components';
 const columns = [
     {
         title: 'ip地址',
-        dataIndex: 'ip'
+        dataIndex: 'userIp'
     },
     {
-        title: '所属国家',
-        dataIndex: 'country'
+        title: '展示位代码',
+        dataIndex: 'appPositionCode'
     },
     {
-        title: '所属地区',
-        dataIndex: 'region'
+        title: '广告平台',
+        dataIndex: 'adChannel'
     },
     {
-        title: '所属城市',
-        dataIndex: 'city'
+        title: '请求次数',
+        dataIndex: 'adRequestCount'
     },
     {
-        title: '访问节点名',
-        dataIndex: 'serverName'
+        title: '展示次数',
+        dataIndex: 'adShowCount'
+    },
+    {
+        title: '点击次数',
+        dataIndex: 'adClickCount'
     },
     {
         title: '连接日期',
@@ -135,7 +125,7 @@ const columns = [
     }
 ];
 
-const url = '/data/vpn';
+const url = '/data/appStatistics';
 export default {
     mixins: [mixinDevice],
     components: {

@@ -9,7 +9,7 @@
                         @click="loadCategoryTreeData"
                         style="cursor: pointer"
                     />
-                    <s-tree :dataSource="talkTreeData" @add="onQueryDict" />
+                    <s-tree class="tree-list-style" :dataSource="talkTreeData" @add="onQueryDict" />
                 </a-card>
             </a-col>
             <a-col :span="20">
