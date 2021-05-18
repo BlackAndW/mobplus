@@ -9,7 +9,7 @@
                         @click="loadAppTreeData"
                         style="cursor: pointer"
                     />
-                    <s-tree :dataSource="appTreeData" @add="onQueryDict" />
+                    <s-tree class="tree-list-style" :dataSource="appTreeData" @add="onQueryDict" />
                 </a-card>
             </a-col>
             <a-col :span="20">

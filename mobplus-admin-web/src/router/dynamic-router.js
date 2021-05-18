@@ -49,7 +49,8 @@ const constantRouterComponents = {
     AppFunction: () => import('@/views/app/appFunction-list'),
 
     // 数据管理
-    VpnAccountLog: () => import('@/views/dataManager/vpnAccount-log')
+    VpnAccountLog: () => import('@/views/dataManager/vpnAccount-log'),
+    AppStatistics: () => import('@/views/dataManager/appStatistics')
 };
 
 // 前端未找到页面路由（固定不用改）
