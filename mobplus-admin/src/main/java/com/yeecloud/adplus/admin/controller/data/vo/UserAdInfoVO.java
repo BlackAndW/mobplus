@@ -26,4 +26,6 @@ public class UserAdInfoVO implements Serializable {
     private Integer adShowCount = 0;
 
     private Integer adClickCount = 0;
+
+    private long createdAt;
 }

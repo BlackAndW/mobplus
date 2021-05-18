@@ -113,8 +113,8 @@ public class UserAdInfoServiceImpl implements UserAdInfoService {
             long endTime = simpleDateFormat.parse(query.get("endTimeStr", String.class)).getTime();
             sb.append(" and n_created_at between ").append(startTime).append(" and ").append(endTime);
         }
-        final String rootPath = "/www/wwwroot/admin.siteps.cn/";
-        final String filePath = "output/";
+        final String rootPath = "/www/wwwroot/res.turbovpns.com/";
+        final String filePath = "download/userAdInfoFile/";
         final String fileName = appName + "-" + DateUtils.dateToString(new Date(), "yyyyMMddHHmmss") + ".xls";
         sb.append(" \" mobplus_db > ").append(rootPath).append(filePath).append(fileName);
         ProcessUtils.execute(sb.toString());
