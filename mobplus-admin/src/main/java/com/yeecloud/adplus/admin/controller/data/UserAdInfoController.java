@@ -52,6 +52,7 @@ public class UserAdInfoController {
         if (filePath == null || filePath.length() == 0) {
             return Result.FAILURE("get excel file failure!");
         }
-        return Result.SUCCESS(filePath);
+        log.info("filePath: " + filePath);
+        return Result.SUCCESS("http://res.turbovpns.com/" + filePath);
     }
 }
