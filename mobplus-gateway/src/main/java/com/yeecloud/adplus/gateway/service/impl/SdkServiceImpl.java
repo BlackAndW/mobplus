@@ -1,10 +1,8 @@
 package com.yeecloud.adplus.gateway.service.impl;
 
+import com.google.common.collect.Maps;
 import com.yeecloud.adplus.dal.entity.*;
-import com.yeecloud.adplus.dal.repository.AppAdvertiserRepository;
-import com.yeecloud.adplus.dal.repository.AppPositionAdPositionRepository;
-import com.yeecloud.adplus.dal.repository.AppPositionRepository;
-import com.yeecloud.adplus.dal.repository.AppRepository;
+import com.yeecloud.adplus.dal.repository.*;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
 import com.yeecloud.adplus.gateway.controller.vo.*;
 import com.yeecloud.adplus.gateway.service.AppConfigService;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Huang
@@ -44,6 +43,9 @@ public class SdkServiceImpl implements SdkService {
 
     @Autowired
     private AppPositionRepository appPositionRepository;
+
+    @Autowired
+    private AppMobileConfRepository appMobileConfRepository;
 
     @Autowired
     private AppPositionAdPositionRepository appPositionAdPositionRepository;
@@ -145,18 +147,27 @@ public class SdkServiceImpl implements SdkService {
             // 获取展示位绑定的广告位
             appPosCfgVO.setParams(appPosition.getParameters());
             List<AppPositionAdPosition> adPositionList = appPosition.getAdPosList();
-            for (AppPositionAdPosition adPosition : adPositionList) {
-                if (adPosition.isDeleted()){
+
+            // 查看全局配置
+            Integer showConfig = appPosition.getLimitShowConfig();
+            Integer clickConfig = appPosition.getLimitClickConfig();
+
+            for (AppPositionAdPosition appPosAdPosition : adPositionList) {
+                if (appPosAdPosition.isDeleted()){
                     continue;
                 }
                 AdPositionVO adPositionVO = new AdPositionVO();
-                adPositionVO.setAdvertiser(adPosition.getAdPosition().getAdvertiser().getCode());
-                adPositionVO.setPosId(adPosition.getAdPosition().getCode());
-                adPositionVO.setUnitId(adPosition.getAdPosition().getMintegralUnitId());
-                adPositionVO.setAdType(adPosition.getAdPosition().getType().getId());
-                adPositionVO.setRatio(adPosition.getRatio());
-                adPositionVO.setTypeRatio(adPosition.getTypeRatio());
-
+                adPositionVO.setAdvertiser(appPosAdPosition.getAdPosition().getAdvertiser().getCode());
+                adPositionVO.setPosId(appPosAdPosition.getAdPosition().getCode());
+                adPositionVO.setUnitId(appPosAdPosition.getAdPosition().getMintegralUnitId());
+                adPositionVO.setAdType(appPosAdPosition.getAdPosition().getType().getId());
+                adPositionVO.setRatio(appPosAdPosition.getRatio());
+                adPositionVO.setTypeRatio(appPosAdPosition.getTypeRatio());
+                adPositionVO.setLimitShowCount(appPosAdPosition.getLimitShowCount());
+                adPositionVO.setLimitClickCount(appPosAdPosition.getLimitClickCount());
+                // 根据配置，设置限制次数
+                Map<String, Integer> limitCountMap = getLimitCountMap(appPosAdPosition.getAdPosition());
+                adPositionVO = setAdPositionVO(adPositionVO, appPosAdPosition.getAdPosition(), limitCountMap, showConfig, clickConfig);
                 appPosCfgVO.getPositionList().add(adPositionVO);
             }
             vo.getAdPosList().put(appPosition.getCode(), appPosCfgVO);
@@ -177,5 +188,64 @@ public class SdkServiceImpl implements SdkService {
             // 添加广告平台列表
             vo.getAdvertiserList().put(appAdvertiser.getAdvertiser().getCode(), advertiserCfgVO);
         }
+    }
+
+    /***
+     * 获取全局配置的限制次数
+     * @param adPosition
+     * @return  limitCountMap
+     */
+    private Map<String, Integer> getLimitCountMap(AdPosition adPosition) {
+        List<AppMobileConf> appMobileConfList;
+        appMobileConfList = appMobileConfRepository.findByApp(adPosition.getApp());
+        Map<String, Integer> limitCountMap = Maps.newHashMap();
+        for (AppMobileConf appMobileConf : appMobileConfList) {
+            if (appMobileConf.getKey().equals("google_show_count")) {
+                limitCountMap.put("GGshowCount", Integer.parseInt(appMobileConf.getValue()));
+                continue;
+            }
+            if (appMobileConf.getKey().equals("google_click_count")) {
+                limitCountMap.put("GGclickCount", Integer.parseInt(appMobileConf.getValue()));
+                continue;
+            }
+            if (appMobileConf.getKey().equals("fb_show_count")) {
+                limitCountMap.put("FBshowCount", Integer.parseInt(appMobileConf.getValue()));
+                continue;
+            }
+            if (appMobileConf.getKey().equals("fb_click_count")) {
+                limitCountMap.put("FBclickCount", Integer.parseInt(appMobileConf.getValue()));
+            }
+        }
+        return limitCountMap;
+    }
+
+    /***
+     * 根据配置，设置限制次数
+     * @param vo
+     * @param adPosition
+     * @param limitCountMap 配置值
+     * @param showConfig    展示次数配置开关
+     * @param clickConfig   点击次数配置开关
+     * @return
+     */
+    private AdPositionVO setAdPositionVO(AdPositionVO vo, AdPosition adPosition,
+                                                     Map<String, Integer> limitCountMap, Integer showConfig, Integer clickConfig){
+        if (clickConfig == 1) {
+            if (adPosition.getAdvertiser().getCode().equals("google")) {
+                vo.setLimitShowCount(limitCountMap.get("GGshowCount"));
+            }
+            if (adPosition.getAdvertiser().getCode().equals("FB")) {
+                vo.setLimitShowCount(limitCountMap.get("FBshowCount"));
+            }
+        }
+        if (showConfig == 1) {
+            if (adPosition.getAdvertiser().getCode().equals("google")) {
+                vo.setLimitClickCount(limitCountMap.get("GGclickCount"));
+            }
+            if (adPosition.getAdvertiser().getCode().equals("FB")) {
+                vo.setLimitClickCount(limitCountMap.get("FBclickCount"));
+            }
+        }
+        return vo;
     }
 }

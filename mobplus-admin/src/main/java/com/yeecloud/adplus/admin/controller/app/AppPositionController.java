@@ -12,8 +12,10 @@ import com.yeecloud.adplus.admin.controller.app.vo.AppPositionVO;
 import com.yeecloud.adplus.admin.service.AdPositionService;
 import com.yeecloud.adplus.admin.service.AppPositionService;
 import com.yeecloud.adplus.dal.entity.AdPosition;
+import com.yeecloud.adplus.dal.entity.AppMobileConf;
 import com.yeecloud.adplus.dal.entity.AppPosition;
 import com.yeecloud.adplus.dal.entity.AppPositionAdPosition;
+import com.yeecloud.adplus.dal.repository.AppMobileConfRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.result.ResultCode;
@@ -46,6 +48,9 @@ public class AppPositionController {
 
     @Autowired
     private AdPositionService adPositionService;
+
+    @Autowired
+    private AppMobileConfRepository appMobileConfRepository;
 
     @Autowired
     private AppPositionConvert appPositionConvert;
@@ -108,6 +113,7 @@ public class AppPositionController {
         if (position == null) {
             return Result.FAILURE(ResultCode.PARAM_ERROR);
         }
+
         Map<String, Object> params = Maps.newHashMap();
         params.put("pageSize", Integer.MAX_VALUE);
         params.put("appId", position.getApp().getId());
@@ -120,15 +126,26 @@ public class AppPositionController {
         List<AppPositionAdPositionVO> resultList = Lists.newArrayList();
 
         // 添加中间表已存在的数据
+        // 查看全局配置
+        Integer showConfig = position.getLimitShowConfig();
+        Integer clickConfig = position.getLimitClickConfig();
         position.getAdPosList().forEach(appPosAdPos -> {
             existsAdPosSet.add(appPosAdPos.getAdPosition().getId());
-            resultList.add(appPosAdPosConvert.convert(appPosAdPos));
+            // 根据配置，设置限制次数（已关联）
+            Map<String, Integer> limitCountMap = getLimitCountMap(appPosAdPos.getAdPosition());
+            AppPositionAdPositionVO vo = appPosAdPosConvert.convert(appPosAdPos);
+            vo = setAppPosAdPosVO(vo, appPosAdPos.getAdPosition(), limitCountMap, showConfig, clickConfig);
+            resultList.add(vo);
         });
         // 根据name，appId查询未关联到中间表的数据，并添加到resultList
         Page<AdPosition> page = adPositionService.query(new Query(params));
         page.stream().forEach(adPosition -> {
             if (!existsAdPosSet.contains(adPosition.getId())) {
-                resultList.add(new AppPositionAdPositionVO(adPosition.getId(), false, adPositionConvert.convert(adPosition), 1, 1));
+                // 根据配置，设置限制次数（未关联）
+                Map<String, Integer> limitCountMap = getLimitCountMap(adPosition);
+                AppPositionAdPositionVO vo = new AppPositionAdPositionVO(adPosition.getId(), false, adPositionConvert.convert(adPosition));
+                vo = setAppPosAdPosVO(vo, adPosition, limitCountMap, showConfig, clickConfig);
+                resultList.add(vo);
             }
         });
         // 将新的resultList按广告平台重新排序
@@ -163,5 +180,64 @@ public class AppPositionController {
     private PageInfo<AppPositionVO> convert(Page<AppPosition> result) {
         List<AppPositionVO> resultList = appPositionConvert.convert(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
+    }
+
+    /***
+     * 获取全局配置的限制次数
+     * @param adPosition
+     * @return  limitCountMap
+     */
+    private Map<String, Integer> getLimitCountMap(AdPosition adPosition) {
+        List<AppMobileConf> appMobileConfList;
+        appMobileConfList = appMobileConfRepository.findByApp(adPosition.getApp());
+        Map<String, Integer> limitCountMap = Maps.newHashMap();
+        for (AppMobileConf appMobileConf : appMobileConfList) {
+            if (appMobileConf.getKey().equals("google_show_count")) {
+                limitCountMap.put("GGshowCount", Integer.parseInt(appMobileConf.getValue()));
+                continue;
+            }
+            if (appMobileConf.getKey().equals("google_click_count")) {
+                limitCountMap.put("GGclickCount", Integer.parseInt(appMobileConf.getValue()));
+                continue;
+            }
+            if (appMobileConf.getKey().equals("fb_show_count")) {
+                limitCountMap.put("FBshowCount", Integer.parseInt(appMobileConf.getValue()));
+                continue;
+            }
+            if (appMobileConf.getKey().equals("fb_click_count")) {
+                limitCountMap.put("FBclickCount", Integer.parseInt(appMobileConf.getValue()));
+            }
+        }
+        return limitCountMap;
+    }
+
+    /***
+     * 根据配置，设置VO限制次数
+     * @param vo
+     * @param adPosition
+     * @param limitCountMap 配置值
+     * @param showConfig    展示次数配置开关
+     * @param clickConfig   点击次数配置开关
+     * @return
+     */
+    private AppPositionAdPositionVO setAppPosAdPosVO(AppPositionAdPositionVO vo, AdPosition adPosition,
+                               Map<String, Integer> limitCountMap, Integer showConfig, Integer clickConfig){
+        if (clickConfig == 1) {
+            if (adPosition.getAdvertiser().getCode().equals("google")) {
+                vo.setLimitShowCount(limitCountMap.get("GGshowCount"));
+            }
+            if (adPosition.getAdvertiser().getCode().equals("FB")) {
+                vo.setLimitShowCount(limitCountMap.get("FBshowCount"));
+            }
+        }
+        if (showConfig == 1) {
+            if (adPosition.getAdvertiser().getCode().equals("google")) {
+                vo.setLimitClickCount(limitCountMap.get("GGclickCount"));
+            }
+            if (adPosition.getAdvertiser().getCode().equals("FB")) {
+                vo.setLimitClickCount(limitCountMap.get("FBclickCount"));
+            }
+        }
+        return vo;
     }
 }

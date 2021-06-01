@@ -19,6 +19,18 @@
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入展示位名称' }] }]"
                     />
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="全局展示次数配置">
+                    <a-radio-group @change="changeShowConfig" button-style="solid" v-decorator="[ 'limitShowConfig', {initialValue: model.limitShowConfig || 0}]">
+                        <a-radio-button :value="1">开启</a-radio-button>
+                        <a-radio-button :value="0">关闭</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="全局点击次数配置">
+                    <a-radio-group @change="changeClickConfig" button-style="solid" v-decorator="[ 'limitClickConfig', {initialValue: model.limitClickConfig || 0}]">
+                        <a-radio-button :value="1">开启</a-radio-button>
+                        <a-radio-button :value="0">关闭</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否展示广告">
                     <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择是否展示广告' }]}]">
                         <a-radio-button :value="1">展示</a-radio-button>
@@ -48,6 +60,8 @@ export default {
             model: {},
 
             advList: [],
+            limitShowConfigFlag: 0,
+            limitClickConfigFlag: 0,
             func: () => {}
         };
     },
@@ -68,6 +82,8 @@ export default {
             this.url = '/app/position';
             this.func = this.$http.post;
             this.confirmLoading = false;
+            this.limitShowConfigFlag = 0;
+            this.limitClickConfigFlag = 0;
             this.visible = true;
         },
         edit: function (record, currentApp) {
@@ -78,6 +94,8 @@ export default {
             this.func = this.$http.put;
             this.confirmLoading = false;
             this.visible = true;
+            this.limitShowConfigFlag = this.model.limitShowConfig;
+            this.limitClickConfigFlag = this.model.limitClickConfig;
         },
         close: function (success) {
             this.$emit('close', success || false);
@@ -86,6 +104,12 @@ export default {
         },
         onCancel: function () {
             this.close(false);
+        },
+        changeShowConfig (e) {
+            this.limitShowConfigFlag = e.target.value;
+        },
+        changeClickConfig (e) {
+            this.limitClickConfigFlag = e.target.value;
         },
         onSubmit: function () {
             const $self = this;

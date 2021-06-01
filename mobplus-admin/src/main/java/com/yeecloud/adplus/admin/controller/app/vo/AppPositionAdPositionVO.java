@@ -19,20 +19,20 @@ public class AppPositionAdPositionVO implements Serializable, Comparable<AppPosi
     private Integer id;
     private boolean checked = true;
     private AdPositionVO adPos;
-    private Integer ratio;
+    private Integer ratio = 1;
     private Boolean ratioFlag = false;
-    private Integer typeRatio;
+    private Integer typeRatio = 1;
+    private Integer limitShowCount = 3;
+    private Integer limitClickCount = 2;
     private String remark;
 
     public AppPositionAdPositionVO() {
     }
 
-    public AppPositionAdPositionVO(Integer id, boolean checked, AdPositionVO adPos, Integer ratio, Integer typeRatio) {
+    public AppPositionAdPositionVO(Integer id, boolean checked, AdPositionVO adPos) {
         this.id = id;
         this.checked = checked;
         this.adPos = adPos;
-        this.ratio = ratio;
-        this.typeRatio = typeRatio;
     }
 
     /** 按广告平台id升序排序 */

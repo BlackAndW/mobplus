@@ -14,4 +14,6 @@ public class AppPositionAdPositionForm {
     private Integer ratio;
     private Boolean ratioFlag;
     private Integer typeRatio;
+    private Integer limitShowCount;
+    private Integer limitClickCount;
 }

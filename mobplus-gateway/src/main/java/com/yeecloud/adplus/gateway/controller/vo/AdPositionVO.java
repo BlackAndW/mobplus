@@ -18,4 +18,6 @@ public class AdPositionVO implements Serializable {
     private int ratio;
     private int adType;
     private int typeRatio;
+    private int limitShowCount;
+    private int limitClickCount;
 }

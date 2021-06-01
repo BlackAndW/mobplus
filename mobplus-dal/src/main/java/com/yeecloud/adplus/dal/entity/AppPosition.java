@@ -41,10 +41,17 @@ public class AppPosition extends AuditorEntity {
     @Column(name = "c_name")
     private String name;
 
-//    /** 广告位类型 */
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "n_type")
-//    private AdType type;
+    /**
+     * 广告限制展示次数，全局配置开关
+     */
+    @Column(name = "n_limit_show_config")
+    private Integer limitShowConfig = 0;
+
+    /**
+     * 广告限制点击次数，全局配置开关
+     */
+    @Column(name = "n_limit_click_config")
+    private Integer limitClickConfig = 0;
 
     @Column(name = "n_status")
     private Integer status;
