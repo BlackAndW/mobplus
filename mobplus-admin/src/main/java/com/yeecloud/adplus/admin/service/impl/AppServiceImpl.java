@@ -117,6 +117,25 @@ public class AppServiceImpl implements AppService {
                 NewBeanUtils.copyProperties(entity, form, true);
                 appRepository.save(entity);
             }
+            List<AppProject> projectList = appProjectRepository.findAllByApp(entity);
+            projectList.forEach( appProject -> {
+                String[] nameList = appProject.getName().split("-");
+                String newName = entity.getName() + "-"
+                        + nameList[nameList.length - 2] + "-"
+                        + nameList[nameList.length - 1];
+                appProject.setName(newName);
+                appProjectRepository.save(appProject);
+            });
+            List<AppConfig> configList = appConfigRepository.findAllByApp(entity);
+            configList.forEach(appConfig -> {
+                String[] nameList = appConfig.getName().split("-");
+                String newName = entity.getName() + "-"
+                        + nameList[nameList.length - 3] + "-"
+                        + nameList[nameList.length - 2] + "-" +
+                        nameList[nameList.length - 1];
+                appConfig.setName(newName);
+                appConfigRepository.save(appConfig);
+            });
         } catch (Throwable e) {
             throw new ServiceException(e);
         }

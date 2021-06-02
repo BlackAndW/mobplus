@@ -17,7 +17,7 @@
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
                         <div class="l" v-action="['app:project:query']" v-if="currentApp!=null">
                             <a-form-item label="版本">
-                                <a-select placeholder="版本" v-model="queryParam.appVersionId" style="width:120px">
+                                <a-select placeholder="版本" v-model="queryParam.appVersionId" style="width:80px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option
                                         v-for="appVersion in appVersionList"
@@ -28,7 +28,7 @@
                                 </a-select>
                             </a-form-item>
                              <a-form-item label="渠道">
-                                <a-select placeholder="渠道" v-model="queryParam.channelId" style="width:120px">
+                                <a-select placeholder="渠道" v-model="queryParam.channelId" style="width:80px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option
                                         v-for="channel in channelList"
@@ -49,7 +49,7 @@
                                     type="text"
                                     placeholder="请输入项目名称"
                                     v-model="queryParam.name"
-                                    style="width:150px"
+                                    style="width:130px"
                                 />
                             </a-form-item>
                             <a-form-item>
@@ -57,7 +57,7 @@
                                     type="text"
                                     placeholder="请输入项目编码"
                                     v-model="queryParam.code"
-                                    style="width:150px"
+                                    style="width:130px"
                                 />
                             </a-form-item>
                             <a-form-item>

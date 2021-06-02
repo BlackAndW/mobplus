@@ -6,11 +6,11 @@
                     <a-form-item label="运行环境">
                         <a-select placeholder="运行环境" v-model="queryParam.runtime" style="width:120px">
                             <a-select-option :value="0">不限</a-select-option>
-                            <a-select-option value="1">android</a-select-option>
-                            <a-select-option value="2">ios</a-select-option>
-                            <a-select-option value="3">h5</a-select-option>
-                            <a-select-option value="4">wechat</a-select-option>
-                            <a-select-option value="5">qq</a-select-option>
+                            <a-select-option :value="1">android</a-select-option>
+                            <a-select-option :value="2">ios</a-select-option>
+                            <a-select-option :value="3">h5</a-select-option>
+                            <a-select-option :value="4">wechat</a-select-option>
+                            <a-select-option :value="5">qq</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-form-item label="应用类型">
@@ -27,10 +27,10 @@
                             <a-select-option :value="2">已启用</a-select-option>
                         </a-select>
                     </a-form-item>
-                    <a-form-item>
+                    <a-form-item style="width: 100px">
                         <a-input type="text" placeholder="应用名称" v-model="queryParam.name" />
                     </a-form-item>
-                    <a-form-item>
+                    <a-form-item style="width: 150px">
                         <a-input type="text" placeholder="AppID" v-model="queryParam.appId" />
                     </a-form-item>
                     <a-form-item>

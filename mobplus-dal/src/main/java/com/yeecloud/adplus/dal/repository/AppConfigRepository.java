@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.dal.repository;
 
+import com.yeecloud.adplus.dal.entity.App;
 import com.yeecloud.adplus.dal.entity.AppConfig;
 import com.yeecloud.adplus.dal.entity.AppProject;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,8 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author: Huang
@@ -23,5 +26,7 @@ public interface AppConfigRepository extends JpaRepository<AppConfig, Integer>, 
     void controlAd(@Param("ids") Integer[] ids, @Param("status") Integer status);
 
     AppConfig findByAppProject(@Param("appProject") AppProject appProject);
+
+    List<AppConfig> findAllByApp(@Param("app") App app);
 
 }
