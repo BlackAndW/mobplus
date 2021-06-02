@@ -117,33 +117,39 @@ import AdPositionModal from '@/views/ad/modules/adPosition-modal';
 const columns = [
     {
         title: '广告位代码',
-        dataIndex: 'code'
+        dataIndex: 'code',
+        width: 240
     },
     {
         title: '广告位名称',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        width: 100
     },
     {
         title: '广告平台',
         dataIndex: 'advName',
-        scopedSlots: { customRender: 'advSlot' }
+        scopedSlots: { customRender: 'advSlot' },
+        width: 80
 
     },
     {
         title: '类型',
         dataIndex: 'type',
-        scopedSlots: { customRender: 'typeSlot' }
+        scopedSlots: { customRender: 'typeSlot' },
+        width: 180
     },
     {
         title: '添加时间',
         dataIndex: 'createdAt',
-        scopedSlots: { customRender: 'dateSlot' }
+        scopedSlots: { customRender: 'dateSlot' },
+        width: 120
     },
     {
         title: '操作',
         dataIndex: 'action',
         align: 'center',
-        scopedSlots: { customRender: 'action' }
+        scopedSlots: { customRender: 'action' },
+        width: 100
     }
 ];
 

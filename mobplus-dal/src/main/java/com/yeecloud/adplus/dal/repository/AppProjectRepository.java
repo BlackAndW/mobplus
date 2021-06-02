@@ -36,6 +36,8 @@ public interface AppProjectRepository extends JpaRepository<AppProject, Integer>
 
     AppProject findByCode(@Param("code") String code);
 
+    List<AppProject> findAllByApp(@Param("app") App app);
+
     AppProject findByAppAndChannelAndAppVersionAndDeleted(@Param("app") App app,@Param("channel")Channel channel,@Param("appVersion")AppVersion appVersion,@Param("deleted") Boolean deleted);
 }
 

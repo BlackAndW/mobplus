@@ -40,6 +40,18 @@
                     <span>{{ text }}</span><br />
                     <span v-if="record.adPos.advName == 'mintegral'">unitId: {{ record.adPos.mintegralUnitId }} </span>
                 </template>
+                <template slot="limitShowCountSlot" slot-scope="text, record">
+                    <span v-if="model.limitShowConfig === 0">
+                        <a-input :value="text" @change="e => handleCellChange(e, 'limitShowCount', record)"/>
+                    </span>
+                    <span v-else>{{ text }}</span>
+                </template>
+                <template slot="limitClickCountSlot" slot-scope="text, record">
+                    <span v-if="model.limitClickConfig === 0">
+                        <a-input :value="text" @change="e => handleCellChange(e, 'limitClickCount', record)"/>
+                    </span>
+                    <span v-else>{{ text }}</span>
+                </template>
                 <template slot="ratioSlot" slot-scope="text, record">
                     <a-input-number
                         v-if="record.ratioFlag"
@@ -47,7 +59,7 @@
                         :max="99"
                         style="margin: -5px 0"
                         :value="text || 1"
-                        @change="val => handleCellChange(val, 'ratio', record)"
+                        @change="val => handleRatioCellChange(val, 'ratio', record)"
                     />
                 </template>
                 <template slot="typeRatioSlot" slot-scope="text, record">
@@ -56,7 +68,7 @@
                         :max="99"
                         style="margin: -5px 0"
                         :value="text || 1"
-                        @change="val => handleTypeCellChange(val, 'typeRatio', record)"
+                        @change="val => handleNumCellChange(val, 'typeRatio', record)"
                     />
                 </template>
                 <template slot="typeSlot" slot-scope="text">
@@ -87,6 +99,18 @@ const columns = [
         scopedSlots: { customRender: 'typeSlot' }
     },
     {
+        title: '限制展示次数',
+        width: 60,
+        dataIndex: 'limitShowCount',
+        scopedSlots: { customRender: 'limitShowCountSlot' }
+    },
+    {
+        title: '限制点击次数',
+        width: 60,
+        dataIndex: 'limitClickCount',
+        scopedSlots: { customRender: 'limitClickCountSlot' }
+    },
+    {
         title: '平台权重',
         width: 120,
         dataIndex: 'ratio',
@@ -109,7 +133,7 @@ export default {
     data () {
         return {
             title: '关联广告位',
-            modalWidth: 1000,
+            modalWidth: 1200,
             visible: false,
             confirmLoading: false,
 
@@ -159,7 +183,9 @@ export default {
                     advName: ele.adPos.advName,
                     ratio: ele.ratio,
                     ratioFlag: ele.ratioFlag,
-                    typeRatio: ele.typeRatio
+                    typeRatio: ele.typeRatio,
+                    limitShowCount: ele.limitShowCount,
+                    limitClickCount: ele.limitClickCount
                 });
             });
             if (params.length === 0) {
@@ -198,7 +224,7 @@ export default {
             this.selectedRowKeys = selectedRowKeys;
             this.selectedRows = selectedRows;
         },
-        handleCellChange (value, column, record) {
+        handleRatioCellChange (value, column, record) {
             record[column] = value;
             // 修改平台权重时，同平台的其他行也会一并修改
             const dataList = this.$refs.table._data.localDataSource;
@@ -209,8 +235,12 @@ export default {
             });
             this.$refs.table.$forceUpdate();
         },
-        handleTypeCellChange (value, column, record) {
+        handleNumCellChange (value, column, record) {
             record[column] = value;
+            this.$refs.table.$forceUpdate();
+        },
+        handleCellChange (e, column, record) {
+            record[column] = e.target.value;
             this.$refs.table.$forceUpdate();
         },
         dataChanged (data) {

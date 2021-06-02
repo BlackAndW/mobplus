@@ -56,10 +56,6 @@ public class AppPositionServiceImpl implements AppPositionService {
             if (appId != null && appId > 0) {
                 predicate = ExpressionUtils.and(predicate, appPosition.app.id.eq(appId));
             }
-//            Integer type = query.get("type", Integer.class);
-//            if (type != null && type > 0) {
-//                predicate = ExpressionUtils.and(predicate, appPosition.type.id.eq(type));
-//            }
             Integer status = query.get("status", Integer.class);
             if (status != null && status > 0) {
                 predicate = ExpressionUtils.and(predicate, appPosition.status.eq(status));

@@ -14,11 +14,11 @@
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="运行环境">
                     <a-select placeholder="运行环境" style="width:120px" v-decorator="[ 'runtime', {initialValue: model.runtime, rules: [ { required: true, message: '请选择运行环境' }]}]">
-                        <a-select-option value="1">android</a-select-option>
-                        <a-select-option value="2">ios</a-select-option>
-                        <a-select-option value="3">h5</a-select-option>
-                        <a-select-option value="4">wechat</a-select-option>
-                        <a-select-option value="5">qq</a-select-option>
+                        <a-select-option :value="1">android</a-select-option>
+                        <a-select-option :value="2">ios</a-select-option>
+                        <a-select-option :value="3">h5</a-select-option>
+                        <a-select-option :value="4">wechat</a-select-option>
+                        <a-select-option :value="5">qq</a-select-option>
                     </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="应用类型">

@@ -36,4 +36,16 @@ public class AppPositionAdPosition extends AuditorEntity {
     /** 类型权重 优先级 最小为1, 否则取不到 */
     @Column(name = "n_type_ratio")
     private Integer typeRatio = 1;
+
+    /**
+     * 广告限制展示次数
+     */
+    @Column(name = "n_limit_show_count")
+    private Integer limitShowCount = 3;
+
+    /**
+     * 广告限制点击次数
+     */
+    @Column(name = "n_limit_click_count")
+    private Integer limitClickCount = 2;
 }
