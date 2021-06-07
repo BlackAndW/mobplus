@@ -85,5 +85,6 @@ export const CountryList = [
     { name: '韩国', value: 'KR', name_en: 'Korea', summary_en: 'Seoul', iconUrl: 'flag_kr.png', id: 8 },
     { name: '新加坡', value: 'SG', name_en: 'Singapore', summary_en: 'Singapore', iconUrl: 'flag_sg.png', id: 9 },
     { name: '印度', value: 'IN', name_en: 'India', summary_en: 'Mumbai', iconUrl: 'flag_in.png', id: 10 },
-    { name: '加拿大', value: 'CA', name_en: 'Canada', summary_en: 'Toronto', iconUrl: 'flag_ca.png', id: 11 }
+    { name: '加拿大', value: 'CA', name_en: 'Canada', summary_en: 'Toronto', iconUrl: 'flag_ca.png', id: 11 },
+    { name: '中国', value: 'CN', name_en: 'China', summary_en: 'China', iconUrl: 'flag_cn.png', id: 12 }
 ];
