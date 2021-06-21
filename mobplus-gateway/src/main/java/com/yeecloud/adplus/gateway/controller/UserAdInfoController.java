@@ -37,8 +37,8 @@ public class UserAdInfoController {
         if (StringUtils.isEmpty(ipAddress)) {
             return Result.FAILURE("ipAddress is empty!");
         }
-        userAdInfoService.createOrUpdateInfo(userForm, ipAddress);
-        return Result.SUCCESS();
+        String result = userAdInfoService.createOrUpdateInfo(userForm, ipAddress);
+        return Result.SUCCESS(result);
     }
 
 }

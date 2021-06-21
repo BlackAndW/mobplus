@@ -64,7 +64,7 @@
                                 </div>
                             </a-form-item>
                             <a-form-item>
-                                <div class="r" v-if="currentApp!=null">
+                                <div v-if="currentApp!=null">
                                     <a-button-group>
                                         <a-button
                                             icon="sync"
@@ -89,7 +89,6 @@
                         :columns="columns"
                         :data="loadData"
                         :lazy="true"
-                        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                     >
                         <template slot="timeSlot" slot-scope="text">
                             {{ text | moment }}
@@ -151,9 +150,6 @@ export default {
             queryParam: {},
             // 表头
             columns,
-            // 选中记录
-            selectedRowKeys: [],
-            selectedRows: [],
             // 加载数据方法
             loadData: this.loadDataList,
             // 分类树数据
@@ -193,10 +189,6 @@ export default {
                     } catch (err) {}
                 }
             });
-        },
-        onSelectChange: function (selectedRowKeys, selectedRows) {
-            this.selectedRowKeys = selectedRowKeys;
-            this.selectedRows = selectedRows;
         },
         loadDataList: function (params) {
             return this.$http.get(

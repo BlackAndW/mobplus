@@ -32,15 +32,14 @@ public class UserAdInfoServiceImpl implements UserAdInfoService {
 
     static final long DAY = 1000*60*60*24;
 
-    @Async
     @Override
     @Transactional
-    public synchronized void createOrUpdateInfo(UserAdInfoForm userForm, String userIp) {
+    public synchronized String createOrUpdateInfo(UserAdInfoForm userForm, String userIp) {
         log.info("用户广告统计：" + userForm.toString());
         try {
             //临时去除为null的数据
             if (userForm.getAppId() == null) {
-                return;
+                return "data is null";
             }
             QUserAdInfo userAdInfo = QUserAdInfo.userAdInfo;
             Predicate predicate = userAdInfo.uuid.eq(userForm.getUuid());
@@ -55,8 +54,10 @@ public class UserAdInfoServiceImpl implements UserAdInfoService {
             UserAdInfo userAdInfoPO = setCountValue(isNewRecord(UserAdInfoList, userForm), userForm, userIp);
 
             userAdInfoRepository.save(userAdInfoPO);
+            return "data updated";
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
+            return "error";
         }
     }
 

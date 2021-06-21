@@ -2,7 +2,9 @@ package com.yeecloud.adplus.gateway.configuration;
 
 import com.yeecloud.meeto.configure.repository.ConfigureRepository;
 import com.yeecloud.meeto.configure.service.ConfigureService;
+import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -34,5 +36,15 @@ public class WebConfiguration implements WebMvcConfigurer {
         service.setConfigureRepository(configureRepository);
         service.refresh();
         return service;
+    }
+
+    @Bean
+    public TomcatServletWebServerFactory webServerFactory() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+        factory.addConnectorCustomizers((Connector connector) -> {
+            connector.setProperty("relaxedPathChars", "\"<>[\\]^`{|}");
+            connector.setProperty("relaxedQueryChars", "\"<>[\\]^`{|}");
+        });
+        return factory;
     }
 }

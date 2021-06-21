@@ -88,3 +88,26 @@ export const CountryList = [
     { name: '加拿大', value: 'CA', name_en: 'Canada', summary_en: 'Toronto', iconUrl: 'flag_ca.png', id: 11 },
     { name: '中国', value: 'CN', name_en: 'China', summary_en: 'China', iconUrl: 'flag_cn.png', id: 12 }
 ];
+
+export const DimensionsList = [
+    { key: '应用', value: 'APP', width: 100 },
+    { key: '广告单元', value: 'AD_UNIT', width: 100 },
+    { key: '日期', value: 'DATE', width: 100 },
+    { key: '国家', value: 'COUNTRY', width: 100 },
+    { key: '广告类型', value: 'AD_TYPE', width: 100 },
+    { key: '格式', value: 'FORMAT', width: 100 },
+    { key: '月份', value: 'MONTH', width: 100 },
+    { key: '星期', value: 'WEEK', width: 100 }
+];
+
+export const MetricsList = [
+    { key: '估算收入', value: 'ESTIMATED_EARNINGS', width: 100 },
+    { key: '千次展示费用', value: 'IMPRESSION_RPM', width: 120 },
+    { key: '请求次数', value: 'AD_REQUESTS', width: 100 },
+    { key: '匹配率', value: 'MATCH_RATE', width: 100 },
+    { key: '匹配请求数', value: 'MATCHED_REQUESTS', width: 100 },
+    { key: '展示率', value: 'SHOW_RATE', width: 100 },
+    { key: '展示次数', value: 'IMPRESSIONS', width: 100 },
+    { key: '展示点击率', value: 'IMPRESSION_CTR', width: 100 },
+    { key: '点击次数', value: 'CLICKS', width: 100 }
+];
