@@ -6,11 +6,11 @@
                     <a-button-group>
                         <a-button
                             type="primary"
-                            @click="$refs.table.refresh(false)"
+                            @click="$refs.table.refresh(true)"
                         >获取数据</a-button>
                         <a-button
                             icon="sync"
-                            @click="$refs.table.refresh(false)"
+                            @click="$refs.table.refresh(true)"
                         />
                     </a-button-group>
                     <hr color="#808080">
@@ -25,8 +25,9 @@
                                     :key="item.name"
                                     :value="item.accountId"
                                 >{{ item.name }}
-                                <a-form-item v-show="false">
+                                <a-form-item style="margin:0px; padding:0px">
                                     <a-input
+                                        v-show="false"
                                         :id="item.name"
                                         v-decorator="[ 'domain', { initialValue: item.domain } ]"
                                     />
@@ -162,37 +163,38 @@ export default {
         },
         getReportData (params) {
             this.getColumns();
-            const $self = this;
+
+            // const $self = this;
             // 触发表单验证
-            this.form.validateFields((err, values) => {
-                const page = Object.assign(params, this.queryParam);
-                console.log(page);
-                values.pageNo = page.pageNo;
-                values.pageSize = page.pageSize;
-                console.log(values);
-                if (!err) {
-                    $self
-                        .$http.post(url + '/report', values)
-                        .then(data => {
-                            $self.$message.success(data || '请求成功!');
-                        })
-                        .catch(err => {
-                            if (err) {
-                                console.log(err.stack);
-                            }
-                        });
-                }
-            });
+            // this.form.validateFields((err, values) => {
+            //     const page = Object.assign(params, this.queryParam);
+            //     values.pageNo = page.pageNo;
+            //     values.pageSize = page.pageSize;
+            //     if (!err) {
+            //         return $self
+            //             .$http.post(url + '/report', values)
+            //             .then(data => {
+            //                 $self.$message.success('请求成功!');
+            //             })
+            //             // .catch(err => {
+            //             //     if (err) {
+            //             //         console.log(err.stack);
+            //             //     }
+            //             // });
+            //     }
+            // });
+            const page = Object.assign(params, this.queryParam);
+            const values = this.form.getFieldsValue();
+            values.pageNo = page.pageNo;
+            values.pageSize = page.pageSize;
+            console.log(values);
+            return this.$http.post(url + '/report', values);
         },
         // loadDataList: function (params) {
         //     return this.$http.post(
         //         url + '/report' + this.currentApp.key,
         //     );
         // },
-        onQueryDict: function (item) {
-            this.currentApp = item;
-            this.$refs.table.refresh(true);
-        }
     }
 };
 </script>

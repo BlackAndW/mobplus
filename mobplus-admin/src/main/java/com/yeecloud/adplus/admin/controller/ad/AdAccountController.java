@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.admin.controller.ad;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.admin.controller.ad.convert.AdAccountConvert;
 import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
@@ -59,7 +60,11 @@ public class AdAccountController {
         if (Integer.valueOf(JSON.parseObject(result).get("code").toString()) != 2000) {
             return Result.FAILURE(result);
         }
-        return Result.SUCCESS(JSON.parseObject(result).get("result"));
+        JSONArray resultArray = JSON.parseObject(result).getJSONArray("result");
+        // 去除header和footer数据列
+        List dataArray = resultArray.subList(1, resultArray.size() - 1);
+        PageInfo pageInfo = adAccountService.dataPage(dataArray, form);
+        return Result.SUCCESS(pageInfo);
     }
 
 }
