@@ -7,6 +7,7 @@ import com.google.cloud.translate.Translation;
 import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
 import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.GoogleApiUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -19,6 +20,9 @@ import java.util.List;
  */
 @Service
 public class TranslateServiceImpl implements TranslateService {
+
+    @Value("${google.apiKeyPath.translate}")
+    private String apiKeyPath;
 
     @Override
     public List<String> translationList(TranslateForm form) {
@@ -56,7 +60,7 @@ public class TranslateServiceImpl implements TranslateService {
 
     private Translate getTranslateService() {
         // 获取json密钥文件
-        File credentialsPath = new File("src/main/resources/translation-test.json");
+        File credentialsPath = new File(apiKeyPath);
 
         Translate translate = TranslateOptions
                 .newBuilder()
