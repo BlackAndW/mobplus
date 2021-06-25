@@ -56,3 +56,8 @@ qqPay:
 qq:
   openUrl: https://api.q.qq.com/sns/jscode2session
 
+google:
+  apiKeyPath:
+    translate: src/main/resources/translation.json
+    ocr: src/main/resources/vision-api-ocr.json
+
