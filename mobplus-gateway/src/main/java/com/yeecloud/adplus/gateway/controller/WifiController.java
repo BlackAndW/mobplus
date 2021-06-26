@@ -45,9 +45,9 @@ public class WifiController {
     }
 
     @RequestMapping("list")
-    public Result getWifiList(@RequestBody WifiInfo wifiInfo, @RequestParam(value = "distance", defaultValue = "5.000") double distance) {
+    public Result getWifiList(@RequestBody WifiInfo wifiInfo, @RequestParam(value = "distance", defaultValue = "1000.000") double distance) {
         List<WifiInfoVO> resultList = wifiService.getWifiList(wifiInfo, distance);
-        if (resultList == null || resultList.size() < 1) { return Result.FAILURE("get wifiInfo list failure!"); }
+        if (resultList == null || resultList.size() < 1) { return Result.FAILURE("get wifiInfo list failure! No wifi found!"); }
         return Result.SUCCESS(resultList);
     }
 

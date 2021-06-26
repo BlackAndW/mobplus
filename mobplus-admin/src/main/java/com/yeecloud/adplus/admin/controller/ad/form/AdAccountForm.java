@@ -19,6 +19,10 @@ public class AdAccountForm {
 
     private String domain;
 
+    private String dateBefore;
+
+    private String[] dateRange;
+
     private int pageNo;
 
     private int pageSize;

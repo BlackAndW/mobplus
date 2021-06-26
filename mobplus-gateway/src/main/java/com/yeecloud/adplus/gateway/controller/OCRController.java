@@ -42,7 +42,7 @@ public class OCRController {
     @RequestMapping("document")
     public Result documentOCR(@RequestParam("imagePath") String imagePath,
                               @RequestParam("isWeb") String isWeb) throws IOException {
-        String result = ocrService.detectDocumentText(imagePath);
+        String result = ocrService.detectDocumentText(imagePath, isWeb);
         return Result.SUCCESS(result);
     }
 

@@ -2,7 +2,7 @@
     <div>
         <a-row :gutter="12">
             <a-col :span="4">
-                <a-card :bordered="true" :loading="treeloading">
+                <a-card :bordered="true" :loading="treeloading" style="overflow-x: hidden;height: 630px;">
                     <a-button-group>
                         <a-button
                             type="primary"
@@ -14,6 +14,7 @@
                         />
                     </a-button-group>
                     <hr color="#808080">
+
                     <a-form :form="form" id="form" ref="form" layout="vertical">
                         <a-form-item label="谷歌账号：">
                             <a-select
@@ -32,6 +33,26 @@
                                         v-decorator="[ 'domain', { initialValue: item.domain } ]"
                                     />
                                 </a-form-item>
+                                </a-select-option>
+                            </a-select>
+                        </a-form-item>
+                        <hr color="#808080">
+
+                        <a-form-item label="时间：">
+                            <a-select
+                                placeholder="日期范围"
+                                v-decorator="[ 'dateBefore', { initialValue: '7'}]"
+                            >
+                                <a-select-option value="7">过去7天</a-select-option>
+                                <a-select-option value="30">过去30天</a-select-option>
+                                <a-select-option value="1">昨日</a-select-option>
+                                <a-select-option value="0">今日累计</a-select-option>
+                                <a-select-option value="01">本月累计</a-select-option>
+                                <a-select-option value="02">
+                                    自定义
+                                    <a-form-item style="margin:0px; padding:0px; position=absolute">
+                                        <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
+                                    </a-form-item>
                                 </a-select-option>
                             </a-select>
                         </a-form-item>
@@ -82,9 +103,6 @@
                         :lazy="true"
                         :scroll="{ x: 10 }"
                     >
-                        <template slot="timeSlot" slot-scope="text">
-                            {{ text | moment }}
-                        </template>
                     </s-table>
                 </a-card>
             </a-col>
@@ -161,40 +179,17 @@ export default {
                 this.accountsList = res.data;
             });
         },
+
         getReportData (params) {
             this.getColumns();
 
-            // const $self = this;
-            // 触发表单验证
-            // this.form.validateFields((err, values) => {
-            //     const page = Object.assign(params, this.queryParam);
-            //     values.pageNo = page.pageNo;
-            //     values.pageSize = page.pageSize;
-            //     if (!err) {
-            //         return $self
-            //             .$http.post(url + '/report', values)
-            //             .then(data => {
-            //                 $self.$message.success('请求成功!');
-            //             })
-            //             // .catch(err => {
-            //             //     if (err) {
-            //             //         console.log(err.stack);
-            //             //     }
-            //             // });
-            //     }
-            // });
             const page = Object.assign(params, this.queryParam);
             const values = this.form.getFieldsValue();
             values.pageNo = page.pageNo;
             values.pageSize = page.pageSize;
             console.log(values);
             return this.$http.post(url + '/report', values);
-        },
-        // loadDataList: function (params) {
-        //     return this.$http.post(
-        //         url + '/report' + this.currentApp.key,
-        //     );
-        // },
+        }
     }
 };
 </script>

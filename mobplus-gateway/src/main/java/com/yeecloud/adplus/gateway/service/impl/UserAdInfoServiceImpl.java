@@ -40,6 +40,11 @@ public class UserAdInfoServiceImpl implements UserAdInfoService {
             //临时去除为null的数据
             if (userForm.getAppId() == null) {
                 return "data is null";
+            } else if (userForm.getAdRequestCount() == 0
+                    && userForm.getAdShowCount() == 0
+                    && userForm.getAdClickCount() == 0
+            ) {
+                return "All counts are 0!No need to record";
             }
             QUserAdInfo userAdInfo = QUserAdInfo.userAdInfo;
             Predicate predicate = userAdInfo.uuid.eq(userForm.getUuid());

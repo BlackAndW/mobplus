@@ -60,7 +60,7 @@ public class AdAccountServiceImpl implements AdAccountService {
             }
             System.out.println(resultPage);
             JSONArray dataArray = new JSONArray();
-            dataArray =  dataTransfer(resultPage, form, dataArray);
+            dataTransfer(resultPage, form, dataArray);
             PageInfo pageInfo = new PageInfo(form.getPageNo(), form.getPageSize(), resultEndNum, dataArray);
             return pageInfo;
         }
@@ -100,7 +100,7 @@ public class AdAccountServiceImpl implements AdAccountService {
 
     }
 
-    private JSONArray dataTransfer(List<JSONObject> dataList, AdAccountForm form, JSONArray dataArray) {
+    private void dataTransfer(List<JSONObject> dataList, AdAccountForm form, JSONArray dataArray) {
 
         dataList.forEach( row -> {
             JSONObject dimensionValues = row.getJSONObject("row").getJSONObject("dimensionValues");
@@ -112,6 +112,8 @@ public class AdAccountServiceImpl implements AdAccountService {
             form.getDimensions().forEach( dimension -> {
                 if (dimension.equals("APP") || dimension.equals("AD_UNIT")) {
                     dataObj.put(dimension, dimensionValues.getJSONObject(dimension).get("displayLabel"));
+                } else {
+                    dataObj.put(dimension, dimensionValues.getJSONObject(dimension).get("value"));
                 }
 
             });
@@ -120,14 +122,21 @@ public class AdAccountServiceImpl implements AdAccountService {
                 DecimalFormat df = new DecimalFormat("0.00");
                 if (metric.equals("ESTIMATED_EARNINGS")) {
                     int microsValueL = (int) metricValues.getJSONObject(metric).get("microsValue");
-                    String microsValue = df.format(microsValueL/(float)1000000);
-                    dataObj.put(metric, microsValue);
+                    String microsValue = df.format(microsValueL/1000000d);
+                    dataObj.put(metric, microsValue + "$");
                 } else if (metric.equals("MATCH_RATE") || metric.equals("SHOW_RATE")
                     || metric.equals("IMPRESSION_CTR") || metric.equals("IMPRESSION_RPM")) {
-                    //强转会报错
-                    double doubleValueD = Double.valueOf(metricValues.getJSONObject(metric).get("doubleValue").toString());
-                    String doubleValue = df.format(doubleValueD*100);
-                    dataObj.put(metric, doubleValue);
+                    String doubleValue = "";
+                    JSONObject metricObject = metricValues.getJSONObject(metric);
+                    if (metricObject == null) {
+                        doubleValue = "-";
+                    } else {
+                        //强转会报错
+                        double doubleValueD = Double.valueOf(metricValues.getJSONObject(metric).get("doubleValue").toString());
+                        doubleValue = metric.equals("IMPRESSION_RPM") ? df.format(doubleValueD) : df.format(doubleValueD * 100);
+                    }
+                    String symbol = metric.equals("IMPRESSION_RPM") ? "$" : "%";
+                    dataObj.put(metric, doubleValue + symbol);
                 } else {
                     int integerValueL = (int) metricValues.getJSONObject(metric).get("integerValue");
                     dataObj.put(metric, integerValueL);
@@ -136,6 +145,5 @@ public class AdAccountServiceImpl implements AdAccountService {
 
             dataArray.add(dataObj);
         });
-        return dataArray;
     }
 }

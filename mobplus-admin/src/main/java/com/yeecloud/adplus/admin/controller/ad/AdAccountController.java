@@ -52,13 +52,14 @@ public class AdAccountController {
     @PostMapping("/report")
     public Result getReportData(@RequestBody AdAccountForm form) throws IOException {
         System.out.println(form);
+        delMtcByDms(form);
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         final Request request = new Request.Builder().url(form.getDomain() + "/data/admob/reportInfo")
                 .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(form)))
                 .build();
         String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
         if (Integer.valueOf(JSON.parseObject(result).get("code").toString()) != 2000) {
-            return Result.FAILURE(result);
+            return Result.FAILURE(JSON.parseObject(result).get("message").toString());
         }
         JSONArray resultArray = JSON.parseObject(result).getJSONArray("result");
         // 去除header和footer数据列
@@ -67,4 +68,13 @@ public class AdAccountController {
         return Result.SUCCESS(pageInfo);
     }
 
+    private void delMtcByDms(AdAccountForm form) {
+        form.getDimensions().forEach( dimension -> {
+            if (dimension.equals("AD_TYPE")) {
+                form.getMetrics().remove("AD_REQUESTS");
+                form.getMetrics().remove("MATCH_RATE");
+                form.getMetrics().remove("IMPRESSION_RPM");
+            }
+        });
+    }
 }
