@@ -8,7 +8,7 @@ import { VueAxios } from './axios';
 
 axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 axios.defaults.headers.post['Content-Type'] = 'application/json; charset=UTF-8';
-axios.defaults.timeout = 6000;
+axios.defaults.timeout = 60000;
 
 const showReloadAlter = function () {
     const token = Vue.ls.get(ACCESS_TOKEN);

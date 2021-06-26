@@ -8,5 +8,5 @@ import com.yeecloud.adplus.gateway.controller.form.UserAdInfoForm;
  */
 public interface UserAdInfoService {
 
-    void createOrUpdateInfo(UserAdInfoForm userForm, String userIp);
+    String createOrUpdateInfo(UserAdInfoForm userForm, String userIp);
 }
