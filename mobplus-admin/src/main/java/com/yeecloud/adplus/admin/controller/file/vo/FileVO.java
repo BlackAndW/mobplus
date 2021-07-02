@@ -2,6 +2,7 @@ package com.yeecloud.adplus.admin.controller.file.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class FileVO implements Serializable {
     private static final long serialVersionUID = 1L;
 

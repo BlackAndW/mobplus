@@ -33,6 +33,9 @@ const constantRouterComponents = {
     GameList: () => import('@/views/cms/game-list'),
     TalkCategoryList: () => import('@/views/cms/talk-category-list'),
     TalkList: () => import('@/views/cms/talk-list'),
+    ChargeBanner: () => import('@/views/cms/charge-banner-list'),
+    ChargeMaterial: () => import('@/views/cms/charge-material-list'),
+    ChargeMType: () => import('@/views/cms/charge-m-type-list'),
 
     // 发行管理
     ChannelList: () => import('@/views/release/channel-list'),
