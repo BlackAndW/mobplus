@@ -111,3 +111,8 @@ export const MetricsList = [
     { key: '展示点击率', value: 'IMPRESSION_CTR', width: 100 },
     { key: '点击次数', value: 'CLICKS', width: 100 }
 ];
+
+export const ChargeOrderList = [
+    { key: '日期', value: 'createdAt' },
+    { key: '权重', value: 'weight' }
+];

@@ -2,16 +2,36 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="分类名称">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型名称">
                     <a-input
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入分类名称' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="优先级：">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型优先级：">
                     <a-input
                         placeholder="默认最高为1"
-                        v-decorator="[ 'rankOrder', { initialValue: model.rankOrder }]"
+                        v-decorator="[ 'rankOrder', { initialValue: model.rankOrder || 1 , rules: [{ required: true, message: '请输入优先级'}]}]"
                     />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型内排序依据">
+                    <a-select
+                        placeholder="选择排序依据"
+                        @change="handleChangeOrder"
+                        v-decorator="[ 'orderColumn', {initialValue: model.orderColumn, rules: [{ required: true, message: '请选择排序依据'}] }]"
+                    >
+                        <a-select-option
+                            v-for="item in chargeOrderList"
+                            :key="item.key"
+                            :value="item.value"
+                        >{{ item.key }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="升降序">
+                    <a-radio-group button-style="solid" v-decorator="[ 'order', {initialValue: model.order || 1 }]">
+                        <a-radio-button :value="1">降序</a-radio-button>
+                        <a-radio-button :value="2">升序</a-radio-button>
+                    </a-radio-group>
                 </a-form-item>
             </a-form>
         </a-spin>
@@ -21,11 +41,13 @@
 <script>
 import { mixinForm } from '@/utils/mixin';
 import { EDrawer } from '@/components';
+import { ChargeOrderList } from '@/datadict/datadict.js';
 
 export default {
     mixins: [mixinForm],
     components: {
-        EDrawer
+        EDrawer,
+        ChargeOrderList
     },
     data () {
         return {
@@ -35,6 +57,7 @@ export default {
             form: this.$form.createForm(this),
             model: {},
             loading: false,
+            chargeOrderList: ChargeOrderList,
             func: () => {}
         };
     },
@@ -55,6 +78,13 @@ export default {
             this.func = this.$http.put;
             this.confirmLoading = false;
             this.visible = true;
+        },
+        handleChangeOrder (params) {
+            if (params === 'createdAt' || params === 'weight') {
+                this.form.setFieldsValue({ order: 1 });
+            } else {
+                this.form.setFieldsValue({ order: 2 });
+            }
         },
         close: function (success) {
             this.$emit('close', success || false);

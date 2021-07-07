@@ -34,4 +34,6 @@ public class ChargeMaterialVO {
     private String useNumFake;
 
     private Integer useLimit;
+
+    private long createdAt;
 }

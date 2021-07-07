@@ -12,6 +12,7 @@ import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
+import com.yeecloud.meeto.common.util.DateUtils;
 import com.yeecloud.meeto.common.util.Query;
 import com.yeecloud.meeto.common.util.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -20,8 +21,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * @author: Leonard
@@ -203,5 +208,23 @@ public class ChargeServiceImpl implements ChargeService {
     @Transactional(rollbackFor = Throwable.class)
     public void deleteMType(Integer[] ids) throws ServiceException {
         chargeMTypeRepository.deleteById(ids);
+    }
+
+    @Async
+    @Override
+    public void updateWeight() {
+        QChargeMaterial chargeMaterial = QChargeMaterial.chargeMaterial;
+        Predicate predicate = chargeMaterial.deleted.eq(false);
+        List<ChargeMaterial> list = (List<ChargeMaterial>)chargeMaterialRepository.findAll(predicate);
+        list.forEach( item -> {
+            DecimalFormat df = new DecimalFormat("0.00");
+            long useNum = item.getUseNum() == 0 ? 1 : item.getUseNum();
+            long showNum = item.getShowNum() == 0 ? 1 : item.getShowNum();
+            float div = Float.valueOf(df.format((float)useNum/showNum));
+            // 计算和上传日期相隔的天数
+            long cday = (System.currentTimeMillis() - item.getCreatedAt())/86400000;
+            item.setWeight(useNum * 10 + (long)((div - cday)*1000));
+            chargeMaterialRepository.save(item);
+        });
     }
 }

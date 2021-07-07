@@ -14,7 +14,7 @@ public class ChargeMTypeForm {
 
     private String orderColumn;
 
-    private Integer orderRule;
+    private Integer order;
 
     private Integer rankOrder;
 }

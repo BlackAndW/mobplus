@@ -29,7 +29,7 @@ public class ChargeMType extends AuditorEntity{
 
     /** 类型内视频升降序规则：1为降序，2为升序 */
     @Column(name = "c_order_rule")
-    private Integer orderRule;
+    private Integer order;
 
     /** 类型优先级：1为最高 */
     @Column(name = "n_rank_order")

@@ -39,9 +39,13 @@
                     <a-divider type="vertical" />
                     <a v-action="['cms:charge:delete']" @click="onDelete(record)">删除</a>
                 </span>
-                <template slot="imgType" slot-scope="text">
-                    <span v-if="text===1">应用内</span>
-                    <span v-else-if="text===2">应用外</span>
+                <template slot="columnSlot" slot-scope="text">
+                    <span v-if="text==='createdAt'">日期</span>
+                    <span v-else-if="text==='weight'">权重</span>
+                </template>
+                <template slot="orderSlot" slot-scope="text">
+                    <span v-if="text===1">降序</span>
+                    <span v-else-if="text===2">升序</span>
                 </template>
             </s-table>
         </a-card>
@@ -56,8 +60,18 @@ import MtypeModal from '@/views/cms/modules/charge-m-type-modal';
 
 const columns = [
     {
-        title: '名称',
+        title: '类型名称',
         dataIndex: 'name'
+    },
+    {
+        title: '排序依据',
+        dataIndex: 'orderColumn',
+        scopedSlots: { customRender: 'columnSlot' }
+    },
+    {
+        title: '升降序',
+        dataIndex: 'order',
+        scopedSlots: { customRender: 'orderSlot' }
     },
     {
         title: '添加时间',

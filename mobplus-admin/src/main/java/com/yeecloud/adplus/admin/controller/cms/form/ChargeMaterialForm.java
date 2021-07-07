@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class ChargeMaterialForm {
 
-    @NotBlank(message = "名称不能为空")
-    private String name;
+//    @NotBlank(message = "名称不能为空")
+//    private String name;
 
     private ChargeMType type;
 

@@ -58,6 +58,6 @@ file:
     app:
       icon:  /data/server/app/icon/
     aws:
-      rootPath: https://charge-show-storage.s3.ap-southeast-1.amazonaws.com/
+      rootPath: https://d3ky56s9zw9vn5.cloudfront.net/
       imgKeyPath: root/img/
       videoKeyPath: root/video/
