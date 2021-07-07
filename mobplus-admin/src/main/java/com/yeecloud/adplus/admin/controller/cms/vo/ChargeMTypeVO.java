@@ -15,7 +15,9 @@ public class ChargeMTypeVO {
 
     private String orderColumn;
 
-    private Integer orderRule;
+    private Integer order;
 
     private Integer rankOrder;
+
+    private long createdAt;
 }

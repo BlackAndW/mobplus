@@ -2,11 +2,14 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="素材名">
+            <!--
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="素材编号">
                     <a-input
-                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入素材名' }] }]"
+                        placeholder="默认为id"
+                        v-decorator="[ 'name', {initialValue: model.id || '', rules: [ { required: false, message: '请输入素材名' }] }]"
                     />
                 </a-form-item>
+            -->
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所属分类">
                     <a-select
                         placeholder="选择类型"
@@ -51,7 +54,7 @@
                     <a-upload
                         name="fileV"
                         action="/api/file/upload/aws/video/material"
-                        :default-file-list="defaultVideoList"
+                        :file-list="videoList"
                         @change="handleChange('v1', $event)"
                     >
                     <a-button> <a-icon type="upload" /> 上传源视频 </a-button>
@@ -65,7 +68,7 @@
                     <a-upload
                         name="fileV"
                         action="/api/file/upload/aws/video/material"
-                        :default-file-list="defaultVideoIntroList"
+                        :file-list="videoIntroList"
                         @change="handleChange('v2', $event)"
                     >
                     <a-button> <a-icon type="upload" /> 上传预览视频 </a-button>
@@ -103,8 +106,8 @@ export default {
             form: this.$form.createForm(this),
             model: {},
             typeList: [],
-            defaultVideoList: [],
-            defaultVideoIntroList: [],
+            videoList: [],
+            videoIntroList: [],
             loading: false,
             func: () => {}
         };
@@ -119,18 +122,18 @@ export default {
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.model = {};
-            this.defaultVideoList = [];
-            this.defaultVideoIntroList = [];
+            this.videoList = [];
+            this.videoIntroList = [];
             this.url = '/cms/charge/material';
             this.visible = true;
         },
         edit: function (record) {
-            this.title = '编辑:' + record.name;
+            this.title = '编辑:' + record.id;
             this.model = record;
-            this.defaultVideoList = [];
-            this.defaultVideoIntroList = [];
-            this.defaultVideoList.push({ uid: record.id, name: record.videoName });
-            this.defaultVideoIntroList.push({ uid: record.id, name: record.videoIntroduceName });
+            this.videoList = [];
+            this.videoIntroList = [];
+            this.videoList.push({ uid: 1, name: record.videoName });
+            this.videoIntroList.push({ uid: 2, name: record.videoIntroduceName });
             this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
@@ -146,17 +149,33 @@ export default {
                 this.typeList = res.data;
             });
         },
+        remove (params, info) {
+            if (params === 'v1') {
+                this.form.setFieldsValue({ videoName: '' });
+            }
+            if (params === 'v2') {
+                this.form.setFieldsValue({ videoIntroduceName: '' });
+            }
+        },
         handleChange (params, info) {
             // 删除列表项时，对应表单值置为空
             if (info.file.status === 'removed') {
+                console.log(info);
                 if (params === 'v1') {
-                    this.model.videoName = '';
+                    this.videoList = [];
+                    this.form.setFieldsValue({ videoName: '' });
                 }
                 if (params === 'v2') {
-                    this.model.videoIntroduceName = '';
+                    this.videoIntroList = [];
+                    this.form.setFieldsValue({ videoIntroduceName: '' });
                 }
             } else if (info.file.status === 'uploading') {
                 this.loading = true;
+                if (params === 'v1') {
+                    this.videoList = [...info.fileList];
+                } else if (params === 'v2') {
+                    this.videoIntroList = [...info.fileList];
+                }
             // 上传完成后，对应表单项赋值
             } else if (info.file.status === 'done') {
                 if (info.file.response.code === 5000) {
@@ -168,10 +187,10 @@ export default {
                         this.model.videoCover = info.file.response.result.url;
                     }
                     if (params === 'v1') {
-                        this.model.videoName = info.file.response.result.realName;
+                        this.form.setFieldsValue({ videoName: info.file.response.result.realName });
                     }
                     if (params === 'v2') {
-                        this.model.videoIntroduceName = info.file.response.result.realName;
+                        this.form.setFieldsValue({ videoIntroduceName: info.file.response.result.realName });
                     }
                     this.loading = false;
                 }
@@ -191,6 +210,7 @@ export default {
                         .func($self.url, values)
                         .then(data => {
                             $self.$message.success(data || '操作成功!');
+                            this.form.resetFields();
                             $self.close(true);
                         })
                         .catch(err => {

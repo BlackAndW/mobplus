@@ -202,6 +202,12 @@ public class ChargeController {
         return Result.SUCCESS();
     }
 
+//    @RequestMapping("testWeight")
+//    public Result test() {
+//        chargeService.updateWeight();
+//        return Result.SUCCESS();
+//    }
+
     private PageInfo<ChargeMTypeVO> convertMType(Page<ChargeMType> result) {
         List<ChargeMTypeVO> resultList = chargeConvert.convertMType(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);

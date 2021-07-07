@@ -63,8 +63,8 @@ import MaterialModal from '@/views/cms/modules/charge-material-modal';
 
 const columns = [
     {
-        title: '名称',
-        dataIndex: 'name'
+        title: '编号',
+        dataIndex: 'id'
     },
     {
         title: '分类',

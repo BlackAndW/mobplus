@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.admin.task;
 
+import com.yeecloud.adplus.admin.service.ChargeService;
 import com.yeecloud.adplus.admin.service.SysConfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,8 +20,16 @@ public class ScheduleTask {
     @Autowired
     private SysConfService sysConfService;
 
+    @Autowired
+    private ChargeService chargeService;
+
     @Scheduled(fixedDelay = 10000)
     public void refreshConfiguration() {
         sysConfService.refreshAsync();
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void updateMaterialWeight() {
+        chargeService.updateWeight();
     }
 }

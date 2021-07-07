@@ -45,4 +45,6 @@ public interface ChargeService{
     void updateMType(Integer id, ChargeMTypeForm form) throws ServiceException;
 
     void deleteMType(Integer[] ids) throws ServiceException;
+
+    void updateWeight();
 }

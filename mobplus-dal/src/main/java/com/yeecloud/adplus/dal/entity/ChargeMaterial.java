@@ -60,7 +60,7 @@ public class ChargeMaterial extends AuditorEntity {
 
     /** 权重（排序用） */
     @Column(name = "n_weight")
-    private Integer weight;
+    private long weight;
 
     /** 是否收藏 */
     @Column(name = "n_collection")

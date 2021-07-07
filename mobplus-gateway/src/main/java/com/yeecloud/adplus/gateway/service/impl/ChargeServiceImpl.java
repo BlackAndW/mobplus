@@ -76,10 +76,16 @@ public class ChargeServiceImpl implements ChargeService {
             predicate = ExpressionUtils.and(predicate, material.collection.eq(collection));
         }
         Integer type = query.get("type", Integer.class);
+        String orderProperty = "createdAt";
+        Integer order = 1;
         if (type != null && type > 0) {
+            ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
+            orderProperty = mType.getOrderColumn();
+            order = mType.getOrder();
             predicate = ExpressionUtils.and(predicate, material.type.id.eq(type));
         }
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+        Sort.Direction direction = order == 1 ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(new Sort.Order(direction, orderProperty));
         PageRequest pageRequest = PageRequest.of(pageNo, 20, sort);
         List<ChargeMaterial> materialList = chargeMaterialRepository.findAll(predicate, pageRequest).getContent();
 
