@@ -52,7 +52,7 @@ public class AWSUtil {
     }
 
     public static void upload(AmazonS3 s3Client, MultipartFile file, String objectKey) throws IOException {
-        log.info("Uploading %s to S3 bucket %s...\n", objectKey, BucketName);
+        log.info("Uploading {} to S3 bucket {}...\n", objectKey, BucketName);
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
