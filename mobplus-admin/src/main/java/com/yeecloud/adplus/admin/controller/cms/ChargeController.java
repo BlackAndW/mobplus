@@ -140,6 +140,13 @@ public class ChargeController {
         return Result.SUCCESS();
     }
 
+    @GetMapping("material/isCopy")
+    @RequiresPermissions("cms:charge:create")
+    public Result isCopy(@RequestParam String name) {
+        boolean isCopy = chargeService.checkVideoByName(name);
+        return Result.SUCCESS(isCopy ? 1 : 2);
+    }
+
     private PageInfo<ChargeMaterialVO> convertMaterial(Page<ChargeMaterial> result) {
         List<ChargeMaterialVO> resultList = chargeConvert.convertMaterial(result.getContent());
         resultList.forEach( item -> {
