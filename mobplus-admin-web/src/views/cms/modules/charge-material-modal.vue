@@ -31,7 +31,6 @@
                         :show-upload-list="false"
                         action="/api/file/upload/aws/img/videoCover"
                         @change="handleChange('cover', $event)"
-                        v-decorator="[ 'thumb-cover',{initialValue: model.videoCover, rules: [ { required: true, message: '请上传封面图' }] }]"
                     >
                         <img
                             class="cover-img"
@@ -47,7 +46,7 @@
                     </a-upload>
                     <a-input
                         type="hidden"
-                        v-decorator="[ 'videoCover', {initialValue: model.videoCover}]"
+                        v-decorator="[ 'videoCover', {initialValue: model.videoCover, rules: [ { required: true, message: '请上传封面图' }] }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="源视频：">
@@ -55,6 +54,7 @@
                         name="fileV"
                         action="/api/file/upload/aws/video/material"
                         :file-list="videoList"
+                        :before-upload="beforeUpload"
                         @change="handleChange('v1', $event)"
                     >
                     <a-button> <a-icon type="upload" /> 上传源视频 </a-button>
@@ -69,6 +69,7 @@
                         name="fileV"
                         action="/api/file/upload/aws/video/material"
                         :file-list="videoIntroList"
+                        :before-upload="beforeUpload"
                         @change="handleChange('v2', $event)"
                     >
                     <a-button> <a-icon type="upload" /> 上传预览视频 </a-button>
@@ -132,8 +133,8 @@ export default {
             this.model = record;
             this.videoList = [];
             this.videoIntroList = [];
-            this.videoList.push({ uid: 1, name: record.videoName });
-            this.videoIntroList.push({ uid: 2, name: record.videoIntroduceName });
+            this.videoList.push({ uid: record.id, name: record.videoName });
+            this.videoIntroList.push({ uid: record.id, name: record.videoIntroduceName });
             this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
@@ -149,18 +150,35 @@ export default {
                 this.typeList = res.data;
             });
         },
-        remove (params, info) {
-            if (params === 'v1') {
-                this.form.setFieldsValue({ videoName: '' });
-            }
-            if (params === 'v2') {
-                this.form.setFieldsValue({ videoIntroduceName: '' });
-            }
+        // 同名文件免上传
+        beforeUpload (file, fileList) {
+            return new Promise((resolve, reject) => {
+                this.$http.get('/cms/charge/material/isCopy?name=' + file.name).then(res => {
+                    if (res === 1) {
+                        // 已提交的同名文件
+                        this.copyFile(file, fileList);
+                        return false;
+                    } else if (res === 2) {
+                        // 已上传，未提交的同名文件
+                        if (this.form.getFieldValue('videoName') === file.name ||
+                            this.form.getFieldValue('videoIntroduceName') === file.name) {
+                                this.copyFile(file, fileList);
+                                return false;
+                        }
+                        return resolve(true);
+                    }
+                });
+            });
+        },
+        // file-list复制，form表单值复制
+        copyFile (file, fileList) {
+            this.videoList = this.videoIntroList = fileList;
+            this.form.setFieldsValue({ videoName: file.name });
+            this.form.setFieldsValue({ videoIntroduceName: file.name });
         },
         handleChange (params, info) {
             // 删除列表项时，对应表单值置为空
             if (info.file.status === 'removed') {
-                console.log(info);
                 if (params === 'v1') {
                     this.videoList = [];
                     this.form.setFieldsValue({ videoName: '' });
@@ -182,7 +200,6 @@ export default {
                     this.$message.error(info.file.response.message);
                     this.loading = false;
                 } else if (info.file.response.code === 2000) {
-                    console.log(info);
                     if (params === 'cover') {
                         this.model.videoCover = info.file.response.result.url;
                     }
@@ -203,14 +220,12 @@ export default {
             const $self = this;
             // 触发表单验证
             this.form.validateFields((err, values) => {
-                console.log(values);
                 if (!err) {
                     $self.confirmLoading = true;
                     $self
                         .func($self.url, values)
                         .then(data => {
                             $self.$message.success(data || '操作成功!');
-                            this.form.resetFields();
                             $self.close(true);
                         })
                         .catch(err => {

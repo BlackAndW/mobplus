@@ -115,7 +115,7 @@ public class ChargeServiceImpl implements ChargeService {
     public Page<ChargeMaterial> queryMaterial(Query query) throws ServiceException {
         QChargeMaterial chargeMaterial = QChargeMaterial.chargeMaterial;
         Predicate predicate = chargeMaterial.deleted.eq(false);
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "createdAt"));
+        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
         PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
         return chargeMaterialRepository.findAll(predicate, pagRequest);
     }
@@ -226,5 +226,17 @@ public class ChargeServiceImpl implements ChargeService {
             item.setWeight(useNum * 10 + (long)((div - cday)*1000));
             chargeMaterialRepository.save(item);
         });
+    }
+
+    @Override
+    public boolean checkVideoByName(String name) {
+        QChargeMaterial material = QChargeMaterial.chargeMaterial;
+        Predicate predicate = material.deleted.eq(false);
+        if (name != null && name.length() > 0) {
+            predicate = ExpressionUtils.and(predicate, material.videoName.eq(name));
+            predicate = ExpressionUtils.or(predicate, material.videoIntroduceName.eq(name));
+        }
+        List<ChargeMaterial> result = (List<ChargeMaterial>) chargeMaterialRepository.findAll(predicate);
+        return result.size() > 0;
     }
 }

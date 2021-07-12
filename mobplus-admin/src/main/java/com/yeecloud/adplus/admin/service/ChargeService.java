@@ -47,4 +47,6 @@ public interface ChargeService{
     void deleteMType(Integer[] ids) throws ServiceException;
 
     void updateWeight();
+
+    boolean checkVideoByName(String name);
 }
