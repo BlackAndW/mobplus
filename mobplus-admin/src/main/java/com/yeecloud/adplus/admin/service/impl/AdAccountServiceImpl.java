@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
+import com.yeecloud.adplus.admin.controller.ad.form.FbAccountForm;
 import com.yeecloud.adplus.admin.service.AdAccountService;
 import com.yeecloud.adplus.dal.entity.AdAccount;
 import com.yeecloud.adplus.dal.entity.QAdAccount;
@@ -12,6 +13,7 @@ import com.yeecloud.adplus.dal.repository.AdAccountRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -58,10 +60,31 @@ public class AdAccountServiceImpl implements AdAccountService {
                     resultPage = dataList.subList(startNum, resultEndNum);
                 }
             }
-            System.out.println(resultPage);
+
             JSONArray dataArray = new JSONArray();
             dataTransfer(resultPage, form, dataArray);
             PageInfo pageInfo = new PageInfo(form.getPageNo(), form.getPageSize(), resultEndNum, dataArray);
+            return pageInfo;
+        }
+        return null;
+    }
+
+    @Override
+    public PageInfo dataFBPage(List dataList, FbAccountForm form) {
+        if (dataList.size() > 0) {
+            int startNum = (form.getPageNo() - 1) * form.getPageSize();
+            int endNum = startNum + form.getPageSize();
+            int resultEndNum = dataList.size();
+
+            List resultPage = new ArrayList<>();
+            if (resultEndNum > 0) {
+                if (resultEndNum > endNum) {
+                    resultPage = dataList.subList(startNum, endNum);
+                } else {
+                    resultPage = dataList.subList(startNum, resultEndNum);
+                }
+            }
+            PageInfo pageInfo = new PageInfo(form.getPageNo(), form.getPageSize(), resultEndNum, resultPage);
             return pageInfo;
         }
         return null;

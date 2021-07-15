@@ -112,6 +112,12 @@ export const MetricsList = [
     { key: '点击次数', value: 'CLICKS', width: 100 }
 ];
 
+export const LevelList = [
+    { key: '广告系列', value: 'campaign', width: 100 },
+    { key: '广告组', value: 'adset', width: 100 },
+    { key: '广告', value: 'ad', width: 100 }
+];
+
 export const ChargeOrderList = [
     { key: '日期', value: 'createdAt' },
     { key: '权重', value: 'weight' }
