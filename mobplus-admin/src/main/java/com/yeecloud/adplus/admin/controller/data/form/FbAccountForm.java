@@ -1,4 +1,4 @@
-package com.yeecloud.adplus.admin.controller.ad.form;
+package com.yeecloud.adplus.admin.controller.data.form;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.yeecloud.adplus.admin.service;
 
 import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
-import com.yeecloud.adplus.admin.controller.ad.form.FbAccountForm;
+import com.yeecloud.adplus.admin.controller.data.form.FbAccountForm;
 import com.yeecloud.adplus.dal.entity.AdAccount;
 import com.yeecloud.meeto.common.util.PageInfo;
 import org.springframework.data.domain.Page;

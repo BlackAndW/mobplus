@@ -142,6 +142,13 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.12.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.facebook.business.sdk/facebook-java-business-sdk -->
+        <dependency>
+            <groupId>com.facebook.business.sdk</groupId>
+            <artifactId>facebook-java-business-sdk</artifactId>
+            <version>10.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -116,7 +116,7 @@ const columns = [
     }
 ];
 
-const url = '/ad/account';
+const url = '/data/fb';
 export default {
     mixins: [mixinDevice],
     components: {
@@ -151,7 +151,7 @@ export default {
     computed: {},
     methods: {
         getAccountList () {
-            return this.$http.get(url + '/listFB').then(res => {
+            return this.$http.get(url + '/list').then(res => {
                 this.accountsList = res;
             });
         },
@@ -160,7 +160,7 @@ export default {
             const values = this.form.getFieldsValue();
             values.pageNo = page.pageNo;
             values.pageSize = page.pageSize;
-            return this.$http.post(url + '/reportFB', values);
+            return this.$http.post(url + '/info', values);
         }
     }
 };

@@ -2,10 +2,9 @@ package com.yeecloud.adplus.admin.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
-import com.yeecloud.adplus.admin.controller.ad.form.FbAccountForm;
+import com.yeecloud.adplus.admin.controller.data.form.FbAccountForm;
 import com.yeecloud.adplus.admin.service.AdAccountService;
 import com.yeecloud.adplus.dal.entity.AdAccount;
 import com.yeecloud.adplus.dal.entity.QAdAccount;
@@ -13,14 +12,12 @@ import com.yeecloud.adplus.dal.repository.AdAccountRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,14 +91,6 @@ public class AdAccountServiceImpl implements AdAccountService {
     public Page<AdAccount> query(Query query) throws ServiceException {
         return null;
     }
-
-//    @Override
-//    public AdAccount queryById(String accountId) {
-//        QAdAccount adAccount = QAdAccount.adAccount;
-//        Predicate predicate = adAccount.deleted.eq(false);
-//        predicate = ExpressionUtils.and(predicate, adAccount.accountId.eq(accountId));
-//        return adAccountRepository.findOne(predicate).orElse(null);
-//    }
 
     @Override
     public AdAccount findById(Integer id) throws ServiceException {
