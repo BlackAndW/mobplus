@@ -78,6 +78,13 @@ public class AdAccountController {
             return Result.FAILURE(JSON.parseObject(result).get("message").toString());
         }
         JSONArray resultArray = JSON.parseObject(result).getJSONObject("result").getJSONArray("data");
+        // 去除开发者账号
+        for (int i = 0; i < resultArray.size(); i++) {
+            if (resultArray.getJSONObject(i).get("name").equals("吴子仲")) {
+                resultArray.remove(i);
+                break;
+            }
+        }
         return Result.SUCCESS(resultArray);
     }
 
