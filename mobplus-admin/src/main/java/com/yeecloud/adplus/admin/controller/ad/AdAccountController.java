@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.admin.controller.ad.convert.AdAccountConvert;
 import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
+import com.yeecloud.adplus.admin.controller.ad.form.FbAccountForm;
 import com.yeecloud.adplus.admin.controller.ad.vo.AdAccountVO;
 import com.yeecloud.adplus.admin.service.AdAccountService;
 import com.yeecloud.adplus.admin.util.OkHttpUtils;
@@ -51,7 +52,6 @@ public class AdAccountController {
 
     @PostMapping("/report")
     public Result getReportData(@RequestBody AdAccountForm form) throws IOException {
-        System.out.println(form);
         delMtcByDms(form);
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
         final Request request = new Request.Builder().url(form.getDomain() + "/data/admob/reportInfo")
@@ -65,6 +65,35 @@ public class AdAccountController {
         // 去除header和footer数据列
         List dataArray = resultArray.subList(1, resultArray.size() - 1);
         PageInfo pageInfo = adAccountService.dataPage(dataArray, form);
+        return Result.SUCCESS(pageInfo);
+    }
+
+    @GetMapping("/listFB")
+    public Result getFBAccountList() throws IOException {
+//        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        final Request request = new Request.Builder().url("http://localhost:9099/data/fb/list")
+                .get().build();
+        String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
+        if (Integer.valueOf(JSON.parseObject(result).get("code").toString()) != 2000) {
+            return Result.FAILURE(JSON.parseObject(result).get("message").toString());
+        }
+        JSONArray resultArray = JSON.parseObject(result).getJSONObject("result").getJSONArray("data");
+        return Result.SUCCESS(resultArray);
+    }
+
+    @PostMapping("/reportFB")
+    public Result getFBReportData(@RequestBody FbAccountForm form) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        final Request request = new Request.Builder().url("http://localhost:9099/data/fb/info")
+                .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(form)))
+                .build();
+        String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
+        if (Integer.valueOf(JSON.parseObject(result).get("code").toString()) != 2000) {
+            return Result.FAILURE(JSON.parseObject(result).get("message").toString());
+        }
+        JSONArray resultArray = JSON.parseObject(result).getJSONArray("result");
+        if (resultArray.size() == 0) return Result.FAILURE("sorry, data is empty!");
+        PageInfo pageInfo = adAccountService.dataFBPage(resultArray, form);
         return Result.SUCCESS(pageInfo);
     }
 

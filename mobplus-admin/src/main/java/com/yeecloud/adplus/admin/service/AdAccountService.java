@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.admin.service;
 
 import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
+import com.yeecloud.adplus.admin.controller.ad.form.FbAccountForm;
 import com.yeecloud.adplus.dal.entity.AdAccount;
 import com.yeecloud.meeto.common.util.PageInfo;
 import org.springframework.data.domain.Page;
@@ -17,4 +18,6 @@ public interface AdAccountService extends BaseService<AdAccount>{
     Page<AdAccount> queryList();
 
     PageInfo dataPage(List dataList, AdAccountForm form);
+
+    PageInfo dataFBPage(List dataList, FbAccountForm form);
 }

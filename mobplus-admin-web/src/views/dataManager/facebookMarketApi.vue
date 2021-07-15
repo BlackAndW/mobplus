@@ -2,7 +2,7 @@
     <div>
         <a-row :gutter="12">
             <a-col :span="4">
-                <a-card :bordered="true" :loading="treeloading" style="overflow-x: hidden;height: 630px;">
+                <a-card :bordered="true" :loading="treeloading" style="overflow-x: hidden;height: 555px;">
                     <a-button-group>
                         <a-button
                             type="primary"
@@ -16,23 +16,16 @@
                     <hr color="#808080">
 
                     <a-form :form="form" id="form" ref="form" layout="vertical">
-                        <a-form-item label="谷歌账号：">
+                        <a-form-item label="脸书账号：">
                             <a-select
                                 placeholder="选择账号"
-                                v-decorator="[ 'accountId', { initialValue: 'pub-9840918607046381' } ]"
+                                v-decorator="[ 'accountId', { rules: [ { required: true, message: '请选择账号' }] } ]"
                             >
                                 <a-select-option
                                     v-for="item in accountsList"
                                     :key="item.name"
-                                    :value="item.accountId"
+                                    :value="item.id"
                                 >{{ item.name }}
-                                <a-form-item style="margin:0px; padding:0px">
-                                    <a-input
-                                        v-show="false"
-                                        :id="item.name"
-                                        v-decorator="[ 'domain', { initialValue: item.domain } ]"
-                                    />
-                                </a-form-item>
                                 </a-select-option>
                             </a-select>
                         </a-form-item>
@@ -41,31 +34,25 @@
                         <a-form-item label="时间：">
                             <a-select
                                 placeholder="日期范围"
-                                v-decorator="[ 'dateBefore', { initialValue: '7'}]"
+                                v-decorator="[ 'dateBefore', { initialValue: '3'}]"
                             >
+                                <a-select-option value="3">过去3天</a-select-option>
                                 <a-select-option value="7">过去7天</a-select-option>
                                 <a-select-option value="30">过去30天</a-select-option>
-                                <a-select-option value="1">昨日</a-select-option>
+                                <a-select-option value="90">过去90天</a-select-option>
                                 <a-select-option value="0">今日累计</a-select-option>
                                 <a-select-option value="01">本月累计</a-select-option>
-                                <a-select-option value="02">
-                                    自定义
-                                    <a-form-item style="margin:0px; padding:0px; position=absolute">
-                                        <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
-                                    </a-form-item>
-                                </a-select-option>
                             </a-select>
                         </a-form-item>
                         <hr color="#808080">
 
-                        <a-form-item label="维度：">
+                        <a-form-item label="层级：">
                             <a-select
-                                mode="multiple"
-                                placeholder="选择维度"
-                                v-decorator="[ 'dimensions', { initialValue: ['APP'] } ]"
+                                placeholder="选择层级："
+                                v-decorator="[ 'level', { initialValue: 'campaign' } ]"
                             >
                                 <a-select-option
-                                    v-for="item in dimensionsList"
+                                    v-for="item in levelList"
                                     :key="item.key"
                                     :value="item.value"
                                 >{{ item.key }}
@@ -73,21 +60,6 @@
                             </a-select>
                         </a-form-item>
                         <hr color="#808080">
-
-                        <a-form-item label="指标：">
-                            <a-select
-                                mode="multiple"
-                                placeholder="选择指标"
-                                v-decorator="[ 'metrics', { initialValue: ['ESTIMATED_EARNINGS', 'IMPRESSION_RPM', 'AD_REQUESTS', 'IMPRESSIONS', 'CLICKS']}]"
-                            >
-                                <a-select-option
-                                    v-for="item in metricsList"
-                                    :key="item.key"
-                                    :value="item.value"
-                                >{{ item.key }}
-                                </a-select-option>
-                            </a-select>
-                        </a-form-item>
                     </a-form>
                 </a-card>
             </a-col>
@@ -113,7 +85,36 @@
 <script>
 import { mixinDevice } from '@/utils/mixin';
 import { STable, STree, ETag } from '@/components';
-import { DimensionsList, MetricsList } from '@/datadict/datadict.js';
+import { LevelList } from '@/datadict/datadict.js';
+
+const columns = [
+    {
+        title: '名称',
+        dataIndex: 'name'
+    },
+    {
+        title: '成效',
+        dataIndex: 'result',
+        width: 100
+    },
+    {
+        title: '展示次数',
+        dataIndex: 'impressions',
+        width: 100
+    },
+    {
+        title: '单次成效费用',
+        dataIndex: 'cost_per_result'
+    },
+    {
+        title: '花费金额',
+        dataIndex: 'spend'
+    },
+    {
+        title: '点击量',
+        dataIndex: 'clicks'
+    }
+];
 
 const url = '/ad/account';
 export default {
@@ -130,7 +131,7 @@ export default {
             // 查询参数
             queryParam: {},
             // 表头
-            columns: [],
+            columns,
             // 选中记录
             selectedRowKeys: [],
             selectedRows: [],
@@ -138,56 +139,28 @@ export default {
             loadData: this.getReportData,
             // 分类树数据
             accountsList: [],
-            dimensionsList: DimensionsList,
-            metricsList: MetricsList,
+            levelList: LevelList,
             treeloading: false,
             appTreeData: []
         };
     },
     created () {},
     mounted () {
-        this.getColumns();
         this.getAccountList();
     },
     computed: {},
     methods: {
-        // 动态展示列
-        getColumns () {
-            // 清空列值
-            this.columns = [];
-            this.form.getFieldValue('dimensions').forEach(value => {
-                DimensionsList.forEach(item => {
-                    if (value === item.value) {
-                        this.columns.push({ title: item.key, dataIndex: item.value, width: item.width, fixed: 'left' });
-                    }
-                });
-            });
-
-            this.form.getFieldValue('metrics').forEach(value => {
-                MetricsList.forEach(item => {
-                    if (value === item.value) {
-                        this.columns.push({ title: item.key, dataIndex: item.value, width: item.width });
-                    }
-                });
-            });
-            // 空白列不设宽度以适应弹性布局
-            this.columns.push({});
-        },
         getAccountList () {
-            return this.$http.get(url + '/list').then(res => {
-                this.accountsList = res.data;
+            return this.$http.get(url + '/listFB').then(res => {
+                this.accountsList = res;
             });
         },
-
         getReportData (params) {
-            this.getColumns();
-
             const page = Object.assign(params, this.queryParam);
             const values = this.form.getFieldsValue();
             values.pageNo = page.pageNo;
             values.pageSize = page.pageSize;
-            console.log(values);
-            return this.$http.post(url + '/report', values);
+            return this.$http.post(url + '/reportFB', values);
         }
     }
 };

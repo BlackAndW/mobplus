@@ -54,7 +54,8 @@ const constantRouterComponents = {
     // 数据管理
     VpnAccountLog: () => import('@/views/dataManager/vpnAccount-log'),
     AppStatistics: () => import('@/views/dataManager/appStatistics'),
-    GoogleAdmobApi: () => import('@/views/dataManager/googleAdmobApi')
+    GoogleAdmobApi: () => import('@/views/dataManager/googleAdmobApi'),
+    FacebookMarketApi: () => import('@/views/dataManager/facebookMarketApi')
 };
 
 // 前端未找到页面路由（固定不用改）
