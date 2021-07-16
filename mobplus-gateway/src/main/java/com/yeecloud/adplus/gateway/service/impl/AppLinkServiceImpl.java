@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author: Leonard
@@ -35,7 +36,7 @@ public class AppLinkServiceImpl implements AppLinkService {
     AppLinkRepository appLinkRepository;
 
     @Override
-    public List<AppLinkVO> query(AppLinkForm form) {
+    public AppLinkVO query(AppLinkForm form) {
         QAppLink qAppLink = QAppLink.appLink;
         Predicate predicate = qAppLink.deleted.eq(false);
         if (form.getAppId() != null && form.getAppId().length() > 0) {
@@ -46,15 +47,14 @@ public class AppLinkServiceImpl implements AppLinkService {
             predicate = ExpressionUtils.and(predicate, qAppLink.id.eq(form.getId()));
         }
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
-        PageRequest pageRequest = PageRequest.of(0, 100, sort);
+
+        PageRequest pageRequest = PageRequest.of(0, 500, sort);
         List<AppLink> appLinks = appLinkRepository.findAll(predicate, pageRequest).getContent();
-        List<AppLinkVO> voList = new ArrayList<>();
-        appLinks.forEach(appLink -> {
-            AppLinkVO vo = new AppLinkVO();
-            NewBeanUtils.copyProperties(vo, appLink, true);
-            voList.add(vo);
-        });
-        return voList;
+        Integer randomIndex = new Random().nextInt(appLinks.size());
+        AppLink appLink = appLinks.get(randomIndex);
+        AppLinkVO vo = new AppLinkVO();
+        NewBeanUtils.copyProperties(vo, appLink, true);
+        return vo;
     }
 
     @Override

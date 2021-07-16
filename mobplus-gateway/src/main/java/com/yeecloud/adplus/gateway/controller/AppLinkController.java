@@ -24,8 +24,8 @@ public class AppLinkController {
 
     @PostMapping("list")
     public Result getLinks(@RequestBody AppLinkForm form) {
-        List<AppLinkVO> list = appLinkService.query(form);
-        return Result.SUCCESS(list);
+        AppLinkVO appLinkVO = appLinkService.query(form);
+        return Result.SUCCESS(appLinkVO);
     }
 
     @PostMapping("update")

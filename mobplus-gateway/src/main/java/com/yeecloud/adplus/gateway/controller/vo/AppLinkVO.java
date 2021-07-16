@@ -22,4 +22,6 @@ public class AppLinkVO {
     private String imgUrl;
 
     private Integer clickNum;
+
+    private Integer showNum;
 }

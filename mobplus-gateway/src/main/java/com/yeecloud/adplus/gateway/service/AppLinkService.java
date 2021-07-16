@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface AppLinkService {
 
-    List<AppLinkVO> query(AppLinkForm form);
+    AppLinkVO query(AppLinkForm form);
 
     Result updateData(AppLinkForm form);
 }

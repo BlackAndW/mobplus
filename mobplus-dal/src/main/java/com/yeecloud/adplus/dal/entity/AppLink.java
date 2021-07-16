@@ -42,4 +42,8 @@ public class AppLink extends AuditorEntity{
     @Column(name = "n_click_num")
     private Integer clickNum = 0;
 
+    /** 展示次数 */
+    @Column(name = "n_show_num")
+    private Integer showNum = 0;
+
 }
