@@ -17,7 +17,7 @@
                         >新增</a-button>
                         <a-button
                             icon="delete"
-                            v-action="['cms:charge:edit']"
+                            v-action="['cms:charge:delete']"
                             v-if="selectedRowKeys.length>0"
                             @click="onDelete()"
                         >删除</a-button>

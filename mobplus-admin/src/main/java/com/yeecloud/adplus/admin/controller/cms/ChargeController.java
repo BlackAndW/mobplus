@@ -86,7 +86,7 @@ public class ChargeController {
     }
 
     @DeleteMapping("banner")
-    @RequiresPermissions("cms:game:delete")
+    @RequiresPermissions("cms:charge:delete")
     public Result deleteBanner(@RequestBody Integer[] ids) throws ServiceException {
         chargeService.deleteBanner(ids);
         return Result.SUCCESS();
@@ -134,7 +134,7 @@ public class ChargeController {
     }
 
     @DeleteMapping("material")
-    @RequiresPermissions("cms:game:delete")
+    @RequiresPermissions("cms:charge:delete")
     public Result deleteMaterial(@RequestBody Integer[] ids) throws ServiceException {
         chargeService.deleteMaterial(ids);
         return Result.SUCCESS();
@@ -203,7 +203,7 @@ public class ChargeController {
     }
 
     @DeleteMapping("mtype")
-    @RequiresPermissions("cms:game:delete")
+    @RequiresPermissions("cms:charge:delete")
     public Result deleteMType(@RequestBody Integer[] ids) throws ServiceException {
         chargeService.deleteMType(ids);
         return Result.SUCCESS();

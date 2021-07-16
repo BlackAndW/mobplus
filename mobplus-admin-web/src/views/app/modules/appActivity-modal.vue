@@ -5,7 +5,7 @@
                 <a-form-item>
                     <a-input
                         type="hidden"
-                        v-decorator="[ 'appId', {initialValue: model.app}]"
+                        v-decorator="[ 'appId', {initialValue: model.appId}]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="活动名称">
@@ -122,7 +122,7 @@ export default {
         add: function (currentApp) {
             this.title = '添加活动';
             this.model = {};
-            this.model.app = currentApp.key;
+            this.model.appId = currentApp.key;
             this.url = '/app/activity';
             this.func = this.$http.post;
             this.confirmLoading = false;
@@ -133,7 +133,7 @@ export default {
         edit: function (record, currentApp) {
             this.title = '编辑活动:' + record.id;
             this.model = record;
-            this.model.app = currentApp.key;
+            this.model.appId = currentApp.key;
             this.url = '/app/activity/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
