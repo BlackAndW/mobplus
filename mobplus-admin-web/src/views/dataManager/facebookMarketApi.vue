@@ -34,14 +34,21 @@
                         <a-form-item label="时间：">
                             <a-select
                                 placeholder="日期范围"
-                                v-decorator="[ 'dateBefore', { initialValue: '3'}]"
+                                v-decorator="[ 'dateBefore', { initialValue: '-1'}]"
                             >
+                                <a-select-option value="-1">昨天</a-select-option>
                                 <a-select-option value="3">过去3天</a-select-option>
                                 <a-select-option value="7">过去7天</a-select-option>
                                 <a-select-option value="30">过去30天</a-select-option>
                                 <a-select-option value="90">过去90天</a-select-option>
                                 <a-select-option value="0">今日累计</a-select-option>
                                 <a-select-option value="01">本月累计</a-select-option>
+                                <a-select-option value="02">
+                                    自定义
+                                    <a-form-item style="margin:0px; padding:0px; position=absolute">
+                                        <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
+                                    </a-form-item>
+                                </a-select-option>
                             </a-select>
                         </a-form-item>
                         <hr color="#808080">

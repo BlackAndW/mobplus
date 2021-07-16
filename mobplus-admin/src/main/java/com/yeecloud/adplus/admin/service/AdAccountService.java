@@ -13,7 +13,7 @@ import java.util.List;
  * @create: 2021/6/10
  */
 
-public interface AdAccountService extends BaseService<AdAccount>{
+public interface AdAccountService{
 
     Page<AdAccount> queryList();
 

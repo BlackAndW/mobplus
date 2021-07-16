@@ -87,31 +87,6 @@ public class AdAccountServiceImpl implements AdAccountService {
         return null;
     }
 
-    @Override
-    public Page<AdAccount> query(Query query) throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public AdAccount findById(Integer id) throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public void create(AdAccount form) throws ServiceException {
-
-    }
-
-    @Override
-    public void update(Integer id, AdAccount form) throws ServiceException {
-
-    }
-
-    @Override
-    public void delete(Integer[] ids) throws ServiceException {
-
-    }
-
     private void dataTransfer(List<JSONObject> dataList, AdAccountForm form, JSONArray dataArray) {
 
         dataList.forEach( row -> {

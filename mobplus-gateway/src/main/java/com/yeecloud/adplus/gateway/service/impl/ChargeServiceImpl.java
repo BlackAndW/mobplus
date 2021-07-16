@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -71,10 +72,10 @@ public class ChargeServiceImpl implements ChargeService {
         if (pageNo == null || pageNo == 0) {
             pageNo = 0;
         }
-        Integer collection = query.get("collection", Integer.class);
-        if (collection != null && collection > 0) {
-            predicate = ExpressionUtils.and(predicate, material.collection.eq(collection));
-        }
+//        Integer collection = query.get("collection", Integer.class);
+//        if (collection != null && collection > 0) {
+//            predicate = ExpressionUtils.and(predicate, material.collection.eq(collection));
+//        }
         Integer type = query.get("type", Integer.class);
         String orderProperty = "createdAt";
         Integer order = 1;
@@ -131,6 +132,7 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public synchronized Result uploadData(ChargeShowForm form) {
         if (form.getVid() == null || form.getVid() < 1) {
             return Result.FAILURE("vid is null");

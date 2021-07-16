@@ -50,11 +50,11 @@
                                 <a-select-option value="01">本月累计</a-select-option>
                                 <a-select-option value="02">
                                     自定义
-                                    <a-form-item style="margin:0px; padding:0px; position=absolute">
-                                        <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
-                                    </a-form-item>
                                 </a-select-option>
                             </a-select>
+                        </a-form-item>
+                        <a-form-item style="margin:0px; padding:0px; position=absolute">
+                            <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
                         </a-form-item>
                         <hr color="#808080">
 

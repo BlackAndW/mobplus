@@ -1,19 +1,18 @@
 package com.yeecloud.adplus.admin.controller.data;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.facebook.ads.sdk.*;
 import com.yeecloud.adplus.admin.controller.data.form.FbAccountForm;
 import com.yeecloud.adplus.admin.controller.data.vo.FbApiVO;
 import com.yeecloud.adplus.admin.service.AdAccountService;
 import com.yeecloud.adplus.admin.service.FbApiService;
-import com.yeecloud.adplus.admin.util.FBUtil;
 import com.yeecloud.adplus.admin.util.OkHttpUtils;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,17 +35,22 @@ import java.util.Map;
 @RequestMapping("/api/data/fb")
 public class FBApiController {
 
+    @Value("${fb.token}")
+    String ACCESS_TOKEN;
+
+    @Value("${fb.account_id}")
+    String ACCOUNT_ID;
+
+    @Value("${fb.app_secret}")
+    String APP_SECRET;
+
     @Resource
     AdAccountService adAccountService;
 
-    private static final String ACCESS_TOKEN = FBUtil.getToken();
-    private static final Long ACCOUNT_ID = 866010113952552L;
-    private static final String APP_SECRET = "c80463d2dbff0d009d2ae1d2503d39c5";
-    private static final APIContext context = new APIContext(ACCESS_TOKEN, APP_SECRET).enableDebug(false);
-
     @RequestMapping("list")
     public Result list() throws IOException {
-        HttpUrl.Builder httpBuilder = HttpUrl.parse(OkHttpUtils.FB_GRAPH_API + ACCOUNT_ID + "/adaccounts").newBuilder();
+        final long ACCOUNT_ID_L = Long.valueOf(ACCOUNT_ID);
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(OkHttpUtils.FB_GRAPH_API + ACCOUNT_ID_L + "/adaccounts").newBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("access_token", ACCESS_TOKEN);
         params.put("fields", "id,name,account_status");
@@ -63,6 +67,7 @@ public class FBApiController {
 
     @RequestMapping("info")
     public Result getInfo(@RequestBody FbAccountForm form) throws APIException {
+        final APIContext context = new APIContext(ACCESS_TOKEN, APP_SECRET).enableDebug(false);
         AdAccount account = new AdAccount(form.getAccountId(), context);
         APINodeList<AdsInsights> insights = FbApiService.getAdsInsights(form, account);
 

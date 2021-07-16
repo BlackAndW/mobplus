@@ -10,15 +10,15 @@ import com.yeecloud.meeto.common.util.Query;
  * @author: Leonard
  * @create: 2021/6/10
  */
-public interface BaseService<T> {
+public interface BaseService<T, K> {
 
     Page<T> query(Query query) throws ServiceException;
 
     T findById(Integer id) throws ServiceException;
 
-    void create(T form) throws ServiceException;
+    void create(K form) throws ServiceException;
 
-    void update(Integer id, T form) throws ServiceException;
+    void update(Integer id, K form) throws ServiceException;
 
     void delete(Integer[] ids) throws ServiceException;
 
