@@ -42,6 +42,7 @@
                             <a-select
                                 placeholder="日期范围"
                                 v-decorator="[ 'dateBefore', { initialValue: '7'}]"
+                                @change="onChangeSelect"
                             >
                                 <a-select-option value="7">过去7天</a-select-option>
                                 <a-select-option value="30">过去30天</a-select-option>
@@ -54,7 +55,7 @@
                             </a-select>
                         </a-form-item>
                         <a-form-item style="margin:0px; padding:0px; position=absolute">
-                            <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
+                            <a-range-picker style="margin-top: 5px" size="small" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
                         </a-form-item>
                         <hr color="#808080">
 
@@ -173,12 +174,17 @@ export default {
             // 空白列不设宽度以适应弹性布局
             this.columns.push({});
         },
+        onChangeSelect (params) {
+            console.log(params);
+        },
+        onChangeDate (date) {
+            console.log(date);
+        },
         getAccountList () {
             return this.$http.get(url + '/list').then(res => {
                 this.accountsList = res.data;
             });
         },
-
         getReportData (params) {
             this.getColumns();
 

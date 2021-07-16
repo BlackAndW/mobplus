@@ -76,7 +76,8 @@ import AppLinkModal from '@/views/app/modules/app-link-modal';
 const columns = [
     {
         title: '名称',
-        dataIndex: 'name'
+        dataIndex: 'name',
+        width: 100
     },
     {
         title: '预览图',
@@ -86,20 +87,28 @@ const columns = [
     },
     {
         title: '跳转链接',
-        dataIndex: 'imgUrl'
+        dataIndex: 'imgUrl',
+        width: 300
     },
     {
         title: '点击次数',
-        dataIndex: 'clickNum'
+        dataIndex: 'clickNum',
+        width: 50
     },
     {
-        title: '添加时间',
-        dataIndex: 'createdAt',
-        scopedSlots: { customRender: 'dateSlot' }
+        title: '展示次数',
+        dataIndex: 'showNum',
+        width: 50
     },
+    // {
+    //     title: '添加时间',
+    //     dataIndex: 'createdAt',
+    //     scopedSlots: { customRender: 'dateSlot' }
+    // },
     {
         title: '操作',
         dataIndex: 'action',
+        width: 100,
         align: 'center',
         scopedSlots: { customRender: 'actionSlot' }
     }
