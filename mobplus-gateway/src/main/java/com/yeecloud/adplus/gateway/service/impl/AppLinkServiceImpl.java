@@ -67,6 +67,9 @@ public class AppLinkServiceImpl implements AppLinkService {
         if (form.getClickNum() != null && form.getClickNum() > 0) {
             appLink.setClickNum(appLink.getClickNum() + 1);
         }
+        if (form.getShowNum() != null && form.getShowNum() > 0) {
+            appLink.setShowNum(appLink.getShowNum() + 1);
+        }
         appLinkRepository.save(appLink);
         return Result.SUCCESS("upload data success!");
     }

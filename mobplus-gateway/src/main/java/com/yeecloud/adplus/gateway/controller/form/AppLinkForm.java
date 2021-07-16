@@ -14,4 +14,6 @@ public class AppLinkForm {
     private String appId;
 
     private Integer clickNum;
+
+    private Integer showNum;
 }
