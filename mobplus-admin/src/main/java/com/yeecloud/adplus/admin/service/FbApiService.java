@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.admin.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.facebook.ads.sdk.APIException;
 import com.facebook.ads.sdk.APINodeList;
 import com.facebook.ads.sdk.AdAccount;
@@ -28,17 +29,20 @@ public class FbApiService {
     public static APINodeList<AdsInsights> getAdsInsights(FbAccountForm form, AdAccount account) throws APIException {
         List<String> fields = Arrays.asList("clicks", "spend", "impressions",  "actions", form.getLevel() + "_name");
         String filter = "[{field: \"action_type\",operator:\"IN\", value: ['mobile_app_install']}]";
-        String date = "";
-        if (form.getDateBefore().equals("0")) {
-            date = "today";
-        } else if (form.getDateBefore().equals("01")) {
-            date = "this_month";
-        } else {
-            date = "last_" + form.getDateBefore() + "d";
+        if (form.getDateBefore().equals("diy")) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("since", form.getDateRange()[0]);
+            jsonObject.put("until", form.getDateRange()[1]);
+            return account.getInsights()
+                    .setLevel(form.getLevel())
+                    .setTimeRange(jsonObject)
+                    .setFields(fields)
+                    .setFiltering(filter)
+                    .execute();
         }
         return account.getInsights()
                 .setLevel(form.getLevel())
-                .setDatePreset(date)
+                .setDatePreset(form.getDateBefore())
                 .setFields(fields)
                 .setFiltering(filter)
                 .execute();

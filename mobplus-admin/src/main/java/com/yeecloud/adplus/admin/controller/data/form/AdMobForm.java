@@ -1,7 +1,8 @@
-package com.yeecloud.adplus.admin.controller.ad.form;
+package com.yeecloud.adplus.admin.controller.data.form;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  * @create: 2021/6/11
  */
 @Data
-public class AdAccountForm {
+public class AdMobForm {
 
     private String accountId;
 

@@ -3,15 +3,13 @@ package com.yeecloud.adplus.admin.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.querydsl.core.types.Predicate;
-import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
+import com.yeecloud.adplus.admin.controller.data.form.AdMobForm;
 import com.yeecloud.adplus.admin.controller.data.form.FbAccountForm;
 import com.yeecloud.adplus.admin.service.AdAccountService;
 import com.yeecloud.adplus.dal.entity.AdAccount;
 import com.yeecloud.adplus.dal.entity.QAdAccount;
 import com.yeecloud.adplus.dal.repository.AdAccountRepository;
-import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.PageInfo;
-import com.yeecloud.meeto.common.util.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -43,7 +41,7 @@ public class AdAccountServiceImpl implements AdAccountService {
     }
 
     @Override
-    public PageInfo dataPage(List dataList, AdAccountForm form) {
+    public PageInfo dataPage(List dataList, AdMobForm form) {
         if (dataList.size() > 0) {
             int startNum = (form.getPageNo() - 1) * form.getPageSize();
             int endNum = startNum + form.getPageSize();
@@ -87,7 +85,7 @@ public class AdAccountServiceImpl implements AdAccountService {
         return null;
     }
 
-    private void dataTransfer(List<JSONObject> dataList, AdAccountForm form, JSONArray dataArray) {
+    private void dataTransfer(List<JSONObject> dataList, AdMobForm form, JSONArray dataArray) {
 
         dataList.forEach( row -> {
             JSONObject dimensionValues = row.getJSONObject("row").getJSONObject("dimensionValues");
