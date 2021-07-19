@@ -1,4 +1,4 @@
-package com.yeecloud.adplus.admin.controller.ad.convert;
+package com.yeecloud.adplus.admin.controller.data.convert;
 
 import com.yeecloud.adplus.admin.common.convert.GeneralConvert;
 import com.yeecloud.adplus.admin.controller.ad.vo.AdAccountVO;
@@ -14,7 +14,7 @@ import java.util.List;
  * @create: 2021/6/10
  */
 @Mapper(componentModel = "spring", uses = GeneralConvert.class)
-public interface AdAccountConvert{
+public interface AdMobConvert {
     @Mappings({
             @Mapping(target = "advId", source = "advertiser.id")
     })

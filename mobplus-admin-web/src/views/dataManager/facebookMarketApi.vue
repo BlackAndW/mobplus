@@ -34,20 +34,18 @@
                         <a-form-item label="时间：">
                             <a-select
                                 placeholder="日期范围"
-                                v-decorator="[ 'dateBefore', { initialValue: '-1'}]"
+                                v-decorator="[ 'dateBefore', { initialValue: 'yesterday'}]"
+                                @change="onChangeSelect"
                             >
-                                <a-select-option value="-1">昨天</a-select-option>
-                                <a-select-option value="3">过去3天</a-select-option>
-                                <a-select-option value="7">过去7天</a-select-option>
-                                <a-select-option value="30">过去30天</a-select-option>
-                                <a-select-option value="90">过去90天</a-select-option>
-                                <a-select-option value="0">今日累计</a-select-option>
-                                <a-select-option value="01">本月累计</a-select-option>
-                                <a-select-option value="02">
+                                <a-select-option value="yesterday">昨天</a-select-option>
+                                <a-select-option value="last_3d">过去3天</a-select-option>
+                                <a-select-option value="last_7d">过去7天</a-select-option>
+                                <a-select-option value="last_30d">过去30天</a-select-option>
+                                <a-select-option value="last_90d">过去90天</a-select-option>
+                                <a-select-option value="today">今日累计</a-select-option>
+                                <a-select-option value="this_month">本月累计</a-select-option>
+                                <a-select-option value="diy">
                                     自定义
-                                    <a-form-item style="margin:0px; padding:0px; position=absolute">
-                                        <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
-                                    </a-form-item>
                                 </a-select-option>
                             </a-select>
                         </a-form-item>
@@ -71,6 +69,9 @@
                 </a-card>
             </a-col>
             <a-col :span="20">
+                <a-form-item v-if="dateRangeArea" style="margin:0px;">
+                    <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
+                </a-form-item>
                 <a-card :bordered="true" class="card-list">
                     <!--       -->
                     <s-table
@@ -148,6 +149,7 @@ export default {
             accountsList: [],
             levelList: LevelList,
             treeloading: false,
+            dateRangeArea: false,
             appTreeData: []
         };
     },
@@ -157,17 +159,31 @@ export default {
     },
     computed: {},
     methods: {
+        onChangeSelect (params) {
+            if (params === 'diy') {
+                this.dateRangeArea = true;
+            }
+        },
+        onChangeDate (date, dateString) {
+            this.queryParam.dateRange = [dateString[0], dateString[1]];
+        },
         getAccountList () {
             return this.$http.get(url + '/list').then(res => {
                 this.accountsList = res;
             });
         },
         getReportData (params) {
-            const page = Object.assign(params, this.queryParam);
-            const values = this.form.getFieldsValue();
-            values.pageNo = page.pageNo;
-            values.pageSize = page.pageSize;
-            return this.$http.post(url + '/info', values);
+            let $values = {};
+            this.form.validateFields((err, values) => {
+                if (!err) {
+                    const queryParam = Object.assign(params, this.queryParam);
+                    values.pageNo = queryParam.pageNo;
+                    values.pageSize = queryParam.pageSize;
+                    values.dateRange = queryParam.dateRange;
+                    $values = values;
+                }
+            });
+            return this.$http.post(url + '/info', $values);
         }
     }
 };

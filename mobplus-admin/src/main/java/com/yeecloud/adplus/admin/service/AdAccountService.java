@@ -1,6 +1,6 @@
 package com.yeecloud.adplus.admin.service;
 
-import com.yeecloud.adplus.admin.controller.ad.form.AdAccountForm;
+import com.yeecloud.adplus.admin.controller.data.form.AdMobForm;
 import com.yeecloud.adplus.admin.controller.data.form.FbAccountForm;
 import com.yeecloud.adplus.dal.entity.AdAccount;
 import com.yeecloud.meeto.common.util.PageInfo;
@@ -17,7 +17,7 @@ public interface AdAccountService{
 
     Page<AdAccount> queryList();
 
-    PageInfo dataPage(List dataList, AdAccountForm form);
+    PageInfo dataPage(List dataList, AdMobForm form);
 
     PageInfo dataFBPage(List dataList, FbAccountForm form);
 }

@@ -54,9 +54,6 @@
                                 </a-select-option>
                             </a-select>
                         </a-form-item>
-                        <a-form-item style="margin:0px; padding:0px; position=absolute">
-                            <a-range-picker style="margin-top: 5px" size="small" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
-                        </a-form-item>
                         <hr color="#808080">
 
                         <a-form-item label="维度：">
@@ -93,6 +90,9 @@
                 </a-card>
             </a-col>
             <a-col :span="20">
+                <a-form-item v-if="dateRangeArea" style="margin:0px;">
+                    <a-range-picker style="margin-top: 5px" v-decorator="[ 'dateRange' ]" @change="onChangeDate"/>
+                </a-form-item>
                 <a-card :bordered="true" class="card-list">
                     <!--       -->
                     <s-table
@@ -142,6 +142,7 @@ export default {
             dimensionsList: DimensionsList,
             metricsList: MetricsList,
             treeloading: false,
+            dateRangeArea: false,
             appTreeData: []
         };
     },
@@ -175,10 +176,14 @@ export default {
             this.columns.push({});
         },
         onChangeSelect (params) {
-            console.log(params);
+            if (params === '02') {
+                this.dateRangeArea = true;
+            }
         },
-        onChangeDate (date) {
+        onChangeDate (date, dateString) {
             console.log(date);
+            console.log(dateString);
+            this.queryParam.dateRange = [dateString[0], dateString[1]];
         },
         getAccountList () {
             return this.$http.get(url + '/list').then(res => {
@@ -187,13 +192,12 @@ export default {
         },
         getReportData (params) {
             this.getColumns();
-
-            const page = Object.assign(params, this.queryParam);
-            const values = this.form.getFieldsValue();
-            values.pageNo = page.pageNo;
-            values.pageSize = page.pageSize;
-            console.log(values);
-            return this.$http.post(url + '/report', values);
+            let values = this.form.getFieldsValue();
+            const queryParam = Object.assign(params, this.queryParam);
+            values.pageNo = queryParam.pageNo;
+            values.pageSize = queryParam.pageSize;
+            values.dateRange = queryParam.dateRange;
+            return this.$http.post(url + '/report', $values);
         }
     }
 };

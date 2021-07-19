@@ -13,12 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +68,10 @@ public class FBApiController {
     }
 
     @RequestMapping("info")
-    public Result getInfo(@RequestBody FbAccountForm form) throws APIException {
+    public Result getInfo(@RequestBody @Valid FbAccountForm form, BindingResult bindingResult) throws APIException {
+        if (bindingResult.hasErrors()){
+            return Result.FAILURE(String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage()));
+        }
         final APIContext context = new APIContext(ACCESS_TOKEN, APP_SECRET).enableDebug(false);
         AdAccount account = new AdAccount(form.getAccountId(), context);
         APINodeList<AdsInsights> insights = FbApiService.getAdsInsights(form, account);
