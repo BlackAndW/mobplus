@@ -46,4 +46,8 @@ public class AppLink extends AuditorEntity{
     @Column(name = "n_show_num")
     private Integer showNum = 0;
 
+    /** 游戏介绍 */
+    @Column(name = "n_description")
+    private String description;
+
 }
