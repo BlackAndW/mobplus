@@ -115,6 +115,13 @@ public class ChargeServiceImpl implements ChargeService {
     public Page<ChargeMaterial> queryMaterial(Query query) throws ServiceException {
         QChargeMaterial chargeMaterial = QChargeMaterial.chargeMaterial;
         Predicate predicate = chargeMaterial.deleted.eq(false);
+        Integer type;
+        type = query.get("type", Integer.class);
+        if (type != null && type == 99) {
+            predicate = ExpressionUtils.and(predicate, chargeMaterial.type.id.eq(99));
+        } else {
+            predicate = ExpressionUtils.and(predicate, chargeMaterial.type.id.eq(1));
+        }
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
         PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
         return chargeMaterialRepository.findAll(predicate, pagRequest);

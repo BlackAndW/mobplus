@@ -14,6 +14,7 @@
                     <a-select
                         placeholder="选择类型"
                         v-decorator="[ 'type.id', { initialValue: 1 } ]"
+                        :disabled="isTest"
                     >
                         <a-select-option
                             v-for="item in typeList"
@@ -108,6 +109,7 @@ export default {
             model: {},
             typeList: [],
             videoList: [],
+            isTest: false,
             videoIntroList: [],
             loading: false,
             func: () => {}
@@ -118,7 +120,7 @@ export default {
         this.getTypeList();
     },
     methods: {
-        add: function () {
+        add: function (queryParam) {
             this.title = '新增素材';
             this.func = this.$http.post;
             this.confirmLoading = false;
@@ -126,9 +128,10 @@ export default {
             this.videoList = [];
             this.videoIntroList = [];
             this.url = '/cms/charge/material';
+            this.isTestMode(queryParam);
             this.visible = true;
         },
-        edit: function (record) {
+        edit: function (record, queryParam) {
             this.title = '编辑:' + record.id;
             this.model = record;
             this.videoList = [];
@@ -137,6 +140,7 @@ export default {
             this.videoIntroList.push({ uid: record.id, name: record.videoIntroduceName });
             this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;
+            this.isTestMode(queryParam);
             this.confirmLoading = false;
             this.visible = true;
         },
@@ -169,6 +173,17 @@ export default {
                     }
                 });
             });
+        },
+        // 判断是否为测试模式
+        isTestMode (queryParam) {
+            if (queryParam.type === 99) {
+                this.isTest = true;
+                this.$nextTick(() => {
+                    this.form.setFieldsValue({ 'type.id': 99 });
+                });
+            } else {
+                this.isTest = false;
+            }
         },
         // file-list复制，form表单值复制
         copyFile (file, fileList) {

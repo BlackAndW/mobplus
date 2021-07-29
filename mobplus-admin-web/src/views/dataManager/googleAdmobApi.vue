@@ -192,7 +192,7 @@ export default {
         },
         getReportData (params) {
             this.getColumns();
-            let values = this.form.getFieldsValue();
+            const values = this.form.getFieldsValue();
             const queryParam = Object.assign(params, this.queryParam);
             values.pageNo = queryParam.pageNo;
             values.pageSize = queryParam.pageSize;
