@@ -3,6 +3,13 @@
         <a-card :bordered="true" class="card-search card-list">
             <!--       -->
             <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
+                <div class="l">
+                    <a-button
+                        v-action="['cms:charge:query']"
+                        @click="change2test"
+                    >切换到{{ changeType }}模式
+                    </a-button>
+                </div>
                 <div class="r">
                     <a-button-group>
                         <a-button
@@ -13,7 +20,7 @@
                         <a-button
                             icon="plus"
                             v-action="['cms:charge:create']"
-                            @click="$refs.modal.add()"
+                            @click="$refs.modal.add(queryParam)"
                         >新增</a-button>
                         <a-button
                             icon="delete"
@@ -35,7 +42,7 @@
             >
                 <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
                 <span slot="actionSlot" slot-scope="text, record">
-                    <a v-action="['cms:charge:edit']" @click="$refs.modal.edit(record)">编辑</a>
+                    <a v-action="['cms:charge:edit']" @click="$refs.modal.edit(record, queryParam)">编辑</a>
                     <a-divider type="vertical" />
                     <a v-action="['cms:charge:delete']" @click="onDelete(record)">删除</a>
                 </span>
@@ -108,6 +115,7 @@ const columns = [
 ];
 
 const url = '/cms/charge/material';
+
 export default {
     mixins: [mixinDevice],
     components: {
@@ -121,9 +129,11 @@ export default {
             advanceSearch: false,
             // 表头
             columns,
+            queryParam: {},
             // 选中记录
             selectedRowKeys: [],
             selectedRows: [],
+            changeType: '测试',
             // 加载数据方法
             loadData: this.loadDataList
         };
@@ -161,7 +171,18 @@ export default {
             this.selectedRowKeys = selectedRowKeys;
             this.selectedRows = selectedRows;
         },
+        change2test () {
+            if (this.changeType !== '测试') {
+                this.queryParam = {};
+                this.changeType = '测试';
+            } else {
+                this.queryParam.type = 99;
+                this.changeType = '正常';
+            }
+            this.$refs.table.refresh(true);
+        },
         loadDataList: function (params) {
+            console.log(params);
             return this.$http.get(url, Object.assign(params, this.queryParam));
         }
     }
