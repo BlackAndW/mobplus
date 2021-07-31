@@ -9,9 +9,7 @@ import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author: Leonard
@@ -26,18 +24,18 @@ public class ChargeShowController {
     @Autowired
     ChargeService chargeService;
 
-    @RequestMapping("bannerList")
+    @PostMapping("bannerList")
     public Result getBannerList() throws ServiceException {
         return Result.SUCCESS(chargeService.queryBanner());
     }
 
-    @RequestMapping("videoList")
+    @PostMapping("videoList")
     public Result getVideoList(@RequestBody String queryMap) throws ServiceException {
         JSONObject jsonMap = JSONObject.parseObject(queryMap);
         return Result.SUCCESS(chargeService.queryMaterial(new Query(jsonMap)));
     }
 
-    @RequestMapping("uploadData")
+    @PostMapping("uploadData")
     public Result uploadData(@RequestBody ChargeShowForm form) {
         return chargeService.uploadData(form);
     }
