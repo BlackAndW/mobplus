@@ -85,6 +85,7 @@ const columns = [
     {
         title: '图标',
         dataIndex: 'b04',
+        width: 100,
         scopedSlots: { customRender: 'iconSlot' }
     },
     {
@@ -95,6 +96,10 @@ const columns = [
     {
         title: '在线人数',
         dataIndex: 'onlineConn'
+    },
+    {
+        title: '连接总数',
+        dataIndex: 'totalConn'
     },
     {
         title: '节点设置',
