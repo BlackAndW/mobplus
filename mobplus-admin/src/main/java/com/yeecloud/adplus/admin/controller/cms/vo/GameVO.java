@@ -16,15 +16,17 @@ public class GameVO {
 
     private Integer id;
     private String name;
-    private String desc;
+//    private String desc;
     private String thumbUrl;
-    private String playUrl;
-    private int type;
-    private int status;
-    private String remark;
-    
-    private Integer createdBy;
-    private Integer modifiedBy;
-    private Long createdAt;
-    private Long modifiedAt;
+//    private String playUrl;
+//    private String type;
+//    private int status;
+//    private String remark;
+
+    private Integer clickNum;
+    private Integer showNum;
+//    private Integer createdBy;
+//    private Integer modifiedBy;
+//    private Long createdAt;
+//    private Long modifiedAt;
 }

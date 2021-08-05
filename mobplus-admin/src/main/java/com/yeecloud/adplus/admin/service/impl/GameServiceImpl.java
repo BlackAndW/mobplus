@@ -39,17 +39,17 @@ public class GameServiceImpl implements GameService {
             QGame game = QGame.game;
             Predicate predicate = game.deleted.eq(false);
 
-            Integer type = query.get("type", Integer.class);
-            if (type != null && type > 0) {
-                predicate = ExpressionUtils.and(predicate, game.type.eq(type));
-            }
-            String keyword = (String) query.get("keyword");
-            if (StringUtils.isNotBlank(keyword)) {
-                String express = keyword.concat("%");
-                Predicate or = ExpressionUtils.or(game.name.like(express), game.desc.like(express));
-                predicate = ExpressionUtils.and(predicate, or);
-            }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "modifiedAt"));
+//            Integer type = query.get("type", Integer.class);
+//            if (type != null && type > 0) {
+//                predicate = ExpressionUtils.and(predicate, game.type.eq(type));
+//            }
+//            String keyword = (String) query.get("keyword");
+//            if (StringUtils.isNotBlank(keyword)) {
+//                String express = keyword.concat("%");
+//                Predicate or = ExpressionUtils.or(game.name.like(express), game.desc.like(express));
+//                predicate = ExpressionUtils.and(predicate, or);
+//            }
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "type"), new Sort.Order(Sort.Direction.ASC, "name"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
             return gameRepository.findAll(predicate, pagRequest);
         } catch (Throwable e) {
