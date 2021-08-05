@@ -1,9 +1,14 @@
 package com.yeecloud.adplus.gateway.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.apache.commons.beanutils.NewBeanUtils;
 import com.google.common.collect.Lists;
 import com.yeecloud.adplus.dal.entity.Game;
+import com.yeecloud.adplus.dal.repository.GameRepository;
 import com.yeecloud.adplus.gateway.controller.vo.GameVO;
+import com.yeecloud.adplus.gateway.controller.vo.GameVO2;
 import com.yeecloud.adplus.gateway.service.GameService;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -12,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -21,6 +28,7 @@ import java.util.List;
  * @create: 2020-11-30 11:10
  */
 @Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/game")
 public class GameController {
@@ -28,6 +36,9 @@ public class GameController {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    GameRepository gameRepository;
 
 
     @GetMapping("/banner")
@@ -69,5 +80,63 @@ public class GameController {
         return needCodec ? Codec.encode(response) : response;
     }
 
+    @GetMapping("list")
+    public Result getGameListNew() throws ServiceException {
+        List<Game> gameList = gameService.findGameListNew();
+        JSONObject gameDataList = new JSONObject();
+        JSONArray gameArray = new JSONArray();
+        String curType = "";
+        for (Game game : gameList) {
+            if (curType.equals("")) {
+                curType = game.getType();
+            }
+            GameVO2 vo2 = new GameVO2();
+            NewBeanUtils.copyProperties(vo2, game, true);
+            if (game.getType().equals(curType)) {
+                gameArray.add(vo2);
+            } else {
+                gameDataList.put(curType, JSONArray.parseArray(gameArray.toJSONString()));
+                gameArray.clear();
+                curType = game.getType();
+                gameArray.add(vo2);
+            }
+        }
+        gameDataList.put(curType, gameArray);
+        return Result.SUCCESS(gameDataList);
+    }
 
+    @PostMapping("update")
+    public void update(@RequestBody Game form) throws ServiceException {
+        gameService.updateNumByName(form);
+    }
+
+    // 导入游戏目录数据
+    @RequestMapping("import")
+    public void insertData() throws IOException {
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("game.txt");
+        int bytes;
+        StringBuilder sb = new StringBuilder();
+        while ((bytes = inputStream.read()) != -1) {
+            sb.append((char) bytes);
+        }
+        String result  = sb.toString();
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String[] typeList = new String[] {"Puzzle", "Action", "Jump & Run", "Shooting", "Sports", "Racing", "Adventure", "Role playing", "Tower Defence"};
+        System.out.println(typeList);
+        save(typeList, jsonObject);
+    }
+
+    private void save(String[] typeList, JSONObject jsonObject) {
+        for (String type : typeList) {
+            List<String> nameList = (List<String>) jsonObject.get(type);
+            for (String name: nameList) {
+                Game game = new Game();
+                game.setName(name);
+                game.setType(type);
+                game.setCreatedBy(1);
+                game.setModifiedBy(1);
+                gameRepository.save(game);
+            }
+        }
+    }
 }

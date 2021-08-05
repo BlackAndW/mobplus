@@ -87,4 +87,6 @@ public class GameController {
         List<GameVO> resultList = gameConvert.convert(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
+
+
 }

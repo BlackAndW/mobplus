@@ -12,4 +12,8 @@ import java.util.List;
 public interface GameService {
 
     List<Game> findGameList(int type, int items) throws ServiceException;
+
+    List<Game> findGameListNew() throws ServiceException;
+
+    void updateNumByName(Game game) throws ServiceException;
 }

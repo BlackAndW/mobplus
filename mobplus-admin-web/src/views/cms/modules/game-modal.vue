@@ -2,67 +2,50 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="游戏名称">
+                <!-- <a-form-item>
                     <a-input
-                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入游戏名称' }] }]"
+                        type="hidden"
+                        v-decorator="[ 'appId', {initialValue: model.appId}]"
+                    />
+                </a-form-item> -->
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="名称">
+                    <a-input
+                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入名称' }] }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="缩略图">
+                <!-- <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="预览图">
                     <a-upload
                         name="file"
                         class="image-uploader"
                         list-type="picture-card"
                         :show-upload-list="false"
-                        action="/api/file/upload/game/thumb"
+                        action="/api/file/upload/aws/img/game"
                         :before-upload="beforeUpload"
                         @change="handleChange"
-                        v-decorator="[ 'thumb',{initialValue: model.thumbUrl, rules: [ { required: true, message: '请上传缩略图' }] }]"
+                        v-decorator="[ 'thumb',{initialValue: model.imgPath, rules: [ { required: true, message: '请上传图片' }] }]"
                     >
                         <img
-                            v-if="model.thumbUrl"
-                            :src="model.thumbUrl"
+                            class="link-img"
+                            v-if="model.imgPath"
+                            :src="model.imgPath"
                         />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'"/>
                             <div class="ant-upload-text">
-                                上传缩略图
+                                上传
                             </div>
                         </div>
                     </a-upload>
                     <a-input
                         type="hidden"
-                        v-decorator="[ 'thumbUrl', {initialValue: model.thumbUrl}]"
+                        v-decorator="[ 'imgPath', {initialValue: model.imgPath}]"
                     />
-                </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="游戏链接">
+                </a-form-item> -->
+                <!-- <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="跳转链接：">
                     <a-input
-                        v-decorator="[ 'playUrl', {initialValue: model.playUrl, rules: [ { required: true, message: '请输入游戏URL' }] }]"
+                        v-decorator="[ 'imgUrl', {initialValue: model.imgUrl, rules: [ { required: true, message: '请输入跳转链接' }] }]"
                     />
-                </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="推荐类型">
-                    <a-radio-group button-style="solid" v-decorator="[ 'type', {initialValue: model.type || 1}]">
-                        <a-radio-button
-                            v-for="item in RecommendedType"
-                            :key="item.value"
-                            :value="item.value"
-                        >{{ item.label }}</a-radio-button>
-                    </a-radio-group>
-                </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="游戏描述">
-                    <a-textarea :rows="4" v-decorator="[ 'desc', {initialValue: model.desc}]" />
-                </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
-                    <a-textarea :rows="4" v-decorator="[ 'remark', {initialValue: model.remark}]" />
-                </a-form-item>
-                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="游戏状态">
-                    <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1}]">
-                        <a-radio-button
-                            v-for="item in GameStatus"
-                            :key="item.value"
-                            :value="item.value"
-                        >{{ item.label }}</a-radio-button>
-                    </a-radio-group>
-                </a-form-item>
+                </a-form-item> -->
             </a-form>
         </a-spin>
     </e-drawer>
@@ -88,26 +71,18 @@ export default {
             func: () => {}
         };
     },
-    computed: {
-        GameStatus: function () {
-            return this.$DictFilterExclude(this.$GameStatus, [0]);
-        },
-        RecommendedType: function () {
-            return this.$DictFilterExclude(this.$RecommendedType, [0]);
-        }
-
-    },
+    computed: { },
     methods: {
         add: function () {
-            this.title = '添加游戏';
+            this.title = '新增';
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.model = {};
-            this.url = '/cms/game';
+            this.url = '/cms/game/';
             this.visible = true;
         },
         edit: function (record) {
-            this.title = '编辑游戏:' + record.name;
+            this.title = '编辑:' + record.name;
             this.model = record;
             this.url = '/cms/game/' + record.id;
             this.func = this.$http.put;
@@ -126,7 +101,8 @@ export default {
             }
             if (info.file.status === 'done') {
                 console.log(info);
-                this.model.thumbUrl = 'http://game.mc.yomobi.net:8001/thumb/' + info.file.response.result.realName;
+                this.model.imgPath = info.file.response.result.url;
+                console.log(this.model.imgPath);
                 this.loading = false;
             }
         },
@@ -135,11 +111,7 @@ export default {
             if (!isPicture) {
                 this.$message.error('只能上传图片格式');
             }
-            const isLt2M = thumb.size / 1024 / 1024 < 2;
-            if (!isLt2M) {
-                this.$message.error('缩略图大小必须小于2MB');
-            }
-            return isPicture && isLt2M;
+            return isPicture;
         },
         onCancel: function () {
             this.close(false);
@@ -148,6 +120,7 @@ export default {
             const $self = this;
             // 触发表单验证
             this.form.validateFields((err, values) => {
+                console.log(values);
                 if (!err) {
                     $self.confirmLoading = true;
                     $self
@@ -169,20 +142,8 @@ export default {
 };
 </script>
 
-<style>
-.image-uploader > .ant-upload {
-  width: 128px;
-  height: 128px;
+<style lang="less" scoped>
+.link-img {
+    width: 180px;
 }
-.ant-upload-select-picture-card i {
-  font-size: 32px;
-  color: #999;
-}
-
-.ant-upload-select-picture-card .ant-upload-text {
-  margin-top: 8px;
-  color: #666;
-}
-</style>
-<style scoped>
 </style>
