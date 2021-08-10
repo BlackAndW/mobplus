@@ -39,6 +39,9 @@ public class App extends AuditorEntity {
     @Column(name = "n_type")
     private Integer type;
 
+    @Column(name = "n_vpn")
+    private Integer vpn;
+
     @Column(name = "c_icon_path")
     private String iconPath;
 

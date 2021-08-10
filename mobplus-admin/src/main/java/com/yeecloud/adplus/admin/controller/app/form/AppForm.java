@@ -21,6 +21,7 @@ public class AppForm {
     private Integer runtime;
     @NotNull(message = "请选择应用类型")
     private Integer type;
+    private Integer vpn;
     private String iconPath;
     private String remark;
     @NotNull(message = "请选择应用状态")

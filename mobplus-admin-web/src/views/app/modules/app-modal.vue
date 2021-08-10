@@ -27,6 +27,12 @@
                         <a-radio-button :value="2">游戏</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="VPN功能">
+                    <a-radio-group button-style="solid" v-decorator="[ 'vpn', {initialValue: model.vpn || 1, rules: [ { required: true, message: '请选择VPN功能' }]}]">
+                        <a-radio-button :value="1">有</a-radio-button>
+                        <a-radio-button :value="2">无</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="图标">
                      <a-upload
                         name="file"

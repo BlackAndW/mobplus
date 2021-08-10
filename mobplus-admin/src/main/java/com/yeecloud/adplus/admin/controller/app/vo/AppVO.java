@@ -18,6 +18,7 @@ public class AppVO implements Serializable {
     private String appId;
     private Integer runtime;
     private Integer type;
+    private Integer vpn;
     private String iconPath;
     private String remark;
     private Integer status;
