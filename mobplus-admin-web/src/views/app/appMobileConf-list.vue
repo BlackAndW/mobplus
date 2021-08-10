@@ -111,7 +111,6 @@
             </a-col>
         </a-row>
         <appMobileConf-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
-        <appVPN-list-modal ref="VPNmodal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
     </div>
 </template>
 
@@ -119,7 +118,6 @@
 import { mixinDevice } from '@/utils/mixin';
 import { STable, STree, ETag } from '@/components';
 import AppMobileConfModal from '@/views/app/modules/appMobileConf-modal';
-import AppVPNListModal from '@/views/app/modules/appVPN-list-modal';
 
 const columns = [
     { title: '配置名称', dataIndex: 'name' },
@@ -156,8 +154,7 @@ export default {
         STable,
         STree,
         ETag,
-        AppMobileConfModal,
-        AppVPNListModal
+        AppMobileConfModal
     },
     data () {
         return {

@@ -20,7 +20,7 @@ public class OkHttpUtils {
 //    public final static String VPN_URL = "http://localhost:9092";
     public final static String FB_GRAPH_API = "https://graph.facebook.com/v10.0/";
 
-    // 格式化result数据
+    // 格式化result数据,将value添加到key为data中
     public static JSONObject getGETResponseData(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         JSONObject jsonObject = JSONObject.parseObject(response.body().string());

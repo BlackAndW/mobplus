@@ -58,6 +58,10 @@ public class AppServiceImpl implements AppService {
             if (type != null && type > 0) {
                 predicate = ExpressionUtils.and(predicate, app.type.eq(type));
             }
+            Integer vpn = query.get("vpn", Integer.class);
+            if (vpn != null && vpn > 0) {
+                predicate = ExpressionUtils.and(predicate, app.vpn.eq(vpn));
+            }
             Integer runtime = query.get("runtime", Integer.class);
             if (type != null && type > 0) {
                 predicate = ExpressionUtils.and(predicate, app.runtime.eq(runtime));

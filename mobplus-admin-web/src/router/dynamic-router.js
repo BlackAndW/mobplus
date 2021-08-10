@@ -51,6 +51,7 @@ const constantRouterComponents = {
     AppActivity: () => import('@/views/app/appActivity-list'),
     AppFunction: () => import('@/views/app/appFunction-list'),
     AppLinkList: () => import('@/views/app/app-link-list'),
+    AppVPNList: () => import('@/views/app/appVPN-list'),
 
     // 数据管理
     VpnAccountLog: () => import('@/views/dataManager/vpnAccount-log'),
