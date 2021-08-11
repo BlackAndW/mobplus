@@ -100,12 +100,6 @@
                                 @click="onDelete(record)"
                             >删除</a>
                         </span>
-                        <span slot="actionVPN" slot-scope="text, record">
-                            <a
-                                v-action="['app:config:edit']"
-                                @click="$refs.VPNmodal.show(record,currentApp)"
-                            >编辑</a>
-                        </span>
                     </s-table>
                 </a-card>
             </a-col>
@@ -140,12 +134,6 @@ const columns = [
         scopedSlots: { customRender: 'action' }
     }
 ];
-
-const vpnColumn = {
-    title: 'VPN管理',
-    align: 'center',
-    scopedSlots: { customRender: 'actionVPN' }
-};
 
 const url = '/app/mobile/conf';
 export default {
@@ -218,14 +206,6 @@ export default {
         },
         onQueryDict: function (item) {
             this.currentApp = item;
-            // 根据app名称判断，带有vpn的应用添加配置列
-            if (this.currentApp.title.toLocaleLowerCase().indexOf('vpn') !== -1) {
-                if (columns.length === 6) {
-                    columns.push(vpnColumn);
-                }
-            } else {
-                columns.splice(6, 1);
-            }
             this.$refs.table.refresh(true);
         },
         loadAppTreeData: async function () {
