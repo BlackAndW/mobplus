@@ -13,4 +13,5 @@ public interface TranslateService {
     List<String> translationList(TranslateForm form);
 
     String translation(TranslateForm form);
+
 }
