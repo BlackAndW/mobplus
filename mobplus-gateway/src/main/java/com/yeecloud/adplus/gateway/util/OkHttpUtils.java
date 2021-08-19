@@ -1,8 +1,9 @@
-package com.yeecloud.adplus.admin.util;
+package com.yeecloud.adplus.gateway.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yeecloud.adplus.admin.controller.app.AppVPNController;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -15,10 +16,6 @@ import java.security.cert.X509Certificate;
  * @create: 2021/4/28
  */
 public class OkHttpUtils {
-
-//    public final static String VPN_URL = "https://api.turbovpns.com";
-    public final static String VPN_URL = "http://localhost:9092";
-    public final static String FB_GRAPH_API = "https://graph.facebook.com/v10.0/";
 
     // 格式化result数据,将value添加到key为data中
     public static JSONObject getGETResponseData(Request request) throws IOException {
