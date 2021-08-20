@@ -39,7 +39,7 @@ public class SdkController {
         if (body != null && needCodec) {
             body = Codec.decode(body);
         }
-        log.debug("ReqFromApp:{}", body);
+//        log.debug("ReqFromApp:{}", body);
         String response = "";
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
@@ -51,7 +51,7 @@ public class SdkController {
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
-        log.debug("RespToApp:{}", response);
+//        log.debug("RespToApp:{}", response);
         return needCodec ? Codec.encode(response) : response;
     }
 
@@ -64,7 +64,7 @@ public class SdkController {
         if (body != null && needCodec) {
             body = Codec.decode(body);
         }
-        log.debug("ReqFromApp:{}", body);
+//        log.debug("ReqFromApp:{}", body);
         String response = "";
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
@@ -76,7 +76,7 @@ public class SdkController {
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
-        log.debug("RespToApp:{}", response);
+//        log.debug("RespToApp:{}", response);
         return needCodec ? Codec.encode(response) : response;
     }
 
@@ -89,7 +89,7 @@ public class SdkController {
         if (body != null && needCodec) {
             body = Codec.decode(body);
         }
-        log.debug("ReqFromApp:{}", body);
+//        log.debug("ReqFromApp:{}", body);
         String response = "";
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
@@ -101,7 +101,7 @@ public class SdkController {
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
-        log.debug("RespToApp:{}", response);
+//        log.debug("RespToApp:{}", response);
         return needCodec ? Codec.encode(response) : response;
     }
 }

@@ -2,10 +2,13 @@ package com.yeecloud.adplus.gateway.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.apache.commons.beanutils.NewBeanUtils;
+import com.yeecloud.adplus.dal.entity.Feedback;
+import com.yeecloud.adplus.dal.repository.FeedbackRepository;
 import com.yeecloud.adplus.gateway.controller.form.ScannerForm;
 import com.yeecloud.adplus.gateway.controller.form.ScannerType;
 import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
-import com.yeecloud.adplus.gateway.service.ScannerRequestService;
+import com.yeecloud.adplus.gateway.service.ScannerService;
 import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.OkHttpUtils;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,13 +32,16 @@ import java.util.regex.Pattern;
  */
 @Service
 @Slf4j
-public class ScannerRequestServiceImpl implements ScannerRequestService {
+public class ScannerServiceImpl implements ScannerService {
 
     @Resource
     private CacheManager cacheManager;
 
     @Resource
     TranslateService translateService;
+
+    @Resource
+    FeedbackRepository feedbackRepository;
 
     @Override
     public String getAuth() {
@@ -76,22 +81,26 @@ public class ScannerRequestServiceImpl implements ScannerRequestService {
     }
 
     @Override
-    public JSONArray resultArray(ScannerForm form) throws IOException, ServiceException {
+    public JSONArray getResultArr(ScannerForm form) throws IOException, ServiceException {
+        long startTime = System.currentTimeMillis();
         String image = "image=" + form.getImageBase64();
         String topNum = "&top_num=3";
         String typeName = ScannerType.getType(form.getType());
-        System.out.println(form.toString());
         String resUrl = "https://aip.baidubce.com/rest/2.0/image-classify/v1/" + typeName + "?access_token=" + this.getAuth();
         if (form.getType() == 0) {
-            resUrl = resUrl.replaceAll("v1", "v2");
+            resUrl = resUrl.replaceAll("/v1/", "/v2/");
         }
         final Request request = new Request.Builder()
                 .url(resUrl)
                 .post(okhttp3.RequestBody.create(MediaType.parse("Content-Type:application/x-www-form-urlencoded; charset=utf-8"), image + topNum))
                 .build();
         String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
+        long baiduApi = System.currentTimeMillis();
+        log.info("百度api用时：" + (baiduApi - startTime));
         System.out.println(result);
         JSONArray resultArray = JSONObject.parseObject(result).getJSONArray("result");
+
+        long forStartTime = System.currentTimeMillis();
         if (resultArray != null && resultArray.size() > 0) {
             for (int i = 0;i < resultArray.size(); i++) {
                 JSONObject imageInfo = resultArray.getJSONObject(i);
@@ -102,7 +111,10 @@ public class ScannerRequestServiceImpl implements ScannerRequestService {
                     imageName = imageInfo.getString("name");
                 }
                 form.setSourceString(imageName);
-                String imageNameTrans = translateName(form);
+                long transStartTime = System.currentTimeMillis();
+                String imageNameTrans = translate(form);
+                long transEndTime = System.currentTimeMillis();
+                log.info("translate time: " + (transEndTime - transStartTime));
                 imageInfo.put("name", imageNameTrans);
                 String description = getWikiInfo(form.getToLang(), imageNameTrans);
                 description = processWikiText(description);
@@ -111,10 +123,14 @@ public class ScannerRequestServiceImpl implements ScannerRequestService {
         } else {
             throw new ServiceException("no result!");
         }
+        long forEndTime = System.currentTimeMillis();
+        log.info("loopTime: " + (forEndTime - forStartTime));
         return resultArray;
     }
 
-    private String getWikiInfo(String lang, String imageNameTrans) throws IOException {
+    @Async
+    synchronized String getWikiInfo(String lang, String imageNameTrans) throws IOException {
+        long startTime = System.currentTimeMillis();
         String wikiUrl = "https://" +
                 lang +
                 ".wikipedia.org/w/api.php" +
@@ -127,6 +143,8 @@ public class ScannerRequestServiceImpl implements ScannerRequestService {
                 .url(wikiUrl)
                 .get().build();
         JSONObject resultObject = OkHttpUtils.getGETResponseJSON(request);
+        long wikiApiTime = System.currentTimeMillis();
+        log.info("wikiApi: " + (wikiApiTime - startTime));
         if (resultObject != null) {
             String text = "";
             JSONArray revisions = resultObject.getJSONObject("query")
@@ -143,11 +161,14 @@ public class ScannerRequestServiceImpl implements ScannerRequestService {
                 return text;
             }
         }
-        return "sorry, there is no info about this item!";
+        TranslateForm form = new TranslateForm();
+        form.setToLang(lang);
+        form.setSourceString("非常抱歉，暂时无法获取此物品的信息");
+        return translate(form);
     }
 
     private String processWikiText(String text) {
-        String regex = "'''|(<ref.*?</ref>)|\\[|]|.*?(?='''.*''')|\\{\\{.*?}}|「|」";
+        String regex = "'''|<ref.*?>|</ref>|\\[|]|.*?(?='''.*''')|\\{\\{.*?}}|「|」|\\(''.*?''\\)|\\n";
         Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(text);
         String text2 = StringUtils.trim(matcher.replaceAll(""));
@@ -155,7 +176,14 @@ public class ScannerRequestServiceImpl implements ScannerRequestService {
     }
 
     @Async
-    synchronized String translateName(ScannerForm form) {
+    synchronized String translate(TranslateForm form) {
         return translateService.translation(form);
+    }
+
+    @Override
+    public void insertFeedbackLog(Feedback form) {
+        if (form != null) {
+            feedbackRepository.save(form);
+        }
     }
 }

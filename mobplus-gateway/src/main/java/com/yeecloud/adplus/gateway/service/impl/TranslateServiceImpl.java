@@ -59,12 +59,10 @@ public class TranslateServiceImpl implements TranslateService {
     }
 
     private Translate getTranslateService() {
-        // 获取json密钥文件
-        File credentialsPath = new File(apiKeyPath);
 
         Translate translate = TranslateOptions
                 .newBuilder()
-                .setCredentials(GoogleApiUtil.getCredential(credentialsPath))
+                .setCredentials(GoogleApiUtil.getCredential())
                 .build()
                 .getService();
 
