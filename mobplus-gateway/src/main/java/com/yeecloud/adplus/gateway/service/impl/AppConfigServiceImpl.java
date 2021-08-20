@@ -128,7 +128,8 @@ public class AppConfigServiceImpl implements AppConfigService {
         // 查找当前应用
         App app = appRepository.findByAppId(form.getAppId());
         if (app == null || app.isDeleted()) {
-            throw new ServiceException("The app does not exist!");
+            log.error("the app does not exist!");
+            return new HashMap<>();
         }
         List<AppMobileConf> list = appMobileConfRepository.findByApp(app);
         Map<String, String> result = Maps.newHashMap();
