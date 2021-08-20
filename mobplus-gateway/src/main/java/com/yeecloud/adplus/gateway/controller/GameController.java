@@ -41,44 +41,44 @@ public class GameController {
     GameRepository gameRepository;
 
 
-    @GetMapping("/banner")
-    public String getBannerGameList(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (body != null && needCodec) {
-            body = Codec.decode(body);
-        }
-        log.debug("ReqFromApp:{}", body);
-        List<Game> gameList = gameService.findGameList(9, 10);
-        return getGameVOList(needCodec, gameList);
-    }
+//    @GetMapping("/banner")
+//    public String getBannerGameList(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
+//        boolean needCodec = m == null || m.trim().length() == 0;
+//        if (body != null && needCodec) {
+//            body = Codec.decode(body);
+//        }
+//        log.debug("ReqFromApp:{}", body);
+//        List<Game> gameList = gameService.findGameList(9, 10);
+//        return getGameVOList(needCodec, gameList);
+//    }
 
-    @GetMapping
-    public String getGameList(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (body != null && needCodec) {
-            body = Codec.decode(body);
-        }
-        log.debug("ReqFromApp:{}", body);
-        List<Game> gameList = gameService.findGameList(1, 50);
-        return getGameVOList(needCodec, gameList);
-    }
-
-    private String getGameVOList(boolean needCodec, List<Game> gameList) {
-        List<GameVO> gameDataList = Lists.newArrayList();
-        for (Game game : gameList) {
-            GameVO data = new GameVO();
-            data.setGameId(game.getId());
-            data.setGameName(game.getName());
-            data.setGameDesc(game.getDesc());
-            data.setThumbUrl(game.getThumbUrl());
-            data.setGameUrl(game.getPlayUrl());
-            data.setStatus(game.getStatus());
-            gameDataList.add(data);
-        }
-        String response = JSON.toJSONString(Result.SUCCESS(gameDataList));
-        log.debug("RespToApp:{}", response);
-        return needCodec ? Codec.encode(response) : response;
-    }
+//    @GetMapping
+//    public String getGameList(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
+//        boolean needCodec = m == null || m.trim().length() == 0;
+//        if (body != null && needCodec) {
+//            body = Codec.decode(body);
+//        }
+//        log.debug("ReqFromApp:{}", body);
+//        List<Game> gameList = gameService.findGameList(1, 50);
+//        return getGameVOList(needCodec, gameList);
+//    }
+//
+//    private String getGameVOList(boolean needCodec, List<Game> gameList) {
+//        List<GameVO> gameDataList = Lists.newArrayList();
+//        for (Game game : gameList) {
+//            GameVO data = new GameVO();
+//            data.setGameId(game.getId());
+//            data.setGameName(game.getName());
+//            data.setGameDesc(game.getDesc());
+//            data.setThumbUrl(game.getThumbUrl());
+//            data.setGameUrl(game.getPlayUrl());
+//            data.setStatus(game.getStatus());
+//            gameDataList.add(data);
+//        }
+//        String response = JSON.toJSONString(Result.SUCCESS(gameDataList));
+//        log.debug("RespToApp:{}", response);
+//        return needCodec ? Codec.encode(response) : response;
+//    }
 
     @GetMapping("list")
     public Result getGameListNew() throws ServiceException {
