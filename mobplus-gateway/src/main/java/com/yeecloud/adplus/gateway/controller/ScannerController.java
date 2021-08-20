@@ -66,23 +66,18 @@ public class ScannerController {
     @RequestMapping("/imageScan")
     public Result imageScan(@RequestBody ScannerForm form) throws IOException, ServiceException {
         try {
-            System.out.println(form.toString());
             String imgParam = URLEncoder.encode(form.getImageBase64(), "UTF-8");
             form.setImageBase64(imgParam);
             JSONArray result = scannerService.getResultArr(form);
             return Result.SUCCESS(result);
         } catch (Exception e) {
-            return Result.FAILURE(e.getMessage());
+            return Result.SUCCESS(e.getMessage());
         }
     }
 
     @RequestMapping("/feedback")
     public Result feedback(@RequestBody Feedback form) {
-        try {
-            scannerService.insertFeedbackLog(form);
-            return Result.SUCCESS();
-        } catch (Exception e) {
-            return Result.FAILURE(e.getMessage());
-        }
+        scannerService.insertFeedbackLog(form);
+        return Result.SUCCESS();
     }
 }

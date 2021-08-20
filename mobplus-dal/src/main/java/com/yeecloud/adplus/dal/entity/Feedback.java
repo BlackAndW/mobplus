@@ -22,7 +22,7 @@ public class Feedback extends AuditorEntity{
     private Integer evaluate;
 
     @Column(name = "n_err_type")
-    private Integer errType;
+    private String errType;
 
     @Column(name = "n_suggestion")
     private String suggestion;

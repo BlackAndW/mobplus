@@ -112,7 +112,7 @@ public class ScannerServiceImpl implements ScannerService {
                 }
                 form.setSourceString(imageName);
                 long transStartTime = System.currentTimeMillis();
-                String imageNameTrans = translate(form);
+                String imageNameTrans = translateService.translation(form);
                 long transEndTime = System.currentTimeMillis();
                 log.info("translate time: " + (transEndTime - transStartTime));
                 imageInfo.put("name", imageNameTrans);
@@ -128,8 +128,7 @@ public class ScannerServiceImpl implements ScannerService {
         return resultArray;
     }
 
-    @Async
-    synchronized String getWikiInfo(String lang, String imageNameTrans) throws IOException {
+    private synchronized String getWikiInfo(String lang, String imageNameTrans) throws IOException {
         long startTime = System.currentTimeMillis();
         String wikiUrl = "https://" +
                 lang +
@@ -164,20 +163,15 @@ public class ScannerServiceImpl implements ScannerService {
         TranslateForm form = new TranslateForm();
         form.setToLang(lang);
         form.setSourceString("非常抱歉，暂时无法获取此物品的信息");
-        return translate(form);
+        return translateService.translation(form);
     }
 
     private String processWikiText(String text) {
-        String regex = "'''|<ref.*?>|</ref>|\\[|]|.*?(?='''.*''')|\\{\\{.*?}}|「|」|\\(''.*?''\\)|\\n";
+        String regex = "'''|<ref.*?</ref>|<ref.*?>|\\[|]|.*?(?='''.*''')|\\{\\{.*?}}|「|」|\\(''.*?''\\)|\\n";
         Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(text);
         String text2 = StringUtils.trim(matcher.replaceAll(""));
         return text2.replaceAll("\\|", ")");
-    }
-
-    @Async
-    synchronized String translate(TranslateForm form) {
-        return translateService.translation(form);
     }
 
     @Override
