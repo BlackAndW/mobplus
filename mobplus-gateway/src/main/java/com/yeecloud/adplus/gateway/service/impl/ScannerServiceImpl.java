@@ -16,6 +16,10 @@ import com.yeecloud.meeto.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.Request;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -104,6 +109,10 @@ public class ScannerServiceImpl implements ScannerService {
         if (resultArray != null && resultArray.size() > 0) {
             for (int i = 0;i < resultArray.size(); i++) {
                 JSONObject imageInfo = resultArray.getJSONObject(i);
+                if (imageInfo.getBigDecimal("score").compareTo(new BigDecimal("0.05")) < 0) {
+                    resultArray.remove(i--);
+                    continue;
+                }
                 String imageName = "";
                 if (form.getType() == 0) {
                     imageName = imageInfo.getString("keyword");
@@ -117,7 +126,6 @@ public class ScannerServiceImpl implements ScannerService {
                 log.info("translate time: " + (transEndTime - transStartTime));
                 imageInfo.put("name", imageNameTrans);
                 String description = getWikiInfo(form.getToLang(), imageNameTrans);
-                description = processWikiText(description);
                 imageInfo.put("des", description);
             }
         } else {
@@ -133,11 +141,10 @@ public class ScannerServiceImpl implements ScannerService {
         String wikiUrl = "https://" +
                 lang +
                 ".wikipedia.org/w/api.php" +
-                "?action=query&format=json" +
-                "&prop=revisions&rvprop=content&rvslots=main&rvsection=0" +
-                "&titles=" +
+                "?action=parse&format=json" +
+                "&page=" +
                 imageNameTrans +
-                "&redirects=1&utf8=1&formatversion=2";
+                "&section=0&redirects=1&utf8=1&formatversion=2";
         final Request request = new Request.Builder()
                 .url(wikiUrl)
                 .get().build();
@@ -145,18 +152,16 @@ public class ScannerServiceImpl implements ScannerService {
         long wikiApiTime = System.currentTimeMillis();
         log.info("wikiApi: " + (wikiApiTime - startTime));
         if (resultObject != null) {
-            String text = "";
-            JSONArray revisions = resultObject.getJSONObject("query")
-                    .getJSONArray("pages")
-                    .getJSONObject(0)
-                    .getJSONArray("revisions");
-            if (revisions != null && revisions.size() > 0) {
-                text = revisions.getJSONObject(0)
-                        .getJSONObject("slots")
-                        .getJSONObject("main")
-                        .getString("content");
+            String textHtml = "";
+            JSONObject parse = resultObject.getJSONObject("parse");
+            if (parse != null) {
+                textHtml = parse.getString("text");
             }
-            if (text != null && text.length() > 0) {
+            if (textHtml != null && textHtml.length() > 0) {
+                Document document = Jsoup.parse(textHtml);
+                Elements elements1 = document.select("div.mw-parser-output > p");
+                String text = elements1.text();
+                text = text.replaceAll("\\[\\d*?]", "");
                 return text;
             }
         }
@@ -166,13 +171,17 @@ public class ScannerServiceImpl implements ScannerService {
         return translateService.translation(form);
     }
 
-    private String processWikiText(String text) {
-        String regex = "'''|<ref.*?</ref>|<ref.*?>|\\[|]|.*?(?='''.*''')|\\{\\{.*?}}|「|」|\\(''.*?''\\)|\\n";
-        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(text);
-        String text2 = StringUtils.trim(matcher.replaceAll(""));
-        return text2.replaceAll("\\|", ")");
-    }
+//    private String processWikiText2(String text) {
+//        String regex = "<p>.*?</p>";
+//        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+//        Matcher matcher = pattern.matcher(text);
+//        String text2 = "";
+//        while (matcher.find()) {
+//            System.out.println(matcher.group());
+//            text2 = StringUtils.trim(matcher.group());
+//        }
+//        return text2;
+//    }
 
     @Override
     public void insertFeedbackLog(Feedback form) {
