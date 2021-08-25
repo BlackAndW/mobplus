@@ -36,7 +36,6 @@
                             </a-col>
                         </a-row>
                     </a-checkbox-group>
-                    </a-select>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="渠道">
                     <a-checkbox :indeterminate="indeterminateChannel" :checked="checkAllChannel" @change="onChannelCheckAllChange">
@@ -95,8 +94,8 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-            appVersionList: {},
-            channelList: {},
+            appVersionList: [],
+            channelList: [],
             indeterminateVersion: true,
             checkAllVersion: false,
             indeterminateChannel: true,
@@ -122,6 +121,7 @@ export default {
         edit: function (record, currentApp) {
             this.title = '编辑配置';
             this.model = record;
+            console.log(record);
             this.model.app = currentApp.key;
             this.url = '/app/mobile/conf/' + record.id;
             this.func = this.$http.put;

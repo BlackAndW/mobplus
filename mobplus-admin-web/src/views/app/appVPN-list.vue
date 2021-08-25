@@ -92,7 +92,7 @@ import AppVPNConfModal from '@/views/app/modules/appVPN-conf-modal';
 const columns = [
     {
         title: '节点名称',
-        dataIndex: 'serverName'
+        dataIndex: 'b02'
     },
     {
         title: '地区',

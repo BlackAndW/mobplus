@@ -164,30 +164,6 @@ export default {
                 Object.assign(params, this.queryParam)
             );
         }
-        // loadAppTreeData: async function () {
-        //     this.treeloading = true;
-        //     try {
-        //         const result = await this.$http.get(
-        //             '/app/entity/item',
-        //             { }
-        //         );
-        //         this.appTreeData = this.convertTreeData(result.data);
-        //     } finally {
-        //         this.treeloading = false;
-        //     }
-        // },
-        // convertTreeData: function (data) {
-        //     return data.map(ele => {
-        //         const item = {
-        //             title: ele.name,
-        //             key: ele.id
-        //         };
-        //         if (ele.children) {
-        //             item.children = this.convertTreeData(ele.children);
-        //         }
-        //         return item;
-        //     });
-        // }
     }
 };
 </script>
