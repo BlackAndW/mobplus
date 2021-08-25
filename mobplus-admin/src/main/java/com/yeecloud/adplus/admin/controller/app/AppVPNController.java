@@ -60,18 +60,20 @@ public class AppVPNController {
     public Result serverSettingList(@PathVariable Integer id) throws ServiceException, IOException {
         String pkgName = getPkgNameById(id);
         final Request request = new Request.Builder()
-                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/s/list?&pkgName=" + pkgName)
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/s/list?pkgName=" + pkgName)
                 .get().build();
         JSONArray response = JSON.parseArray(OkHttpUtils.ResponseJSON(request).getString("result"));
         AppSettingVO vo = new AppSettingVO();
-        for (int i = 0; i < response.size(); i++) {
-            JSONObject server = response.getJSONObject(i);
-            if (server.getString("type").equals("0")) {
-                vo.getServerNMList().add(server);
-            } else if (server.getString("type").equals("1")) {
-                vo.getServerVIPList().add(server);
-            } else if (server.getString("type").equals("2")) {
-                vo.getServerBKList().add(server);
+        if (response != null) {
+            for (int i = 0; i < response.size(); i++) {
+                JSONObject server = response.getJSONObject(i);
+                if (server.getString("type").equals("0")) {
+                    vo.getServerNMList().add(server);
+                } else if (server.getString("type").equals("1")) {
+                    vo.getServerVIPList().add(server);
+                } else if (server.getString("type").equals("2")) {
+                    vo.getServerBKList().add(server);
+                }
             }
         }
         return Result.SUCCESS(vo);
