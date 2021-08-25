@@ -21,20 +21,20 @@ public class OkHttpUtils {
     public final static String FB_GRAPH_API = "https://graph.facebook.com/v10.0/";
 
     // 格式化result数据,将value添加到key为data中
-    public static JSONObject getGETResponseData(Request request) throws IOException {
+    public static JSONObject ResponseData(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         JSONObject jsonObject = JSONObject.parseObject(response.body().string());
         return getDataResult(jsonObject);
     }
 
     // 响应转化为JSON对象
-    public static JSONObject getGETResponseJSON(Request request) throws IOException {
+    public static JSONObject ResponseJSON(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         return JSONObject.parseObject(response.body().string());
     }
 
     // 直接返回响应字符串
-    public static String getGETResponse(Request request) throws IOException {
+    public static String Response(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         return response.body().string();
     }
@@ -46,7 +46,7 @@ public class OkHttpUtils {
         return mBuilder.build();
     }
 
-    public static JSONObject getDataResult(JSONObject object) {
+    private static JSONObject getDataResult(JSONObject object) {
         if (null == object) {
             return null;
         }

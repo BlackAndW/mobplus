@@ -42,7 +42,7 @@ public class VpnAccountLogController extends HttpServlet {
     public Result getAccountLog(@RequestParam Map<String, Object> params) throws ServiceException, IOException {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(OkHttpUtils.VPN_URL + "/app/api/v1/vpn/list").newBuilder();
         final Request request = getRequest(httpBuilder, params);
-        return Result.SUCCESS(OkHttpUtils.getGETResponseJSON(request));
+        return Result.SUCCESS(OkHttpUtils.ResponseJSON(request));
     }
 
     @GetMapping("data2excel")
@@ -50,7 +50,7 @@ public class VpnAccountLogController extends HttpServlet {
     public Result downloadExcel(@RequestParam Map<String, Object> params, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServiceException, IOException {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(OkHttpUtils.VPN_URL + "/app/api/v1/vpn/data2excel").newBuilder();
         final Request request = getRequest(httpBuilder, params);
-        String downloadFilename = OkHttpUtils.getGETResponseJSON(request).get("file").toString();
+        String downloadFilename = OkHttpUtils.ResponseJSON(request).get("file").toString();
         log.info("download filename is: " + downloadFilename);
         return Result.SUCCESS("http://res.turbovpns.com/" + downloadFilename);
     }

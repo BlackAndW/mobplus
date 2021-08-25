@@ -1,8 +1,10 @@
 package com.yeecloud.adplus.admin.controller.app;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.admin.controller.app.vo.AppActivityVO;
+import com.yeecloud.adplus.admin.controller.app.vo.AppSettingVO;
 import com.yeecloud.adplus.admin.util.OkHttpUtils;
 import com.yeecloud.adplus.dal.entity.App;
 import com.yeecloud.adplus.dal.entity.AppActivity;
@@ -48,39 +50,39 @@ public class AppVPNController {
     public Result serverList(@PathVariable Integer id, @RequestParam Integer type) throws ServiceException, IOException {
         String pkgName = getPkgNameById(id);
         final Request request = new Request.Builder()
-                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c03/list?type=" + type + "&pkgName=" + pkgName)
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/list?type=" + type + "&pkgName=" + pkgName)
                 .get().build();
-        return Result.SUCCESS(OkHttpUtils.getGETResponseData(request));
+        return Result.SUCCESS(OkHttpUtils.ResponseData(request));
     }
 
-    @GetMapping("conf/{id}")
+    @GetMapping("/s/{id}")
     @RequiresPermissions("app:vpn:query")
-    public Result serverAppConf(@PathVariable Integer id) throws ServiceException, IOException {
+    public Result serverSettingList(@PathVariable Integer id) throws ServiceException, IOException {
         String pkgName = getPkgNameById(id);
-        final Request request = new Request.Builder().url(OkHttpUtils.VPN_URL + "/app/api/v1/c03/conf?pkgName=" + pkgName).get().build();
-        return Result.SUCCESS(OkHttpUtils.getGETResponseData(request));
-    }
-
-    @PutMapping("conf/{id}")
-    @RequiresPermissions("app:vpn:edit")
-    public Result updateAppConf(@PathVariable Integer id, @RequestBody Map<String, Object> params) throws ServiceException, IOException {
-        App app = appRepository.findById(id).orElse(null);
-        String pkgName = "";
-        if (app != null) {
-            pkgName = app.getPkgName();
+        final Request request = new Request.Builder()
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/s/list?&pkgName=" + pkgName)
+                .get().build();
+        JSONArray response = JSON.parseArray(OkHttpUtils.ResponseJSON(request).getString("result"));
+        AppSettingVO vo = new AppSettingVO();
+        for (int i = 0; i < response.size(); i++) {
+            JSONObject server = response.getJSONObject(i);
+            if (server.getString("type").equals("0")) {
+                vo.getServerNMList().add(server);
+            } else if (server.getString("type").equals("1")) {
+                vo.getServerVIPList().add(server);
+            } else if (server.getString("type").equals("2")) {
+                vo.getServerBKList().add(server);
+            }
         }
-        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-        final Request request = new Request.Builder().url(OkHttpUtils.VPN_URL + "/app/api/v1/c03/conf/update?pkgName=" + pkgName)
-                .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params))).build();
-        OkHttpUtils.getGETResponse(request);
-        return Result.SUCCESS();
+        return Result.SUCCESS(vo);
     }
 
     @PostMapping
     @RequiresPermissions("app:vpn:create")
     public Result create(@RequestBody Map<String, Object> params) throws ServiceException, IOException {
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-        final Request request = new Request.Builder().url(OkHttpUtils.VPN_URL + "/app/api/v1/c03/create")
+        final Request request = new Request.Builder()
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/create")
                 .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
                 .build();
         String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
@@ -94,13 +96,42 @@ public class AppVPNController {
     @RequiresPermissions("app:vpn:edit")
     public Result update(@PathVariable Integer id, @RequestBody Map<String, Object> params) throws ServiceException, IOException {
         MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
-        final Request request = new Request.Builder().url(OkHttpUtils.VPN_URL + "/app/api/v1/c03/update/" + id)
+        final Request request = new Request.Builder()
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/update/" + id)
                 .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
                 .build();
         String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
         if (Integer.valueOf(JSON.parseObject(result).get("code").toString()) != 2000) {
             return Result.FAILURE(result);
         }
+        return Result.SUCCESS();
+    }
+
+    @GetMapping("setting/{id}")
+    @RequiresPermissions("app:vpn:query")
+    public Result serverAppConf(@PathVariable Integer id) throws ServiceException, IOException {
+        String pkgName = getPkgNameById(id);
+        final Request request = new Request.Builder()
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/setting?pkgName=" + pkgName)
+                .get()
+                .build();
+        return Result.SUCCESS(OkHttpUtils.ResponseJSON(request));
+    }
+
+    @PutMapping("setting/{id}")
+    @RequiresPermissions("app:vpn:edit")
+    public Result updateAppConf(@PathVariable Integer id, @RequestBody Map<String, Object> params) throws ServiceException, IOException {
+        App app = appRepository.findById(id).orElse(null);
+        String pkgName = "";
+        if (app != null) {
+            pkgName = app.getPkgName();
+        }
+        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        final Request request = new Request.Builder()
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/setting/update?pkgName=" + pkgName)
+                .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
+                .build();
+        OkHttpUtils.Response(request);
         return Result.SUCCESS();
     }
 

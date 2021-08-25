@@ -57,7 +57,7 @@ public class FBApiController {
         params.put("access_token", ACCESS_TOKEN);
         params.put("fields", "id,name,account_status");
         final Request request = getRequest(httpBuilder, params);
-        JSONArray array = OkHttpUtils.getGETResponseJSON(request).getJSONArray("data");
+        JSONArray array = OkHttpUtils.ResponseJSON(request).getJSONArray("data");
         for (int i = 0; i < array.size(); i++) {
             if (array.getJSONObject(0).get("name").equals("吴子仲")) {
                 array.remove(i);
