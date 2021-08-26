@@ -8,6 +8,7 @@ import com.yeecloud.adplus.dal.repository.FeedbackRepository;
 import com.yeecloud.adplus.gateway.controller.form.ScannerForm;
 import com.yeecloud.adplus.gateway.controller.form.ScannerType;
 import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
+import com.yeecloud.adplus.gateway.controller.vo.ScannerVO;
 import com.yeecloud.adplus.gateway.service.ScannerService;
 import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.OkHttpUtils;
@@ -28,6 +29,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,10 +89,10 @@ public class ScannerServiceImpl implements ScannerService {
     }
 
     @Override
-    public JSONArray getResultArr(ScannerForm form) throws IOException, ServiceException {
+    public List<ScannerVO> getResult(ScannerForm form) throws IOException, ServiceException {
         long startTime = System.currentTimeMillis();
         String image = "image=" + form.getImageBase64();
-        String topNum = "&top_num=3";
+        String baike_num = "&baike_num=6";
         String typeName = ScannerType.getType(form.getType());
         String resUrl = "https://aip.baidubce.com/rest/2.0/image-classify/v1/" + typeName + "?access_token=" + this.getAuth();
         if (form.getType() == 0) {
@@ -97,20 +100,22 @@ public class ScannerServiceImpl implements ScannerService {
         }
         final Request request = new Request.Builder()
                 .url(resUrl)
-                .post(okhttp3.RequestBody.create(MediaType.parse("Content-Type:application/x-www-form-urlencoded; charset=utf-8"), image + topNum))
+                .post(okhttp3.RequestBody.create(MediaType.parse("Content-Type:application/x-www-form-urlencoded; charset=utf-8"), image + baike_num))
                 .build();
         String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
-        long baiduApi = System.currentTimeMillis();
-        log.info("百度api用时：" + (baiduApi - startTime));
+        long endTime = System.currentTimeMillis();
+        log.info("百度api用时：" + (endTime - startTime));
         System.out.println(result);
-        JSONArray resultArray = JSONObject.parseObject(result).getJSONArray("result");
+        JSONArray responseArray = JSONObject.parseObject(result).getJSONArray("result");
+        List<ScannerVO> vos = new ArrayList<>();
 
         long forStartTime = System.currentTimeMillis();
-        if (resultArray != null && resultArray.size() > 0) {
-            for (int i = 0;i < resultArray.size(); i++) {
-                JSONObject imageInfo = resultArray.getJSONObject(i);
+        if (responseArray != null && responseArray.size() > 0) {
+            for (int i = 0;i < responseArray.size(); i++) {
+                JSONObject imageInfo = responseArray.getJSONObject(i);
+                ScannerVO vo = new ScannerVO();
                 if (imageInfo.getBigDecimal("score").compareTo(new BigDecimal("0.05")) < 0) {
-                    resultArray.remove(i--);
+                    responseArray.remove(i--);
                     continue;
                 }
                 String imageName = "";
@@ -120,23 +125,30 @@ public class ScannerServiceImpl implements ScannerService {
                     imageName = imageInfo.getString("name");
                 }
                 form.setSourceString(imageName);
-                long transStartTime = System.currentTimeMillis();
                 String imageNameTrans = translateService.translation(form);
-                long transEndTime = System.currentTimeMillis();
-                log.info("translate time: " + (transEndTime - transStartTime));
-                imageInfo.put("name", imageNameTrans);
-                String description = getWikiInfo(form.getToLang(), imageNameTrans);
-                imageInfo.put("des", description);
+                vo.setName(imageNameTrans);
+                vo.setScore(imageInfo.getBigDecimal("score"));
+                String description = getDescription(form.getToLang(), imageNameTrans, imageInfo);
+                vo.setDes(description);
+                vos.add(vo);
             }
         } else {
             throw new ServiceException("no result!");
         }
         long forEndTime = System.currentTimeMillis();
         log.info("loopTime: " + (forEndTime - forStartTime));
-        return resultArray;
+        return vos;
     }
 
-    private synchronized String getWikiInfo(String lang, String imageNameTrans) throws IOException {
+    /***
+     * 先查wiki，查不到翻译百度百科
+     * @param lang
+     * @param imageNameTrans
+     * @param imageInfo
+     * @return
+     * @throws IOException
+     */
+    private synchronized String getDescription(String lang, String imageNameTrans, JSONObject imageInfo) throws IOException {
         long startTime = System.currentTimeMillis();
         String wikiUrl = "https://" +
                 lang +
@@ -151,7 +163,7 @@ public class ScannerServiceImpl implements ScannerService {
         JSONObject resultObject = OkHttpUtils.getGETResponseJSON(request);
         long wikiApiTime = System.currentTimeMillis();
         log.info("wikiApi: " + (wikiApiTime - startTime));
-        if (resultObject != null) {
+        if (resultObject.get("parse") != null) {
             String textHtml = "";
             JSONObject parse = resultObject.getJSONObject("parse");
             if (parse != null) {
@@ -164,10 +176,14 @@ public class ScannerServiceImpl implements ScannerService {
                 text = text.replaceAll("\\[\\d*?]", "");
                 return text;
             }
+        } else {
+            String baikeDes = imageInfo.getJSONObject("baike_info").getString("description");
+            if (baikeDes != null && baikeDes.length() > 0) {
+                TranslateForm formDes = new TranslateForm(baikeDes, lang);
+                return translateService.translation(formDes);
+            }
         }
-        TranslateForm form = new TranslateForm();
-        form.setToLang(lang);
-        form.setSourceString("非常抱歉，暂时无法获取此物品的信息");
+        TranslateForm form = new TranslateForm("非常抱歉，暂时无法获取此物品的信息", lang);
         return translateService.translation(form);
     }
 

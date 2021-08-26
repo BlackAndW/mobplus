@@ -6,7 +6,7 @@ public enum ScannerType {
     NORMAL("advanced_general", 0),
     ANIMAL("animal", 1),
     PLANT("plant", 2),
-    FOOD("ingredient", 3),
+    FOOD("dish", 3),
     CURRENCY("currency", 4),
     LANDMARK("landmark", 5);
 
