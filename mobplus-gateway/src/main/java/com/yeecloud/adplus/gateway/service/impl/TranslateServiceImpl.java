@@ -7,6 +7,7 @@ import com.google.cloud.translate.Translation;
 import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
 import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.GoogleApiUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
  * @create: 2021/6/23
  */
 @Service
+@Slf4j
 public class TranslateServiceImpl implements TranslateService {
 
     @Value("${google.apiKeyPath.translate}")
@@ -48,6 +50,7 @@ public class TranslateServiceImpl implements TranslateService {
 
     @Override
     public String translation(TranslateForm form) {
+        long transStartTime = System.currentTimeMillis();
         Translate translate = getTranslateService();
         if (!checkSupportedLang(form.getToLang(), translate)) return null;
         Translation translation =
@@ -55,6 +58,8 @@ public class TranslateServiceImpl implements TranslateService {
                         form.getSourceString(),
                         Translate.TranslateOption.targetLanguage(form.getToLang()),
                         Translate.TranslateOption.model("base"));
+        long transEndTime = System.currentTimeMillis();
+        log.info("translate time: " + (transEndTime - transStartTime));
         return translation.getTranslatedText();
     }
 

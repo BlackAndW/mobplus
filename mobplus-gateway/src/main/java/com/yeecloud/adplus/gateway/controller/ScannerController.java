@@ -1,8 +1,11 @@
 package com.yeecloud.adplus.gateway.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.google.cloud.vision.v1.*;
+import com.google.protobuf.ByteString;
 import com.yeecloud.adplus.dal.entity.Feedback;
 import com.yeecloud.adplus.gateway.controller.form.ScannerForm;
+import com.yeecloud.adplus.gateway.controller.vo.ScannerVO;
 import com.yeecloud.adplus.gateway.service.ScannerService;
 import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.Base64Util;
@@ -18,6 +21,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: Leonard
@@ -58,7 +63,7 @@ public class ScannerController {
         formTest.setType(0);
         formTest.setToLang("en");
         formTest.setImageBase64(imgParam);
-        JSONArray result = scannerService.getResultArr(formTest);
+        List<ScannerVO> result = scannerService.getResult(formTest);
         return Result.SUCCESS(result);
     }
 
@@ -68,7 +73,7 @@ public class ScannerController {
         try {
             String imgParam = URLEncoder.encode(form.getImageBase64(), "UTF-8");
             form.setImageBase64(imgParam);
-            JSONArray result = scannerService.getResultArr(form);
+            List<ScannerVO> result = scannerService.getResult(form);
             return Result.SUCCESS(result);
         } catch (Exception e) {
             return Result.SUCCESS(e.getMessage());
@@ -80,4 +85,39 @@ public class ScannerController {
         scannerService.insertFeedbackLog(form);
         return Result.SUCCESS();
     }
+
+    // Detects labels in the specified local image.
+//    public static void detectLabels(String filePath) throws IOException {
+//        List<AnnotateImageRequest> requests = new ArrayList<>();
+//
+//        ByteString imgBytes = ByteString.readFrom(new FileInputStream(filePath));
+//
+//        Image img = Image.newBuilder().setContent(imgBytes).build();
+//        Feature feat = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
+//        AnnotateImageRequest request =
+//                AnnotateImageRequest.newBuilder().addFeatures(feat).setImage(img).build();
+//        requests.add(request);
+//
+//        // Initialize client that will be used to send requests. This client only needs to be created
+//        // once, and can be reused for multiple requests. After completing all of your requests, call
+//        // the "close" method on the client to safely clean up any remaining background resources.
+//        try (ImageAnnotatorClient client = ImageAnnotatorClient.create()) {
+//            BatchAnnotateImagesResponse response = client.batchAnnotateImages(requests);
+//            List<AnnotateImageResponse> responses = response.getResponsesList();
+//
+//            for (AnnotateImageResponse res : responses) {
+//                if (res.hasError()) {
+//                    System.out.format("Error: %s%n", res.getError().getMessage());
+//                    return;
+//                }
+//
+//                // For full list of available annotations, see http://g.co/cloud/vision/docs
+//                for (EntityAnnotation annotation : res.getLabelAnnotationsList()) {
+//                    annotation
+//                            .getAllFields()
+//                            .forEach((k, v) -> System.out.format("%s : %s%n", k, v.toString()));
+//                }
+//            }
+//        }
+//    }
 }
