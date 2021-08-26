@@ -54,9 +54,9 @@ public class ScannerServiceImpl implements ScannerService {
     @Override
     public String getAuth() {
         // 官网获取的 API Key 更新为你注册的
-        String clientId = "Y9Cc4GciVkPYiPkbWoscuqL9";
+        String clientId = "uYH6GUrqLbmFpr4NQNTdKi80";
         // 官网获取的 Secret Key 更新为你注册的
-        String clientSecret = "uaxlhhescuQs6GzOGuUmaAgbCL66DSYi";
+        String clientSecret = "VM1IKjxGCsaO4U2BbLQUZg6kzDRasEqa";
         return getAuth(clientId, clientSecret);
     }
 
