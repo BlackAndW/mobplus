@@ -21,7 +21,7 @@ public interface AppVersionRepository extends JpaRepository<AppVersion, Integer>
 
     @Transactional
     @Modifying
-    @Query("update AppVersion obj set obj.deleted = true where obj.id = :id")
+//    @Query("update AppVersion obj set obj.deleted = true where obj.id = :id")
     void deleteById(@Param("id") Integer id);
 
     List<AppVersion> findAllByAppAndDeleted(@Param("app") App app, @Param("deleted") Boolean deleted);

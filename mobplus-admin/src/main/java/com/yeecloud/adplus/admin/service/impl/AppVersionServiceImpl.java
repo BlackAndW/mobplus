@@ -125,6 +125,7 @@ public class AppVersionServiceImpl implements AppVersionService {
                     appProjectRepository.deleteById(appProject.getId());
                 }
             }
+            // 删除版本是物理删除，保证版本唯一性
             appVersionRepository.deleteById(id);
         }
     }

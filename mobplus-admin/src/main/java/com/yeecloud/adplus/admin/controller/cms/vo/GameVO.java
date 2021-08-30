@@ -27,6 +27,6 @@ public class GameVO {
     private Integer showNum;
 //    private Integer createdBy;
 //    private Integer modifiedBy;
-//    private Long createdAt;
+    private Long createdAt;
 //    private Long modifiedAt;
 }
