@@ -1,14 +1,14 @@
 package com.yeecloud.adplus.gateway.service.impl;
 
-import com.apache.commons.beanutils.NewBeanUtils;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yeecloud.adplus.dal.entity.Game;
 import com.yeecloud.adplus.dal.entity.QGame;
 import com.yeecloud.adplus.dal.repository.GameRepository;
 import com.yeecloud.adplus.gateway.service.GameService;
 import com.yeecloud.meeto.common.exception.ServiceException;
-import com.yeecloud.meeto.common.util.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,22 +33,28 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    JPAQueryFactory jpaQueryFactory;
+
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public List<Game> findGameList(int type, int size) throws ServiceException {
+    public List<Tuple> findGameList(int type, int size) throws ServiceException {
         try {
             QGame game = QGame.game;
             Predicate predicate = ExpressionUtils.and(game.deleted.eq(false), game.status.ne(1));
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "type"), new Sort.Order(Sort.Direction.ASC, "name"));
-            PageRequest pagRequest = PageRequest.of(0, size, sort);
-            return gameRepository.findAll(predicate, pagRequest).getContent();
+            return jpaQueryFactory.
+                    selectDistinct(game.name, game.type).
+                    from(game).
+                    where(predicate).
+                    orderBy(game.type.asc(), game.name.asc()).
+                    fetch();
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public List<Game> findGameListNew() throws ServiceException {
+    public List<Tuple> findGameListNew() throws ServiceException {
         return findGameList(-1,999);
     }
 
