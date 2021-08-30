@@ -11,12 +11,15 @@ import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import com.yeecloud.meeto.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
 
 /**
  * Title
@@ -49,7 +52,21 @@ public class GameServiceImpl implements GameService {
 //                Predicate or = ExpressionUtils.or(game.name.like(express), game.desc.like(express));
 //                predicate = ExpressionUtils.and(predicate, or);
 //            }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "type"), new Sort.Order(Sort.Direction.ASC, "name"));
+            // 按时间选择框筛选数据，默认展示今天的数据
+            String startTimeStr = query.get("startTimeStr", String.class);
+            String endTimeStr = query.get("endTimeStr", String.class);
+            if (startTimeStr != null && startTimeStr.length() > 0) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                long startTime = simpleDateFormat.parse(startTimeStr).getTime();
+                long endTime = simpleDateFormat.parse(endTimeStr).getTime();
+                predicate = ExpressionUtils.and(predicate, game.createdAt.between(startTime, endTime));
+            } else {
+                DateTime today = new DateTime();
+                long startTime = today.withMillisOfDay(0).getMillis();
+                long endTime = today.plusDays(1).withMillisOfDay(0).getMillis();
+                predicate = ExpressionUtils.and(predicate, game.createdAt.between(startTime, endTime));
+            }
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "clickNum"), new Sort.Order(Sort.Direction.ASC, "name"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
             return gameRepository.findAll(predicate, pagRequest);
         } catch (Throwable e) {
