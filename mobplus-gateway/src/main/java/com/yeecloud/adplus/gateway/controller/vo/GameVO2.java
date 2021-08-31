@@ -10,6 +10,6 @@ import java.io.Serializable;
  */
 @Data
 public class GameVO2 implements Serializable {
-//    private Integer id;
+    private Integer id;
     private String name;
 }

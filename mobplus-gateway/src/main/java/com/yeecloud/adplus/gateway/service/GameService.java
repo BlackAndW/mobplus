@@ -1,6 +1,5 @@
 package com.yeecloud.adplus.gateway.service;
 
-import com.querydsl.core.Tuple;
 import com.yeecloud.adplus.dal.entity.Game;
 import com.yeecloud.meeto.common.exception.ServiceException;
 
@@ -12,9 +11,9 @@ import java.util.List;
  */
 public interface GameService {
 
-    List<Tuple> findGameList(int type, int items) throws ServiceException;
+    List<Game> findGameList(int type, int items) throws ServiceException;
 
-    List<Tuple> findGameListNew() throws ServiceException;
+    List<Game> findGameListNew() throws ServiceException;
 
     void updateNumByName(Game game) throws ServiceException;
 }

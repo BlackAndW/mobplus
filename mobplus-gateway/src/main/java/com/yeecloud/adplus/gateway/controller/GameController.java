@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.apache.commons.beanutils.NewBeanUtils;
 import com.google.common.collect.Lists;
-import com.querydsl.core.Tuple;
 import com.yeecloud.adplus.dal.entity.Game;
 import com.yeecloud.adplus.dal.repository.GameRepository;
 import com.yeecloud.adplus.gateway.controller.vo.GameVO;
@@ -83,22 +82,22 @@ public class GameController {
 
     @GetMapping("list")
     public Result getGameListNew() throws ServiceException {
-        List<Tuple> gameList = gameService.findGameListNew();
+        List<Game> gameList = gameService.findGameListNew();
         JSONObject gameDataList = new JSONObject();
         JSONArray gameArray = new JSONArray();
         String curType = "";
-        for (Tuple game : gameList) {
+        for (Game game : gameList) {
             if (curType.equals("")) {
-                curType = game.get(1, String.class);
+                curType = game.getType();
             }
             GameVO2 vo2 = new GameVO2();
-            vo2.setName(game.get(0, String.class));
-            if (game.get(1, String.class).equals(curType)) {
+            NewBeanUtils.copyProperties(vo2, game, true);
+            if (game.getType().equals(curType)) {
                 gameArray.add(vo2);
             } else {
                 gameDataList.put(curType, JSONArray.parseArray(gameArray.toJSONString()));
                 gameArray.clear();
-                curType = game.get(1, String.class);
+                curType = game.getType();
                 gameArray.add(vo2);
             }
         }
