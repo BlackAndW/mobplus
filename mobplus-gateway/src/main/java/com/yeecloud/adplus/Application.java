@@ -11,6 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 
 import javax.persistence.EntityManager;
 
@@ -23,6 +24,7 @@ import javax.persistence.EntityManager;
  * @author ybbk
  * @version 1.0.01
  */
+@EnableOpenApi
 @EnableJpaAuditing
 @EnableAsync
 @EnableAspectJAutoProxy(exposeProxy = true)

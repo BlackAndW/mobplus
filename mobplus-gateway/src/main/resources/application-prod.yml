@@ -60,3 +60,6 @@ google:
   apiKeyPath:
     translate: src/main/resources/translation.json
     ocr: src/main/resources/vision-api-ocr.json
+
+swagger:
+  swaggerEnabled: false

@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.gateway.service;
 
 import com.yeecloud.adplus.dal.entity.Game;
+import com.yeecloud.adplus.gateway.controller.form.GameForm;
 import com.yeecloud.meeto.common.exception.ServiceException;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface GameService {
 
     List<Game> findGameListNew() throws ServiceException;
 
-    void updateNumByName(Game game) throws ServiceException;
+    void updateLogById(GameForm game) throws ServiceException;
 }

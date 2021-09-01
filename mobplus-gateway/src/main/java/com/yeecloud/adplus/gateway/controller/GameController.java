@@ -7,12 +7,15 @@ import com.apache.commons.beanutils.NewBeanUtils;
 import com.google.common.collect.Lists;
 import com.yeecloud.adplus.dal.entity.Game;
 import com.yeecloud.adplus.dal.repository.GameRepository;
+import com.yeecloud.adplus.gateway.controller.form.GameForm;
 import com.yeecloud.adplus.gateway.controller.vo.GameVO;
 import com.yeecloud.adplus.gateway.controller.vo.GameVO2;
 import com.yeecloud.adplus.gateway.service.GameService;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +33,7 @@ import java.util.List;
 @Slf4j
 @CrossOrigin
 @RestController
+@Api(tags = "h5游戏管理")
 @RequestMapping("/api/v1/game")
 public class GameController {
 
@@ -80,6 +84,7 @@ public class GameController {
 //        return needCodec ? Codec.encode(response) : response;
 //    }
 
+    @ApiOperation(value = "获取游戏列表，无参数接口")
     @GetMapping("list")
     public Result getGameListNew() throws ServiceException {
         List<Game> gameList = gameService.findGameListNew();
@@ -106,8 +111,10 @@ public class GameController {
     }
 
     @PostMapping("update")
-    public void update(@RequestBody Game form) throws ServiceException {
-        gameService.updateNumByName(form);
+    @ApiOperation(value = "更新游戏日志", httpMethod = "POST")
+    public Result update(@RequestBody GameForm form) throws ServiceException {
+        gameService.updateLogById(form);
+        return Result.SUCCESS("game log updated");
     }
 
     // 导入游戏目录数据

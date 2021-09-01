@@ -5,7 +5,10 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.service.GameService;
 import com.yeecloud.adplus.dal.entity.Game;
+import com.yeecloud.adplus.dal.entity.GameLog;
 import com.yeecloud.adplus.dal.entity.QGame;
+import com.yeecloud.adplus.dal.entity.QGameLog;
+import com.yeecloud.adplus.dal.repository.GameLogRepository;
 import com.yeecloud.adplus.dal.repository.GameRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
@@ -33,15 +36,21 @@ import java.text.SimpleDateFormat;
 @Slf4j
 @Service
 public class GameServiceImpl implements GameService {
+
     @Autowired
     private GameRepository gameRepository;
 
-    @Override
-    public Page<Game> query(Query query) throws ServiceException {
-        try {
-            QGame game = QGame.game;
-            Predicate predicate = game.deleted.eq(false);
+    @Autowired
+    private GameLogRepository gameLogRepository;
 
+    @Override
+    public Page<GameLog> query(Query query) throws ServiceException {
+        try {
+//            QGame game = QGame.game;
+//            Predicate predicate = game.deleted.eq(false);
+
+            QGameLog QgameLog = QGameLog.gameLog;
+            Predicate predicate = QgameLog.deleted.eq(false);
 //            Integer type = query.get("type", Integer.class);
 //            if (type != null && type > 0) {
 //                predicate = ExpressionUtils.and(predicate, game.type.eq(type));
@@ -59,16 +68,16 @@ public class GameServiceImpl implements GameService {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 long startTime = simpleDateFormat.parse(startTimeStr).getTime();
                 long endTime = simpleDateFormat.parse(endTimeStr).getTime();
-                predicate = ExpressionUtils.and(predicate, game.createdAt.between(startTime, endTime));
+                predicate = ExpressionUtils.and(predicate, QgameLog.createdAt.between(startTime, endTime));
             } else {
                 DateTime today = new DateTime();
                 long startTime = today.withMillisOfDay(0).getMillis();
                 long endTime = today.plusDays(1).withMillisOfDay(0).getMillis();
-                predicate = ExpressionUtils.and(predicate, game.createdAt.between(startTime, endTime));
+                predicate = ExpressionUtils.and(predicate, QgameLog.createdAt.between(startTime, endTime));
             }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "clickNum"), new Sort.Order(Sort.Direction.ASC, "name"));
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "clickNum"), new Sort.Order(Sort.Direction.DESC, "createdAt"));
             PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-            return gameRepository.findAll(predicate, pagRequest);
+            return gameLogRepository.findAll(predicate, pagRequest);
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
