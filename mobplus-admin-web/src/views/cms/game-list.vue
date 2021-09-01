@@ -81,13 +81,13 @@ import moment from 'moment';
 const columns = [
     {
         title: '编号',
-        dataIndex: 'id',
+        dataIndex: 'gameId',
         width: 100
     },
     {
         title: '名称',
         dataIndex: 'name',
-        width: 200
+        width: 100
     },
     {
         title: '预览图',
@@ -101,11 +101,20 @@ const columns = [
         width: 100
     },
     {
+        title: '访问人数',
+        dataIndex: 'ipNum',
+        width: 100
+    },
+    {
+        title: '游玩时长(秒)',
+        dataIndex: 'playTime',
+        width: 100
+    },
+    {
         title: '日期',
         dataIndex: 'createdAt',
         scopedSlots: { customRender: 'dateSlot' },
         customRender: (text, record) => {
-            console.log(text);
             return moment(text).format('YYYY-MM-DD');
         }
     },

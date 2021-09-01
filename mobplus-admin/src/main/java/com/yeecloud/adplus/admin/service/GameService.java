@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.admin.service;
 
 import com.yeecloud.adplus.dal.entity.Game;
+import com.yeecloud.adplus.dal.entity.GameLog;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ import org.springframework.data.domain.Page;
  */
 public interface GameService {
 
-    Page<Game> query(Query query) throws ServiceException;
+    Page<GameLog> query(Query query) throws ServiceException;
 
     Game findById(Integer id) throws ServiceException;
 

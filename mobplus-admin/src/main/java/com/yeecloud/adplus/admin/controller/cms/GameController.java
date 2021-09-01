@@ -4,6 +4,7 @@ import com.yeecloud.adplus.admin.controller.cms.convert.GameConvert;
 import com.yeecloud.adplus.admin.controller.cms.vo.GameVO;
 import com.yeecloud.adplus.admin.service.GameService;
 import com.yeecloud.adplus.dal.entity.Game;
+import com.yeecloud.adplus.dal.entity.GameLog;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.PageInfo;
@@ -42,7 +43,7 @@ public class GameController {
     @GetMapping
     @RequiresPermissions("cms:game:query")
     public Result<GameVO> list(@RequestParam Map<String, Object> params) throws ServiceException {
-        Page<Game> page = gameService.query(new Query(params));
+        Page<GameLog> page = gameService.query(new Query(params));
         PageInfo<GameVO> result = convert(page);
         return Result.SUCCESS(result);
     }
@@ -83,8 +84,8 @@ public class GameController {
         return Result.SUCCESS();
     }
 
-    private PageInfo<GameVO> convert(Page<Game> result) {
-        List<GameVO> resultList = gameConvert.convert(result.getContent());
+    private PageInfo<GameVO> convert(Page<GameLog> result) {
+        List<GameVO> resultList = gameConvert.convertLog(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
 

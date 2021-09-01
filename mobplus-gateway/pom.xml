@@ -151,6 +151,13 @@
             <artifactId>jsoup</artifactId>
             <version>1.14.2</version>
         </dependency>
+
+        <!-- 引入swagger3 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

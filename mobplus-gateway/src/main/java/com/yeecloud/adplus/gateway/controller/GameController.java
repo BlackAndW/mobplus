@@ -5,15 +5,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.apache.commons.beanutils.NewBeanUtils;
 import com.google.common.collect.Lists;
-import com.querydsl.core.Tuple;
 import com.yeecloud.adplus.dal.entity.Game;
 import com.yeecloud.adplus.dal.repository.GameRepository;
+import com.yeecloud.adplus.gateway.controller.form.GameForm;
 import com.yeecloud.adplus.gateway.controller.vo.GameVO;
 import com.yeecloud.adplus.gateway.controller.vo.GameVO2;
 import com.yeecloud.adplus.gateway.service.GameService;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,7 @@ import java.util.List;
 @Slf4j
 @CrossOrigin
 @RestController
+@Api(tags = "h5游戏管理")
 @RequestMapping("/api/v1/game")
 public class GameController {
 
@@ -81,24 +84,25 @@ public class GameController {
 //        return needCodec ? Codec.encode(response) : response;
 //    }
 
+    @ApiOperation(value = "获取游戏列表，无参数接口")
     @GetMapping("list")
     public Result getGameListNew() throws ServiceException {
-        List<Tuple> gameList = gameService.findGameListNew();
+        List<Game> gameList = gameService.findGameListNew();
         JSONObject gameDataList = new JSONObject();
         JSONArray gameArray = new JSONArray();
         String curType = "";
-        for (Tuple game : gameList) {
+        for (Game game : gameList) {
             if (curType.equals("")) {
-                curType = game.get(1, String.class);
+                curType = game.getType();
             }
             GameVO2 vo2 = new GameVO2();
-            vo2.setName(game.get(0, String.class));
-            if (game.get(1, String.class).equals(curType)) {
+            NewBeanUtils.copyProperties(vo2, game, true);
+            if (game.getType().equals(curType)) {
                 gameArray.add(vo2);
             } else {
                 gameDataList.put(curType, JSONArray.parseArray(gameArray.toJSONString()));
                 gameArray.clear();
-                curType = game.get(1, String.class);
+                curType = game.getType();
                 gameArray.add(vo2);
             }
         }
@@ -107,8 +111,10 @@ public class GameController {
     }
 
     @PostMapping("update")
-    public void update(@RequestBody Game form) throws ServiceException {
-        gameService.updateNumByName(form);
+    @ApiOperation(value = "更新游戏日志", httpMethod = "POST")
+    public Result update(@RequestBody GameForm form) throws ServiceException {
+        gameService.updateLogById(form);
+        return Result.SUCCESS("game log updated");
     }
 
     // 导入游戏目录数据

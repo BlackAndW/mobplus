@@ -52,11 +52,13 @@ public class Game extends AuditorEntity {
     @Column(name = "c_remark")
     private String remark;
 
-    /** 点击次数 */
-    @Column(name = "n_click_num")
-    private Integer clickNum = 0;
+//    /** 点击次数 */
+//    @Column(name = "n_click_num")
+//    private Integer clickNum = 0;
+//
+//    /** 展示次数 */
+//    @Column(name = "n_show_num")
+//    private Integer showNum = 0;
 
-    /** 展示次数 */
-    @Column(name = "n_show_num")
-    private Integer showNum = 0;
+
 }
