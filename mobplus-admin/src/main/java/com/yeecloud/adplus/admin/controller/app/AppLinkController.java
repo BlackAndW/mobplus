@@ -8,6 +8,7 @@ import com.yeecloud.adplus.admin.controller.cms.vo.ChargeBannerVO;
 import com.yeecloud.adplus.admin.service.AppLinkService;
 import com.yeecloud.adplus.dal.entity.App;
 import com.yeecloud.adplus.dal.entity.AppLink;
+import com.yeecloud.adplus.dal.entity.AppLinkLog;
 import com.yeecloud.adplus.dal.entity.ChargeBanner;
 import com.yeecloud.adplus.dal.repository.AppLinkRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -55,7 +56,7 @@ public class AppLinkController {
     @GetMapping
     @RequiresPermissions("app:link:query")
     public Result getLink(@RequestParam Map<String, Object> params) throws Exception {
-        Page<AppLink> page = appLinkService.query(new Query(params));
+        Page<AppLinkLog> page = appLinkService.queryLog(new Query(params));
         PageInfo<AppLinkVO> result = convertAppLink(page);
         return Result.SUCCESS(result);
     }
@@ -124,8 +125,8 @@ public class AppLinkController {
 //        }
 //    }
 
-    private PageInfo<AppLinkVO> convertAppLink(Page<AppLink> result) {
-        List<AppLinkVO> resultList = appLinkConvert.convert(result.getContent());
+    private PageInfo<AppLinkVO> convertAppLink(Page<AppLinkLog> result) {
+        List<AppLinkVO> resultList = appLinkConvert.convert2(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
 }

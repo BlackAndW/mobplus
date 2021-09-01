@@ -38,13 +38,13 @@ public class AppLink extends AuditorEntity{
     @Column(name = "n_img_url")
     private String imgUrl;
 
-    /** 点击次数 */
-    @Column(name = "n_click_num")
-    private Integer clickNum = 0;
-
-    /** 展示次数 */
-    @Column(name = "n_show_num")
-    private Integer showNum = 0;
+//    /** 点击次数 */
+//    @Column(name = "n_click_num")
+//    private Integer clickNum = 0;
+//
+//    /** 展示次数 */
+//    @Column(name = "n_show_num")
+//    private Integer showNum = 0;
 
     /** 游戏介绍 */
     @Column(name = "n_description")
