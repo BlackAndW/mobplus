@@ -16,6 +16,25 @@
             <a-col :span="20">
                 <a-card :bordered="true" class="card-search card-list">
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
+                        <div class="l">
+                            <a-form-item>
+                                <a-range-picker
+                                    v-decorator="[ 'time', { initialValue: [moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')] } ]"
+                                    @change="onChangeDate" />
+                            </a-form-item>
+                            <a-button-group>
+                                <a-button
+                                    icon="sync"
+                                    v-action="['app:link:query']"
+                                    @click="$refs.table.refresh(false)"
+                                />
+                                <a-button
+                                    type="primary"
+                                    icon="search"
+                                    @click="$refs.table.refresh(true)"
+                                >查询</a-button>
+                            </a-button-group>
+                        </div>
                         <div class="r" v-if="currentApp!=null">
                             <a-button-group>
                                 <a-button
@@ -72,6 +91,7 @@
 import { mixinDevice } from '@/utils/mixin';
 import { STable, STree, ETag } from '@/components';
 import AppLinkModal from '@/views/app/modules/app-link-modal';
+import moment from 'moment';
 
 const columns = [
     {
@@ -88,7 +108,7 @@ const columns = [
     {
         title: '跳转链接',
         dataIndex: 'imgUrl',
-        width: 300
+        width: 220
     },
     {
         title: '点击次数',
@@ -100,11 +120,14 @@ const columns = [
         dataIndex: 'showNum',
         width: 50
     },
-    // {
-    //     title: '添加时间',
-    //     dataIndex: 'createdAt',
-    //     scopedSlots: { customRender: 'dateSlot' }
-    // },
+    {
+        title: '日期',
+        dataIndex: 'createdAt',
+        scopedSlots: { customRender: 'dateSlot' },
+        customRender: (text, record) => {
+            return moment(text).format('YYYY-MM-DD');
+        }
+    },
     {
         title: '操作',
         dataIndex: 'action',
@@ -121,7 +144,8 @@ export default {
         STable,
         STree,
         ETag,
-        AppLinkModal
+        AppLinkModal,
+        moment
     },
     data () {
         return {
@@ -146,6 +170,11 @@ export default {
     },
     computed: {},
     methods: {
+        moment,
+        onChangeDate (date, dateString) {
+            this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
+            this.queryParam.endTimeStr = dateString[1] + ' 23:59:59';
+        },
         onDelete: function (record) {
             var params = [];
             if (record !== undefined) {

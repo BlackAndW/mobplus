@@ -6,13 +6,15 @@ import org.checkerframework.checker.units.qual.K;
 import org.springframework.data.domain.Page;
 import com.yeecloud.meeto.common.util.Query;
 
+import java.text.ParseException;
+
 /**
  * @author: Leonard
  * @create: 2021/6/10
  */
 public interface BaseService<T, K> {
 
-    Page<T> query(Query query) throws ServiceException;
+    Page<T> query(Query query) throws ServiceException, ParseException;
 
     T findById(Integer id) throws ServiceException;
 
