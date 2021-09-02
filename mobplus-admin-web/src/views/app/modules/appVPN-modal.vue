@@ -10,7 +10,7 @@
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="节点名称">
                     <a-input
-                        v-decorator="[ 'serverName', {initialValue: model.serverName, rules: [ { required: true, message: '请输入节点名称' }] }]"
+                        v-decorator="[ 'b02', {initialValue: model.b02, rules: [ { required: true, message: '请输入节点名称' }] }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="国家">
@@ -26,7 +26,7 @@
                         </a-select-option>
                     </a-select>
                 </a-form-item>
-                <div v-show="false">
+                <!-- <div v-show="false">
                     <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="节点英文名">
                         <a-input
                             v-decorator="[ 'b02', {initialValue: model.b02}]"
@@ -37,7 +37,7 @@
                             v-decorator="[ 'b03', {initialValue: model.b03}]"
                         />
                     </a-form-item>
-                </div>
+                </div> -->
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="地区">
                     <a-input
                         v-decorator="[ 'region', {initialValue: model.region, rules: [ { required: true, message: '请输入地区名称' }] }]"
@@ -120,6 +120,7 @@ export default {
         edit: function (record) {
             this.title = '编辑节点:' + record.b01;
             this.model = record;
+            console.log(record);
             this.url = '/app/vpn/' + record.b01;
             this.disabledIP = true;
             this.func = this.$http.put;
