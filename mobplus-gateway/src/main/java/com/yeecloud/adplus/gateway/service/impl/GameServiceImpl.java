@@ -92,8 +92,8 @@ public class GameServiceImpl implements GameService {
             GameLog gameLog = gameLogPage.getContent().get(0);
             DateTime today = new DateTime();
             today = today.withMillisOfDay(0);
-            DateTime gameCreatedTime = new DateTime(gameLog.getCreatedAt());
-            Period period = new Period(gameCreatedTime, today, PeriodType.days());
+            DateTime gameCreatedDay = new DateTime(gameLog.getCreatedAt()).withMillisOfDay(0);
+            Period period = new Period(gameCreatedDay, today, PeriodType.days());
             // 相隔一天以上的数据，新增
             if (period.getDays() >= 1) {
                 GameLog newRecord = new GameLog();

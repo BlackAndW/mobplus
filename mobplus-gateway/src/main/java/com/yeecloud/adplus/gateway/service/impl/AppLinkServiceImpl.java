@@ -94,8 +94,8 @@ public class AppLinkServiceImpl implements AppLinkService {
             AppLinkLog appLinkLog = appLinkLogPage.getContent().get(0);
             DateTime today = new DateTime();
             today = today.withMillisOfDay(0);
-            DateTime appLinkCreatedTime = new DateTime(appLinkLog.getCreatedAt());
-            Period period = new Period(appLinkCreatedTime, today, PeriodType.days());
+            DateTime appLinkCreatedDay = new DateTime(appLinkLog.getCreatedAt()).withMillisOfDay(0);
+            Period period = new Period(appLinkCreatedDay, today, PeriodType.days());
             // 相隔一天以上的数据，新增
             if (period.getDays() >= 1) {
                 AppLinkLog newRecord = new AppLinkLog();
