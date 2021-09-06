@@ -11,6 +11,8 @@ import lombok.Data;
 @Data
 public class ChargeMaterialVO {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
 
     private String name;

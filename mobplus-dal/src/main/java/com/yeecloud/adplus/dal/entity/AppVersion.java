@@ -12,6 +12,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_app_version")
 public class AppVersion extends AuditorEntity {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "n_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

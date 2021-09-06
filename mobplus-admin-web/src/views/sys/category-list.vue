@@ -12,7 +12,7 @@
                     </a-form-item>
                 </div>
                 <div class="r">
-                    <a-button-group>
+                    <a-button-group class="btn-grp-margin-top">
                         <a-button
                             icon="sync"
                             v-action="['sys:category:query']"

@@ -14,6 +14,8 @@ import javax.persistence.*;
 @Table(name = "t_app_link")
 public class AppLink extends AuditorEntity{
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "n_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class ChargeBannerVO {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
 
     private String name;

@@ -33,7 +33,7 @@
                             </a-form-item>
                         </div>
                         <div class="r" v-if="currentCategory!=null">
-                            <a-button-group>
+                            <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     icon="sync"
                                     v-action="['sys:permission:query']"

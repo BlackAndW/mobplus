@@ -22,7 +22,7 @@
                                     v-decorator="[ 'time', { initialValue: [moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')] } ]"
                                     @change="onChangeDate" />
                             </a-form-item>
-                            <a-button-group>
+                            <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     icon="sync"
                                     v-action="['app:link:query']"
@@ -36,7 +36,7 @@
                             </a-button-group>
                         </div>
                         <div class="r" v-if="currentApp!=null">
-                            <a-button-group>
+                            <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     icon="sync"
                                     v-action="['app:link:query']"

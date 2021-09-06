@@ -63,5 +63,5 @@ google:
     translate: src/main/resources/translation.json
     ocr: src/main/resources/vision-api-ocr.json
 
-swagger:
-  swaggerEnabled: false
+#swagger:
+#  swaggerEnabled: false

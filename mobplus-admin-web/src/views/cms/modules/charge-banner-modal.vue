@@ -47,7 +47,7 @@
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型">
-                    <a-radio-group button-style="solid" v-decorator="[ 'imgType', {initialValue: model.imgType || 1, rules: [ { required: true, message: '请选择是跳转类型' }]}]">
+                    <a-radio-group button-style="solid" v-decorator="[ 'imgType', {initialValue: model.imgType || 1, rules: [ { required: true, message: '请选择跳转类型' }]}]">
                         <a-radio-button :value="1">应用内</a-radio-button>
                         <a-radio-button :value="2">应用外</a-radio-button>
                     </a-radio-group>

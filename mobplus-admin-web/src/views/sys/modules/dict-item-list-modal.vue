@@ -1,7 +1,7 @@
 <template>
     <e-drawer :visible="visible" :title="title" @cancel="onCancel">
         <a-spin :spinning="confirmLoading">
-            <a-button-group style="margin-bottom:16px">
+            <a-button-group class="btn-grp-margin-top" style="margin-bottom:16px">
                 <a-button icon="plus" v-action="['sys:dict:add']" @click="$refs.modal.add(model)">新增</a-button>
                 <a-button icon="sync" v-action="['sys:dict:query']" @click="loadDataList" />
             </a-button-group>
