@@ -13,6 +13,9 @@ import java.util.List;
 @Entity
 @Table(name = "t_app_project")
 public class AppProject extends AuditorEntity {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "n_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

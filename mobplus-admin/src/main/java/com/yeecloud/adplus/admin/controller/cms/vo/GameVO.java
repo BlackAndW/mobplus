@@ -14,6 +14,8 @@ import lombok.Data;
 @Data
 public class GameVO {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
     private String name;
     private Integer gameId;

@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class AdvertiserVO extends Advertiser {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
     private String code;
     private String name;

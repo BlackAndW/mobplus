@@ -3,7 +3,7 @@
         <a-spin :spinning="confirmLoading">
             <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
                 <div class="r">
-                    <a-button-group>
+                    <a-button-group class="btn-grp-margin-top">
                         <a-button
                             icon="sync"
                             v-action="['cms:talk:query']"

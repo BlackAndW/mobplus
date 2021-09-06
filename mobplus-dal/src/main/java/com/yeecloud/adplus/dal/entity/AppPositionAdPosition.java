@@ -13,6 +13,8 @@ import javax.persistence.*;
 @Table(name = "t_app_pos_ad_pos")
 public class AppPositionAdPosition extends AuditorEntity {
 
+    private static final long serialVersionUID = 1L;
+
 
     @Id
     @Column(name = "n_id")

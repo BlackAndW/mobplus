@@ -65,7 +65,7 @@
                             </a-form-item>
                             <a-form-item>
                                 <div v-if="currentApp!=null">
-                                    <a-button-group>
+                                    <a-button-group class="btn-grp-margin-top">
                                         <a-button
                                             icon="sync"
                                             v-action="['dataManager:query']"

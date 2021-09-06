@@ -42,7 +42,7 @@ public class GameController {
 
     @GetMapping
     @RequiresPermissions("cms:game:query")
-    public Result<GameVO> list(@RequestParam Map<String, Object> params) throws ServiceException {
+    public Result list(@RequestParam Map<String, Object> params) throws ServiceException {
         Page<GameLog> page = gameService.query(new Query(params));
         PageInfo<GameVO> result = convert(page);
         return Result.SUCCESS(result);
@@ -50,7 +50,7 @@ public class GameController {
 
     @GetMapping("/{id}")
     @RequiresPermissions("cms:game:info")
-    public Result<GameVO> info(@PathVariable Integer id) throws ServiceException {
+    public Result info(@PathVariable Integer id) throws ServiceException {
         Game result = gameService.findById(id);
         return Result.SUCCESS(gameConvert.convert(result));
     }
@@ -88,6 +88,5 @@ public class GameController {
         List<GameVO> resultList = gameConvert.convertLog(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
-
 
 }

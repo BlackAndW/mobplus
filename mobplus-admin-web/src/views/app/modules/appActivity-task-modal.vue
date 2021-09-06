@@ -10,7 +10,7 @@
         cancelText="关闭"
     >
         <div class="add-modal" v-if="currentAppActivity!=null">
-            <a-button-group>
+            <a-button-group class="btn-grp-margin-top">
                 <a-button
                     icon="sync"
                     v-action="['app:activity:query']"

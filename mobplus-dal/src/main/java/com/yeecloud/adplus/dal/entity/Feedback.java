@@ -13,6 +13,8 @@ import javax.persistence.*;
 @Table(name = "t_image_feedback")
 public class Feedback extends AuditorEntity{
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "n_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

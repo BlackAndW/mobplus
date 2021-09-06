@@ -22,13 +22,13 @@
                 </div>
                 <a-card :bordered="true" class="card-list">
                     <div class="button-area" v-if="currentApp!=null">
-                            <a-button-group>
+                            <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     v-action="['app:config:create']"
                                     @click="$refs.confModal.edit(currentApp)"
                                 >APP配置</a-button>
                             </a-button-group>
-                            <a-button-group>
+                            <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     icon="sync"
                                     v-action="['app:config:query']"

@@ -1,7 +1,7 @@
 <template>
-    <div class="panel panel-appVersion">
+    <div class="panel">
         <a-row :gutter="12">
-            <a-col :span="4">
+            <!-- <a-col :span="4">
                 <a-card :bordered="true" title="应用信息" class="tree-list" :loading="treeloading">
                     <a-icon
                         slot="extra"
@@ -11,52 +11,47 @@
                     />
                     <s-tree class="tree-list-style" :dataSource="appTreeData" @add="onQueryDict" />
                 </a-card>
-            </a-col>
-            <a-col :span="20">
-                <a-card :bordered="true" class="card-list">
-                    <!--       -->
+            </a-col> -->
+            <a-col :span="24">
+                <a-card :bordered="true" class="card-search card-list">
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l" v-action="['app:version:query']" v-if="currentApp!=null">
-                            <a-form-item label="状态">
-                                <a-select placeholder="状态" v-model="queryParam.status" style="width:120px">
+                        <div class="l">
+                            <a-form-item>
+                                <a-range-picker
+                                    v-decorator="[ 'time', { initialValue: [moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')] } ]"
+                                    @change="onChangeDate" />
+                                </a-range-picker>
+                            </a-form-item>
+                            <a-form-item label="处理状态">
+                                <a-select placeholder="处理状态" v-model="queryParam.status" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
-                                    <a-select-option :value="1">未启用</a-select-option>
-                                    <a-select-option :value="2">已启用</a-select-option>
+                                    <a-select-option :value="1">未处理</a-select-option>
+                                    <a-select-option :value="2">已处理</a-select-option>
                                 </a-select>
                             </a-form-item>
-                            <a-form-item>
-                                <a-input
-                                    type="text"
-                                    placeholder="请输入版本号"
-                                    v-model="queryParam.code"
-                                />
+                            <a-form-item label="应用">
+                                <a-select placeholder="应用名" v-model="queryParam.appId" style="width:120px">
+                                    <a-select-option :value="0">全部</a-select-option>
+                                    <a-select-option
+                                        v-for="appData in appTreeData"
+                                        :value="appData.id"
+                                        :key="appData.id"
+                                    >
+                                        {{ appData.title }}
+                                    </a-select-option>
+                                </a-select>
                             </a-form-item>
-                            <a-form-item>
+                            <a-button-group class="btn-grp-margin-top">
+                                <a-button
+                                    icon="sync"
+                                    v-action="['cms:feedback:query']"
+                                    @click="$refs.table.refresh(false)"
+                                />
                                 <a-button
                                     type="primary"
                                     icon="search"
                                     @click="$refs.table.refresh(true)"
                                 >查询</a-button>
-                            </a-form-item>
-                        </div>
-                        <div class="r" v-if="currentApp!=null">
-                            <a-button-group class="btn-grp-margin-top">
-                                <a-button
-                                    icon="sync"
-                                    v-action="['app:version:query']"
-                                    @click="$refs.table.refresh(false)"
-                                />
-                                <a-button
-                                    icon="plus"
-                                    v-action="['app:version:create']"
-                                    @click="$refs.modal.add(currentApp)"
-                                >新增</a-button>
-                                <a-button
-                                    icon="delete"
-                                    v-action="['app:version:delete']"
-                                    v-if="selectedRowKeys.length>0"
-                                    @click="onDelete()"
-                                >删除</a-button>
                             </a-button-group>
                         </div>
                     </a-form>
@@ -67,90 +62,123 @@
                         class="card-table"
                         :columns="columns"
                         :data="loadData"
-                        :lazy="true"
-                        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+                        :lazy="false"
                     >
                         <a-row slot="expandedRowRender" slot-scope="record" class="table-expand">
                             <a-col :span="24">
                                 <ul>
-                                    <li><label>版本内容</label><span>{{ record.content }}</span></li>
+                                    <li><label>备注</label><span>{{ record.remark }}</span></li>
                                 </ul>
                             </a-col>
                         </a-row>
                         <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
                         <template slot="statusSlot" slot-scope="text">
-                            <span v-if="text===1">未启用</span>
-                            <span v-else>已启用</span>
+                            <span v-if="text===1">未处理</span>
+                            <span v-else-if="text===2">已处理</span>
                         </template>
-                        <span slot="action" slot-scope="text, record">
-                            <a
-                                v-action="['app:version:edit']"
-                                @click="$refs.modal.edit(record)"
-                            >编辑</a>
-                            <a-divider type="vertical" />
-                            <a
-                                v-action="['app:version:delete']"
-                                @click="onDelete(record)"
-                            >删除</a>
+                        <span slot="actionSlot" slot-scope="text, record">
+                            <a v-action="['cms:feedback:edit']" @click="$refs.modal.edit(record,currentApp)"> 编辑</a>
                         </span>
                     </s-table>
                 </a-card>
             </a-col>
         </a-row>
-        <appVersion-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
+        <user-feedback-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
     </div>
 </template>
 
 <script>
 import { mixinDevice } from '@/utils/mixin';
 import { STable, STree, ETag } from '@/components';
-import AppVersionModal from '@/views/app/modules/appVersion-modal';
+import UserFeedbackModal from '@/views/cms/modules/user-feedback-modal';
+import moment from 'moment';
 
 const columns = [
-    { title: '版本号', dataIndex: 'code', width: '6%' },
     {
-        title: '状态',
+        title: '用户名',
+        dataIndex: 'username'
+    },
+    {
+        title: '应用名',
+        dataIndex: 'appName'
+    },
+    {
+        title: '版本',
+        dataIndex: 'version'
+    },
+    {
+        title: '设备名',
+        dataIndex: 'device'
+    },
+    {
+        title: '系统',
+        dataIndex: 'os'
+    },
+    {
+        title: 'ip',
+        dataIndex: 'ip'
+    },
+    {
+        title: '地区',
+        dataIndex: 'area'
+    },
+    // {
+    //     title: '电话',
+    //     dataIndex: 'phone'
+    // },
+    {
+        title: '留言评价内容',
+        dataIndex: 'content',
+        width: 200
+    },
+    {
+        title: '联系邮箱',
+        dataIndex: 'email'
+    },
+    {
+        title: '处理状态',
         dataIndex: 'status',
         scopedSlots: { customRender: 'statusSlot' }
     },
     {
-        title: '添加时间',
+        title: '处理结果',
+        dataIndex: 'result'
+    },
+    {
+        title: '日期',
         dataIndex: 'createdAt',
-        scopedSlots: { customRender: 'dateSlot' }
+        scopedSlots: { customRender: 'dateSlot' },
+        customRender: (text, record) => {
+            return moment(text).format('YYYY-MM-DD');
+        }
     },
     {
         title: '操作',
         dataIndex: 'action',
         align: 'center',
-        scopedSlots: { customRender: 'action' }
+        scopedSlots: { customRender: 'actionSlot' }
     }
 ];
 
-const url = '/app/version';
+const url = '/cms/user/feedback/';
 export default {
     mixins: [mixinDevice],
     components: {
         STable,
         STree,
         ETag,
-        AppVersionModal
+        UserFeedbackModal,
+        moment
     },
     data () {
         return {
             form: this.$form.createForm(this),
             advanceSearch: false,
-            // 查询参数
             queryParam: {},
             // 表头
             columns,
-            // 选中记录
-            selectedRowKeys: [],
-            selectedRows: [],
-            // 加载数据方法
-            loadData: this.loadDataList,
-
-            // 分类树数据
             currentApp: null,
+            loadData: this.loadDataList,
             treeloading: false,
             appTreeData: []
         };
@@ -159,9 +187,15 @@ export default {
     mounted () {
         this.loadAppTreeData();
     },
+    computed: {},
     methods: {
+        moment,
+        onChangeDate (date, dateString) {
+            this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
+            this.queryParam.endTimeStr = dateString[1] + ' 23:59:59';
+        },
         onDelete: function (record) {
-            let params = [];
+            var params = [];
             if (record !== undefined) {
                 params.push(record.id);
             } else {
@@ -189,12 +223,6 @@ export default {
             this.selectedRowKeys = selectedRowKeys;
             this.selectedRows = selectedRows;
         },
-        loadDataList: function (params) {
-            return this.$http.get(
-                url + '?appId=' + this.currentApp.key,
-                Object.assign(params, this.queryParam)
-            );
-        },
         onQueryDict: function (item) {
             this.currentApp = item;
             this.$refs.table.refresh(true);
@@ -203,8 +231,7 @@ export default {
             this.treeloading = true;
             try {
                 const result = await this.$http.get(
-                    '/app/entity/item',
-                    {}
+                    '/app/entity/item'
                 );
                 this.appTreeData = this.convertTreeData(result.data);
             } finally {
@@ -222,31 +249,19 @@ export default {
                 }
                 return item;
             });
+        },
+        loadDataList: function (params) {
+            return this.$http.get(
+                url + 'list',
+                Object.assign(params, this.queryParam)
+            );
         }
     }
 };
 </script>
 
-<style lang="less">
-.panel-appVersion {
-    .ant-row {
-        height: 100%;
-        > div {
-            height: 100%;
-        }
-    }
-    .tree-list {
-        height: 100%;
-        .ant-card-body {
-            padding: 5px 0px 0px 10px;
-
-            .tree-wrapper .ant-menu {
-                border-right: 0px;
-            }
-        }
-    }
-    .card-list .ant-card-body {
-        padding: 15px 15px;
-    }
+<style lang="less" scoped>
+.link-img {
+    width: 180px;
 }
 </style>

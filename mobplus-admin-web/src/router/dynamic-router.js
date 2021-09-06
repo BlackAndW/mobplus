@@ -36,6 +36,7 @@ const constantRouterComponents = {
     ChargeBanner: () => import('@/views/cms/charge-banner-list'),
     ChargeMaterial: () => import('@/views/cms/charge-material-list'),
     ChargeMType: () => import('@/views/cms/charge-m-type-list'),
+    UserFeedback: () => import('@/views/cms/user-feedback-list'),
 
     // 发行管理
     ChannelList: () => import('@/views/release/channel-list'),

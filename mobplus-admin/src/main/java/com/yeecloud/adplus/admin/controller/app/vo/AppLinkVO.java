@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class AppLinkVO {
 
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
 
     private String name;

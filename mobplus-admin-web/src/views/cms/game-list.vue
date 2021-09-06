@@ -9,7 +9,7 @@
                                 v-decorator="[ 'time', { initialValue: [moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')] } ]"
                                 @change="onChangeDate" />
                         </a-form-item>
-                        <a-button-group>
+                        <a-button-group class="btn-grp-margin-top">
                             <a-button
                                 icon="sync"
                                 v-action="['dataManager:query']"
@@ -23,7 +23,7 @@
                         </a-button-group>
                     </div>
                     <div class="r">
-                        <a-button-group>
+                        <a-button-group class="btn-grp-margin-top">
                             <a-button
                                 icon="sync"
                                 v-action="['cms:game:query']"
@@ -122,6 +122,7 @@ const columns = [
         title: '操作',
         dataIndex: 'action',
         align: 'center',
+        width: 100,
         scopedSlots: { customRender: 'actionSlot' }
     }
 ];

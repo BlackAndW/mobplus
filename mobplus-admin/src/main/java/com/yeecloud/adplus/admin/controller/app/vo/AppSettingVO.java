@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 public class AppSettingVO {
 
+    private static final long serialVersionUID = 1L;
+
     private JSONArray serverNMList = new JSONArray();
     private JSONArray serverVIPList = new JSONArray();
     private JSONArray serverBKList = new JSONArray();

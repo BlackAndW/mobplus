@@ -15,6 +15,8 @@ import javax.persistence.*;
 @Table(name = "t_charge_m_type")
 public class ChargeMType extends AuditorEntity{
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "n_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

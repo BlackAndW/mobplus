@@ -19,6 +19,9 @@ import java.util.HashMap;
 @Entity
 @Table(name = "t_app")
 public class App extends AuditorEntity {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "n_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

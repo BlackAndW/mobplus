@@ -14,6 +14,8 @@ import javax.persistence.*;
 @Table(name = "t_wifi_info")
 public class WifiInfo extends AuditorEntity{
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "n_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

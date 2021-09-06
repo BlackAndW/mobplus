@@ -54,7 +54,7 @@
                             </a-form-item>
                         </div>
                         <div class="r" v-if="currentApp!=null">
-                            <a-button-group>
+                            <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     icon="sync"
                                     v-action="['app:function:query']"
