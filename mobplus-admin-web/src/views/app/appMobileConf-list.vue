@@ -116,21 +116,24 @@ import AppMobileConfModal from '@/views/app/modules/appMobileConf-modal';
 const columns = [
     { title: '配置名称', dataIndex: 'name' },
     { title: '配置键', dataIndex: 'key' },
-    { title: '配置值', dataIndex: 'value' },
+    { title: '配置值', width: 100, dataIndex: 'value' },
     {
         title: '状态',
         dataIndex: 'status',
+        width: 60,
         scopedSlots: { customRender: 'statusSlot' }
     },
     {
         title: '添加时间',
         dataIndex: 'createdAt',
+        width: 150,
         scopedSlots: { customRender: 'dateSlot' }
     },
     {
         title: '操作',
         dataIndex: 'action',
         align: 'center',
+        width: 100,
         scopedSlots: { customRender: 'action' }
     }
 ];
