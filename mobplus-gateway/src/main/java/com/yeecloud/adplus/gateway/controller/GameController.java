@@ -14,6 +14,7 @@ import com.yeecloud.adplus.gateway.service.GameService;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * 游戏
+ * H5游戏
  *
  * @author: Huang
  * @create: 2020-11-30 11:10
@@ -31,10 +32,8 @@ import java.util.List;
 @Slf4j
 @CrossOrigin
 @RestController
-//@Api(tags = "h5游戏管理")
 @RequestMapping("/api/v1/game")
 public class GameController {
-
 
     @Autowired
     private GameService gameService;
@@ -82,6 +81,11 @@ public class GameController {
 //        return needCodec ? Codec.encode(response) : response;
 //    }
 
+    /**
+     *
+     * @return
+     * @throws ServiceException
+     */
     @GetMapping("list")
     public Result getGameListNew() throws ServiceException {
         List<Game> gameList = gameService.findGameListNew();

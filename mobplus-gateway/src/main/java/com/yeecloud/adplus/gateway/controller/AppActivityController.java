@@ -9,6 +9,7 @@ import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
 import com.yeecloud.adplus.gateway.service.AppActivityService;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.result.Result;
+import io.github.yedaxia.apidocs.ApiDoc;
 import org.hibernate.service.spi.ServiceException;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * 活动管理
  * @author: Leonard
  * @create: 2021/1/20
  */
@@ -35,6 +37,14 @@ public class AppActivityController {
     @Autowired
     AppActivityService appActivityService;
 
+    /**
+     * 获取活动信息列表
+     * @param body 设备信息JSON字符串
+     * @description
+     * @param m 解码标识
+     * @return
+     */
+    @ApiDoc
     @RequestMapping("/activityList")
     public Result getAppActivityList(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) {
         boolean needCodec = m == null || m.trim().length() == 0;
