@@ -119,7 +119,7 @@ public class ChargeServiceImpl implements ChargeService {
         Predicate predicate = chargeVideo.deleted.eq(false);
         Integer type;
         type = query.get("type", Integer.class);
-        if (type != null && type > 0) {
+        if (type != null && type != 1 && type > 0) {
             predicate = ExpressionUtils.and(predicate, chargeVideo.type.id.eq(type));
         }
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
@@ -177,7 +177,7 @@ public class ChargeServiceImpl implements ChargeService {
         Predicate predicate = chargeWallpaper.deleted.eq(false);
         Integer type;
         type = query.get("type", Integer.class);
-        if (type != null && type > 0) {
+        if (type != null && type != 100 && type > 0) {
             predicate = ExpressionUtils.and(predicate, chargeWallpaper.type.id.eq(type));
         }
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
