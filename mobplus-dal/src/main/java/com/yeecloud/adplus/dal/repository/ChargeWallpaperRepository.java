@@ -1,6 +1,6 @@
 package com.yeecloud.adplus.dal.repository;
 
-import com.yeecloud.adplus.dal.entity.ChargeMaterial;
+import com.yeecloud.adplus.dal.entity.ChargeWallpaper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @create: 2021/6/28
  */
 @Repository
-public interface ChargeMaterialRepository extends JpaRepository<ChargeMaterial, Integer>, QuerydslPredicateExecutor<ChargeMaterial> {
+public interface ChargeWallpaperRepository extends JpaRepository<ChargeWallpaper, Integer>, QuerydslPredicateExecutor<ChargeWallpaper> {
 
     @Transactional
     @Modifying
-    @Query("update ChargeMaterial obj set obj.deleted = true where obj.id in :ids")
+    @Query("update ChargeWallpaper obj set obj.deleted = true where obj.id in :ids")
     void deleteById(@Param("ids") Integer[] ids);
 }

@@ -9,7 +9,13 @@ import lombok.Data;
 @Data
 public class ChargeShowForm {
 
+    private Integer pageNo;
+
+    private Integer type;
+
     private Integer vid;
+
+    private Integer wpid;
 
     private Integer useNum;
 

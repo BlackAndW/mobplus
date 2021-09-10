@@ -25,11 +25,15 @@ public class ChargeMType extends AuditorEntity{
     @Column(name = "n_name")
     private String name;
 
-    /** 类型内视频排序依据列 */
+    /** 1:视频；2:壁纸 */
+    @Column(name = "n_style")
+    private Integer style;
+
+    /** 类型内排序依据列 */
     @Column(name = "c_order_column")
     private String orderColumn;
 
-    /** 类型内视频升降序规则：1为降序，2为升序 */
+    /** 类型内升降序规则：1为降序，2为升序 */
     @Column(name = "c_order_rule")
     private Integer order;
 

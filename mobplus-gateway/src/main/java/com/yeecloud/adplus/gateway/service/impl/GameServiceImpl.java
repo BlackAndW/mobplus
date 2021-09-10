@@ -66,7 +66,8 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public void updateLogById(GameForm form) throws ServiceException {
+    public synchronized void updateLogById(GameForm form) throws ServiceException {
+        log.info("form data is [{}]", form);
         if (form.getId() != null && form.getId() > 0) {
             Game game = gameRepository.findById(form.getId()).orElse(null);
             if (EmptyUtil.isEmpty(game)) {

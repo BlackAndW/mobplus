@@ -1,14 +1,8 @@
 package com.yeecloud.adplus.admin.controller.cms.convert;
 
 import com.yeecloud.adplus.admin.common.convert.GeneralConvert;
-import com.yeecloud.adplus.admin.controller.cms.vo.ChargeBannerVO;
-import com.yeecloud.adplus.admin.controller.cms.vo.ChargeMTypeVO;
-import com.yeecloud.adplus.admin.controller.cms.vo.ChargeMaterialVO;
-import com.yeecloud.adplus.admin.controller.cms.vo.GameVO;
-import com.yeecloud.adplus.dal.entity.ChargeBanner;
-import com.yeecloud.adplus.dal.entity.ChargeMType;
-import com.yeecloud.adplus.dal.entity.ChargeMaterial;
-import com.yeecloud.adplus.dal.entity.Game;
+import com.yeecloud.adplus.admin.controller.cms.vo.*;
+import com.yeecloud.adplus.dal.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -27,13 +21,20 @@ public interface ChargeConvert {
     List<ChargeBannerVO> convertBanner(List<ChargeBanner> list);
 
     @Mappings({
-            @Mapping(target = "type", source = "type.name"),
+            @Mapping(target = "typeName", source = "type.name"),
     })
-    ChargeMaterialVO convertMaterial(ChargeMaterial entity);
+    ChargeVideoVO convertVideo(ChargeVideo entity);
 
-    List<ChargeMaterialVO> convertMaterial(List<ChargeMaterial> list);
+    List<ChargeVideoVO> convertVideo(List<ChargeVideo> list);
 
     ChargeMTypeVO convertMType(ChargeMType entity);
 
     List<ChargeMTypeVO> convertMType(List<ChargeMType> list);
+
+    @Mappings({
+            @Mapping(target= "typeName", source = "type.name")
+    })
+    ChargeWallpaperVO convertWallpaper(ChargeWallpaper entity);
+
+    List<ChargeWallpaperVO> convertWallpaper(List<ChargeWallpaper> list);
 }

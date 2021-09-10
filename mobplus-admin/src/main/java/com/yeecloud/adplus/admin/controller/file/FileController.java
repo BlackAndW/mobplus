@@ -12,13 +12,16 @@ import com.yeecloud.adplus.admin.util.AWSUtil;
 import com.yeecloud.adplus.admin.util.FileUtil;
 import com.yeecloud.meeto.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -46,6 +49,9 @@ public class FileController {
 
     @Value("${file.path.aws.videoKeyPath}")
     private String videoKeyPath;
+
+    @Value("${file.path.tmp.imgPath}")
+    private String tmpImgPath;
 
     @Autowired
     private FileService fileService;
@@ -98,8 +104,23 @@ public class FileController {
         if (!FileUtil.IMAGE.equals(FileUtil.getFileType(suffix))) {
             return Result.FAILURE("只能上传图片");
         }
+        // 上传原图
+        FileVO vo = upload2S3(imgKeyPath + key, file);
 
-        FileVO vo = upload(imgKeyPath + key, file);
+        String tmpPath = tmpImgPath + file.getOriginalFilename();
+        File tmpFile = new File(tmpPath);
+        Thumbnails.of(file.getInputStream()).size(200, 200).outputQuality(0.25d).toFile(tmpFile);
+        //将file类型的文件转成MultipartFile 类型的
+        FileInputStream fileInputStream = new FileInputStream(tmpFile);
+        MultipartFile multipartFile = new MockMultipartFile(tmpFile.getName(),tmpFile.getName(),file.getContentType(),fileInputStream);
+        // 上传缩略图
+        upload2S3(imgKeyPath + key + "/thumb", multipartFile);
+        vo.setThumbUrl(rootPath + imgKeyPath + key + "/thumb/" + file.getOriginalFilename());
+
+        if (tmpFile.exists()) {
+            tmpFile.delete();
+        }
+
         return Result.SUCCESS(vo);
     }
 
@@ -117,7 +138,7 @@ public class FileController {
             return Result.FAILURE("只能上传视频");
         }
 
-        FileVO vo = upload(videoKeyPath + key, fileV);
+        FileVO vo = upload2S3(videoKeyPath + key, fileV);
         return Result.SUCCESS(vo);
     }
 
@@ -128,7 +149,7 @@ public class FileController {
      * @return
      * @throws Exception
      */
-    private FileVO upload(String desPath, MultipartFile file) throws Exception {
+    private FileVO upload2S3(String desPath, MultipartFile file) throws Exception {
         AmazonS3 s3Client = AWSUtil.init_s3Client();
         String objectKey = desPath + "/" + file.getOriginalFilename();
         AWSUtil.upload(s3Client, file, objectKey);

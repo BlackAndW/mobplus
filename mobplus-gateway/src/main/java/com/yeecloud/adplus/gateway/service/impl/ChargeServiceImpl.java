@@ -5,10 +5,13 @@ import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
-import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
+import com.yeecloud.adplus.dal.repository.ChargeVideoRepository;
+import com.yeecloud.adplus.dal.repository.ChargeWallpaperRepository;
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
-import com.yeecloud.adplus.gateway.controller.vo.ChargeMaterialVO;
+import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
+import com.yeecloud.adplus.gateway.controller.vo.ChargeVideoVO;
+import com.yeecloud.adplus.gateway.controller.vo.ChargeWallpaperVO;
 import com.yeecloud.adplus.gateway.service.ChargeService;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
@@ -38,7 +41,10 @@ public class ChargeServiceImpl implements ChargeService {
     ChargeBannerRepository chargeBannerRepository;
 
     @Autowired
-    ChargeMaterialRepository chargeMaterialRepository;
+    ChargeVideoRepository chargeVideoRepository;
+
+    @Autowired
+    ChargeWallpaperRepository chargeWallpaperRepository;
 
     @Autowired
     ChargeMTypeRepository chargeMTypeRepository;
@@ -59,92 +65,135 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
-    public ChargeBanner findBannerById(Integer id) throws ServiceException {
-        return null;
-    }
+    public List<ChargeVideoVO> queryVideo(ChargeShowForm form) throws ServiceException {
+        QChargeVideo video = QChargeVideo.chargeVideo;
+        Predicate predicate = video.deleted.eq(false);
 
-    @Override
-    public List<ChargeMaterialVO> queryMaterial(Query query) throws ServiceException {
-        QChargeMaterial material = QChargeMaterial.chargeMaterial;
-        Predicate predicate = material.deleted.eq(false);
-
-        Integer pageNo = query.get("pageNo", Integer.class);
+        Integer pageNo = form.getPageNo();
         if (pageNo == null || pageNo == 0) {
             pageNo = 0;
         }
-//        Integer collection = query.get("collection", Integer.class);
-//        if (collection != null && collection > 0) {
-//            predicate = ExpressionUtils.and(predicate, material.collection.eq(collection));
-//        }
-        Integer type = query.get("type", Integer.class);
+        Integer type = form.getType();
+        // 默认按创建时间降序排
         String orderProperty = "createdAt";
         Integer order = 1;
         if (type != null && type > 0) {
             ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
             orderProperty = mType.getOrderColumn();
             order = mType.getOrder();
-            predicate = ExpressionUtils.and(predicate, material.type.id.eq(type));
+            predicate = ExpressionUtils.and(predicate, video.type.id.eq(type));
         }
         Sort.Direction direction = order == 1 ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(new Sort.Order(direction, orderProperty));
         PageRequest pageRequest = PageRequest.of(pageNo, 20, sort);
-        List<ChargeMaterial> materialList = chargeMaterialRepository.findAll(predicate, pageRequest).getContent();
-
-        return convertMaterial(materialList);
+        List<ChargeVideo> videoList = chargeVideoRepository.findAll(predicate, pageRequest).getContent();
+        return convertVideo(videoList);
     }
 
-    @Override
-    public ChargeMaterial findMaterialById(Integer id) throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public List<ChargeMType> queryMType() throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public ChargeMType findMTypeById(Integer id) throws ServiceException {
-        return null;
-    }
-
-    private List<ChargeMaterialVO> convertMaterial(List<ChargeMaterial> materialList) {
-        List<ChargeMaterialVO> materialListVO = new ArrayList<>( materialList.size() );
-        for ( ChargeMaterial chargeMaterial : materialList ) {
-            ChargeMaterialVO vo = new ChargeMaterialVO();
-            BeanUtils.copyProperties(chargeMaterial, vo);
-            vo.setType(chargeMaterial.getType().getName());
-            long baseNum = chargeMaterial.getUseNum()/100;
-            if (chargeMaterial.getUseNum() == 0) {
-                vo.setUseNumFake(new Random().nextInt(90) + 10 + "");
-            } else if (baseNum == 0) {
-                long useNumFake = chargeMaterial.getUseNum()/10 == 0 ? 100 : (chargeMaterial.getUseNum()/10)*1000;
-                vo.setUseNumFake(useNumFake + new Random().nextInt(999) + "");
-            } else if (baseNum >= 1 && baseNum < 10) {
-                DecimalFormat df = new DecimalFormat("0.0");
-                vo.setUseNumFake(df.format(chargeMaterial.getUseNum()/100f) + "W");
-            } else if (baseNum >= 10) {
-                vo.setUseNumFake(baseNum + "W");
-            }
-            materialListVO.add(vo);
+    private List<ChargeVideoVO> convertVideo(List<ChargeVideo> videoList) {
+        videoList.forEach(ChargeVideo::fakeData);
+        List<ChargeVideoVO> videoListVO = new ArrayList<>( videoList.size() );
+        for ( ChargeVideo chargeVideo : videoList ) {
+            ChargeVideoVO vo = new ChargeVideoVO();
+            BeanUtils.copyProperties(chargeVideo, vo);
+            vo.setTypeName(chargeVideo.getType().getName());
+            videoListVO.add(vo);
         }
-        return materialListVO;
+        return videoListVO;
+    }
+
+    @Override
+    public List<ChargeWallpaperVO> queryWallpaper(ChargeShowForm form) throws ServiceException {
+        QChargeWallpaper wallpaper = QChargeWallpaper.chargeWallpaper;
+        Predicate predicate = wallpaper.deleted.eq(false);
+
+        Integer pageNo = form.getPageNo();
+        if (pageNo == null || pageNo == 0) {
+            pageNo = 0;
+        }
+        Integer type = form.getType();
+        // 默认按创建时间降序排
+        String orderProperty = "createdAt";
+        Integer order = 1;
+        if (type != null && type > 0) {
+            ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
+            orderProperty = mType.getOrderColumn();
+            order = mType.getOrder();
+            predicate = ExpressionUtils.and(predicate, wallpaper.type.id.eq(type));
+        }
+        Sort.Direction direction = order == 1 ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(new Sort.Order(direction, orderProperty));
+        PageRequest pageRequest = PageRequest.of(pageNo, 20, sort);
+        List<ChargeWallpaper> wallpaperList = chargeWallpaperRepository.findAll(predicate, pageRequest).getContent();
+        return convertWallpaper(wallpaperList);
+    }
+
+    private List<ChargeWallpaperVO> convertWallpaper(List<ChargeWallpaper> wallpaperList) {
+        wallpaperList.forEach(ChargeWallpaper::fakeData);
+        List<ChargeWallpaperVO> wallpaperListVO = new ArrayList<>( wallpaperList.size() );
+        for ( ChargeWallpaper chargeWallpaper : wallpaperList ) {
+            ChargeWallpaperVO vo = new ChargeWallpaperVO();
+            BeanUtils.copyProperties(chargeWallpaper, vo);
+            vo.setTypeName(chargeWallpaper.getType().getName());
+            wallpaperListVO.add(vo);
+        }
+        return wallpaperListVO;
     }
 
     @Override
     @Transactional(rollbackFor = Throwable.class)
-    public synchronized Result uploadData(ChargeShowForm form) {
+    public synchronized Result uploadDataV(ChargeShowForm form) {
         if (form.getVid() == null || form.getVid() < 1) {
             return Result.FAILURE("vid is null");
         }
-        ChargeMaterial material = chargeMaterialRepository.getOne(form.getVid());
+        ChargeVideo video = chargeVideoRepository.getOne(form.getVid());
         if (form.getShowNum() != null && form.getShowNum() > 0) {
-            material.setShowNum(material.getShowNum() + 1);
+            video.setShowNum(video.getShowNum() + 1);
         }
         if (form.getUseNum() != null && form.getUseNum() > 0) {
-            material.setUseNum(material.getShowNum() + 1);
+            video.setUseNum(video.getShowNum() + 1);
         }
-        chargeMaterialRepository.save(material);
-        return Result.SUCCESS("upload data success!");
+        chargeVideoRepository.save(video);
+        return Result.SUCCESS("update video data success!");
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public synchronized Result uploadDataWP(ChargeShowForm form) {
+        if (form.getWpid() == null || form.getWpid() < 1) {
+            return Result.FAILURE("wallpaper id is null");
+        }
+        ChargeWallpaper wallpaper = chargeWallpaperRepository.getOne(form.getWpid());
+        if (form.getShowNum() != null && form.getShowNum() > 0) {
+            wallpaper.setShowNum(wallpaper.getShowNum() + 1);
+        }
+        if (form.getUseNum() != null && form.getUseNum() > 0) {
+            wallpaper.setUseNum(wallpaper.getShowNum() + 1);
+        }
+        chargeWallpaperRepository.save(wallpaper);
+        return Result.SUCCESS("update wallpaper data success!");
+    }
+
+    @Override
+    public List<ChargeMTypeVO> queryTypeList(Integer style) {
+        QChargeMType type = QChargeMType.chargeMType;
+        Predicate predicate = type.deleted.eq(false);
+        if (style != null && style > 0) {
+            predicate = ExpressionUtils.and(predicate, type.style.eq(style));
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "rankOrder"));
+            List<ChargeMType> resultList =   (List<ChargeMType>)chargeMTypeRepository.findAll(predicate, sort);
+            return convertMType(resultList);
+        }
+        return new ArrayList<>();
+    }
+
+    private List<ChargeMTypeVO> convertMType(List<ChargeMType> resultList) {
+        List<ChargeMTypeVO> mTypeVOS = new ArrayList<>( resultList.size() );
+        for ( ChargeMType chargeMType : resultList ) {
+            ChargeMTypeVO vo = new ChargeMTypeVO();
+            BeanUtils.copyProperties(chargeMType, vo);
+            mTypeVOS.add(vo);
+        }
+        return mTypeVOS;
     }
 }

@@ -2,9 +2,10 @@ package com.yeecloud.adplus.dal.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
+import java.util.Random;
 
 /**
  * @author: Leonard
@@ -12,8 +13,7 @@ import javax.persistence.*;
  */
 
 @Data
-@Entity
-@Table(name = "t_charge_material")
+@MappedSuperclass
 public class ChargeMaterial extends AuditorEntity {
 
     private static final long serialVersionUID = 1L;
@@ -32,26 +32,6 @@ public class ChargeMaterial extends AuditorEntity {
     @JoinColumn(name = "c_type_id")
     private ChargeMType type;
 
-    /** 源素材地址 */
-    @Column(name = "n_video_path")
-    private String videoPath;
-
-    /** 源素材名 */
-    @Column(name = "n_video_name")
-    private String videoName;
-
-    /** 预览素材地址 */
-    @Column(name = "n_video_introduce")
-    private String videoIntroduce;
-
-    /** 预览素材地址 */
-    @Column(name = "n_video_introduce_name")
-    private String videoIntroduceName;
-
-    /** 素材封面地址 */
-    @Column(name = "n_video_cover")
-    private String videoCover;
-
     /** 使用次数 */
     @Column(name = "n_use_num")
     private long useNum;
@@ -64,11 +44,35 @@ public class ChargeMaterial extends AuditorEntity {
     @Column(name = "n_weight")
     private long weight;
 
-    /** 是否收藏 */
-    @Column(name = "n_collection")
-    private Integer collection;
-
-    /** 是够需要登录 */
+    /** 是否需要登录 */
     @Column(name = "n_use_limit")
     private Integer useLimit;
+
+    @Transient
+    private String useNumFake;
+
+    public void fakeData() {
+        long baseNum = this.getUseNum()/100;
+        if (this.getUseNum() == 0) {
+            this.setUseNumFake(new Random().nextInt(90) + 10 + "");
+        } else if (baseNum == 0) {
+            long useNumFake = this.getUseNum()/10 == 0 ? 100 : (this.getUseNum()/10)*1000;
+            this.setUseNumFake(useNumFake + new Random().nextInt(999) + "");
+        } else if (baseNum >= 1 && baseNum < 10) {
+            DecimalFormat df = new DecimalFormat("0.0");
+            this.setUseNumFake(df.format(this.getUseNum()/100f) + "W");
+        } else if (baseNum >= 10) {
+            this.setUseNumFake(baseNum + "W");
+        }
+    }
+
+    public void updateWeight() {
+        DecimalFormat df = new DecimalFormat("0.00");
+        long useNum = this.getUseNum() == 0 ? 1 : this.getUseNum();
+        long showNum = this.getShowNum() == 0 ? 1 : this.getShowNum();
+        float div = Float.valueOf(df.format((float)useNum/showNum));
+        // 计算和上传日期相隔的天数
+        long cday = (System.currentTimeMillis() - this.getCreatedAt())/86400000;
+        this.setWeight(useNum * 10 + (long)((div - cday)*1000));
+    }
 }

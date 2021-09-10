@@ -35,19 +35,23 @@
                     >
                         <img
                             class="cover-img"
-                            v-if="model.videoCover"
-                            :src="model.videoCover"
+                            v-if="model.videoCoverThumb"
+                            :src="model.videoCoverThumb"
                         />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'"/>
                             <div class="ant-upload-text">
-                                上传
+                                上传封面
                             </div>
                         </div>
                     </a-upload>
                     <a-input
                         type="hidden"
                         v-decorator="[ 'videoCover', {initialValue: model.videoCover, rules: [ { required: true, message: '请上传封面图' }] }]"
+                    />
+                    <a-input
+                        type="hidden"
+                        v-decorator="[ 'videoCoverThumb', {initialValue: model.videoCoverThumb }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="源视频：">
@@ -81,7 +85,7 @@
                     </a-upload>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="登录限制：">
-                    <a-radio-group button-style="solid" v-decorator="[ 'useLimit', {initialValue: model.useLimit || 1 }]">
+                    <a-radio-group button-style="solid" v-decorator="[ 'useLimit', {initialValue: model.useLimit || 2 }]">
                         <a-radio-button :value="1">限制</a-radio-button>
                         <a-radio-button :value="2">无限制</a-radio-button>
                     </a-radio-group>
@@ -117,27 +121,28 @@ export default {
     },
     computed: {},
     mounted () {
-        this.getTypeList();
     },
     methods: {
-        add: function (queryParam) {
+        add: function (queryParam, typeList) {
             this.title = '新增素材';
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.model = {};
             this.videoList = [];
             this.videoIntroList = [];
+            this.typeList = typeList;
             this.url = '/cms/charge/material';
             this.isTestMode(queryParam);
             this.visible = true;
         },
-        edit: function (record, queryParam) {
+        edit: function (record, queryParam, typeList) {
             this.title = '编辑:' + record.id;
             this.model = record;
             this.videoList = [];
             this.videoIntroList = [];
             this.videoList.push({ uid: record.id, name: record.videoName });
             this.videoIntroList.push({ uid: record.id, name: record.videoIntroduceName });
+            this.typeList = typeList;
             this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;
             this.isTestMode(queryParam);
@@ -148,11 +153,6 @@ export default {
             this.$emit('close', success || false);
             this.visible = false;
             this.form.resetFields();
-        },
-        getTypeList () {
-            return this.$http.get('/cms/charge/mtype').then(res => {
-                this.typeList = res.data;
-            });
         },
         // 同名文件免上传
         beforeUpload (file, fileList) {
@@ -217,6 +217,7 @@ export default {
                 } else if (info.file.response.code === 2000) {
                     if (params === 'cover') {
                         this.model.videoCover = info.file.response.result.url;
+                        this.model.videoCoverThumb = info.file.response.result.thumbUrl;
                     }
                     if (params === 'v1') {
                         this.form.setFieldsValue({ videoName: info.file.response.result.realName });

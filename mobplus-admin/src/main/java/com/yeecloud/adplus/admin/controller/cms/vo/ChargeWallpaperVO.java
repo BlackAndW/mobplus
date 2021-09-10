@@ -1,7 +1,9 @@
 package com.yeecloud.adplus.admin.controller.cms.vo;
 
-import com.yeecloud.adplus.dal.entity.ChargeMType;
 import lombok.Data;
+
+import java.text.DecimalFormat;
+import java.util.Random;
 
 /**
  * @author: Leonard
@@ -9,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class ChargeMaterialVO {
+public class ChargeWallpaperVO {
 
     private static final long serialVersionUID = 1L;
 
@@ -17,17 +19,11 @@ public class ChargeMaterialVO {
 
     private String name;
 
-    private String type;
+    private String typeName;
 
-    private String videoPath;
+    private String imgUrl;
 
-    private String videoName;
-
-    private String videoIntroduce;
-
-    private String videoIntroduceName;
-
-    private String videoCover;
+    private String thumbUrl;
 
     private long useNum;
 
@@ -38,4 +34,5 @@ public class ChargeMaterialVO {
     private Integer useLimit;
 
     private long createdAt;
+
 }

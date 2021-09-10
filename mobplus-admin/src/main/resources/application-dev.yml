@@ -64,6 +64,8 @@ file:
       rootPath: https://d3ky56s9zw9vn5.cloudfront.net/
       imgKeyPath: root/img/
       videoKeyPath: root/video/
+    tmp:
+      imgPath: D:/1-project/1.MobPlus-backend/
 
 fb:
   account_id: 866010113952552

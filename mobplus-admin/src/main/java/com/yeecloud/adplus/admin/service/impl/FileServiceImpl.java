@@ -35,6 +35,7 @@ public class FileServiceImpl implements FileService {
             FileVO vo = new FileVO(
                     file.getName(),
                     relativePath + file.getName(),
+                    relativePath + file.getName(),
                     suffix,
                     file.getPath(),
                     type,
