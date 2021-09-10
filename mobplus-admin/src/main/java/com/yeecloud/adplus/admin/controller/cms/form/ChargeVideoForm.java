@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  */
 
 @Data
-public class ChargeMaterialForm {
+public class ChargeVideoForm {
 
 //    @NotBlank(message = "名称不能为空")
 //    private String name;
@@ -26,6 +26,8 @@ public class ChargeMaterialForm {
 
     @NotBlank(message = "封面未上传")
     private String videoCover;
+
+    private String videoCoverThumb;
 
     private Integer useLimit;
 }

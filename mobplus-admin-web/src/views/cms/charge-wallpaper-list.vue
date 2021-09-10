@@ -4,11 +4,18 @@
             <!--       -->
             <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
                 <div class="l">
-                    <a-form-item label="素材类别">
-                        <a-select placeholder="素材类别" v-model="queryParam.style" style="width:120px">
-                            <a-select-option :value="0">不限</a-select-option>
-                            <a-select-option :value="1">视频</a-select-option>
-                            <a-select-option :value="2">壁纸</a-select-option>
+                    <a-form-item label="素材类别" >
+                        <a-select
+                            placeholder="选择类型"
+                            v-model="queryParam.type"
+                            style="width:120px"
+                        >
+                            <a-select-option
+                                v-for="item in typeList"
+                                :key="item.name"
+                                :value="item.id"
+                            >{{ item.name }}
+                            </a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-button-group class="btn-grp-margin-top">
@@ -24,7 +31,6 @@
                         >查询</a-button>
                     </a-button-group>
                 </div>
-
                 <div class="r">
                     <a-button-group class="btn-grp-margin-top">
                         <a-button
@@ -35,11 +41,11 @@
                         <a-button
                             icon="plus"
                             v-action="['cms:charge:create']"
-                            @click="$refs.modal.add()"
+                            @click="$refs.modal.add(typeList)"
                         >新增</a-button>
                         <a-button
                             icon="delete"
-                            v-action="['cms:charge:edit']"
+                            v-action="['cms:charge:delete']"
                             v-if="selectedRowKeys.length>0"
                             @click="onDelete()"
                         >删除</a-button>
@@ -57,52 +63,68 @@
             >
                 <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
                 <span slot="actionSlot" slot-scope="text, record">
-                    <a v-action="['cms:charge:edit']" @click="$refs.modal.edit(record)">编辑</a>
+                    <a v-action="['cms:charge:edit']" @click="$refs.modal.edit(record, typeList)">编辑</a>
                     <a-divider type="vertical" />
                     <a v-action="['cms:charge:delete']" @click="onDelete(record)">删除</a>
                 </span>
-                <template slot="styleSlot" slot-scope="text">
-                    <span v-if="text===1">视频</span>
-                    <span v-else-if="text===2">壁纸</span>
+                <template slot="imgSlot" slot-scope="text">
+                        <img
+                            class="image-slot"
+                            v-if="text && text.length > 0"
+                            :src="text"
+                        />
                 </template>
-                <template slot="columnSlot" slot-scope="text">
-                    <span v-if="text==='createdAt'">日期</span>
-                    <span v-else-if="text==='weight'">权重</span>
-                </template>
-                <template slot="orderSlot" slot-scope="text">
-                    <span v-if="text===1">降序</span>
-                    <span v-else-if="text===2">升序</span>
+                <template slot="useLimitSlot" slot-scope="text">
+                    <span v-if="text===1">是</span>
+                    <span v-else-if="text===2">否</span>
                 </template>
             </s-table>
         </a-card>
-        <mtype-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
+        <wallpaper-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
     </div>
 </template>
 
 <script>
 import { mixinDevice } from '@/utils/mixin';
 import { STable, ETag } from '@/components';
-import MtypeModal from '@/views/cms/modules/charge-m-type-modal';
+import WallpaperModal from '@/views/cms/modules/charge-wallpaper-modal';
 
 const columns = [
     {
-        title: '类型名称',
+        title: '编号',
+        dataIndex: 'id'
+    },
+    {
+        title: '名称',
         dataIndex: 'name'
     },
     {
-        title: '素材类别',
-        dataIndex: 'style',
-        scopedSlots: { customRender: 'styleSlot' }
+        title: '分类',
+        dataIndex: 'typeName',
+        width: 50
     },
     {
-        title: '排序依据',
-        dataIndex: 'orderColumn',
-        scopedSlots: { customRender: 'columnSlot' }
+        title: '预览图',
+        dataIndex: 'thumbUrl',
+        width: 100,
+        scopedSlots: { customRender: 'imgSlot' }
     },
     {
-        title: '升降序',
-        dataIndex: 'order',
-        scopedSlots: { customRender: 'orderSlot' }
+        title: '真实使用次数',
+        dataIndex: 'useNum'
+    },
+    {
+        title: '点击次数',
+        dataIndex: 'showNum'
+    },
+    {
+        title: '虚拟使用次数',
+        dataIndex: 'useNumFake'
+    },
+    {
+        title: '限制',
+        dataIndex: 'useLimit',
+        scopedSlots: { customRender: 'useLimitSlot' }
     },
     {
         title: '添加时间',
@@ -117,13 +139,13 @@ const columns = [
     }
 ];
 
-const url = '/cms/charge/mtype';
+const url = '/cms/charge/wallpaper';
 export default {
     mixins: [mixinDevice],
     components: {
         STable,
         ETag,
-        MtypeModal
+        WallpaperModal
     },
     data () {
         return {
@@ -131,8 +153,9 @@ export default {
             advanceSearch: false,
             // 表头
             columns,
-            queryParam: {},
             // 选中记录
+            queryParam: {},
+            typeList: [],
             selectedRowKeys: [],
             selectedRows: [],
             // 加载数据方法
@@ -140,9 +163,16 @@ export default {
         };
     },
     created () {},
-    mounted () {},
+    mounted () {
+        this.getTypeList();
+    },
     computed: {},
     methods: {
+        getTypeList () {
+            return this.$http.get('/cms/charge/mtype?style=2').then(res => {
+                this.typeList = res.data;
+            });
+        },
         onDelete: function (record) {
             var params = [];
             if (record !== undefined) {
@@ -180,7 +210,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.banner-img {
+.image-slot {
     width: 180px;
 }
 </style>

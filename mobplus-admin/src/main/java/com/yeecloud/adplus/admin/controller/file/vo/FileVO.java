@@ -18,6 +18,7 @@ public class FileVO implements Serializable {
 
     private String realName;
     private String url;
+    private String thumbUrl;
     private String suffix;
     private String path;
     private String type;

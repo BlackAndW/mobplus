@@ -8,11 +8,11 @@ import lombok.Data;
  */
 
 @Data
-public class ChargeMaterialVO {
+public class ChargeVideoVO {
 
     private Integer id;
 
-    private String type;
+    private String typeName;
 
     private String videoPath;
 
@@ -20,9 +20,9 @@ public class ChargeMaterialVO {
 
     private String videoCover;
 
-    private String useNumFake;
+    private String videoCoverThumb;
 
-    private Integer collection;
+    private String useNumFake;
 
     private Integer useLimit;
 }
