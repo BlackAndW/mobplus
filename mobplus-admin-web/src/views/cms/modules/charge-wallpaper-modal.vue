@@ -2,15 +2,10 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="壁纸名称">
-                    <a-input
-                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入壁纸名称' }] }]"
-                    />
-                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所属分类">
                     <a-select
                         placeholder="选择类型"
-                        v-decorator="[ 'type.id', { initialValue: 100 } ]"
+                        v-decorator="[ 'type.id', { initialValue: model.typeId || 100 } ]"
                         :disabled="isTest"
                     >
                         <a-select-option

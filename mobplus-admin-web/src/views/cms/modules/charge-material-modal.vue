@@ -13,7 +13,7 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所属分类">
                     <a-select
                         placeholder="选择类型"
-                        v-decorator="[ 'type.id', { initialValue: 1 } ]"
+                        v-decorator="[ 'type.id', { initialValue: model.typeId || 1 } ]"
                         :disabled="isTest"
                     >
                         <a-select-option
