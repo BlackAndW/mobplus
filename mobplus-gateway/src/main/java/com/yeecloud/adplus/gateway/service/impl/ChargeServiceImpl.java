@@ -96,6 +96,7 @@ public class ChargeServiceImpl implements ChargeService {
         for ( ChargeVideo chargeVideo : videoList ) {
             ChargeVideoVO vo = new ChargeVideoVO();
             BeanUtils.copyProperties(chargeVideo, vo);
+            vo.setTypeId(chargeVideo.getType().getId());
             vo.setTypeName(chargeVideo.getType().getName());
             videoListVO.add(vo);
         }
@@ -134,6 +135,7 @@ public class ChargeServiceImpl implements ChargeService {
         for ( ChargeWallpaper chargeWallpaper : wallpaperList ) {
             ChargeWallpaperVO vo = new ChargeWallpaperVO();
             BeanUtils.copyProperties(chargeWallpaper, vo);
+            vo.setTypeId(chargeWallpaper.getType().getId());
             vo.setTypeName(chargeWallpaper.getType().getName());
             wallpaperListVO.add(vo);
         }

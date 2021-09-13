@@ -13,8 +13,6 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class ChargeWallpaperForm {
 
-    private String name;
-
     private ChargeMType type;
 
     @NotBlank(message = "图片未上传")

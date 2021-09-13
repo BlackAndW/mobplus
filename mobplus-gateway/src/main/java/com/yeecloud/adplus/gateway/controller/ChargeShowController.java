@@ -33,6 +33,12 @@ public class ChargeShowController {
         return Result.SUCCESS(chargeService.queryBanner());
     }
 
+    @GetMapping("type")
+    public Result getType(@RequestParam Integer style) {
+        List<ChargeMTypeVO> result = chargeService.queryTypeList(style);
+        return Result.SUCCESS(result);
+    }
+
     @PostMapping("videoList")
     public Result getVideoList(@RequestBody ChargeShowForm form) throws ServiceException {
         return Result.SUCCESS(chargeService.queryVideo(form));
@@ -53,10 +59,4 @@ public class ChargeShowController {
         return chargeService.uploadDataWP(form);
     }
 
-
-    @GetMapping("type")
-    public Result getType(@RequestParam Integer style) {
-        List<ChargeMTypeVO> result = chargeService.queryTypeList(style);
-        return Result.SUCCESS(result);
-    }
 }

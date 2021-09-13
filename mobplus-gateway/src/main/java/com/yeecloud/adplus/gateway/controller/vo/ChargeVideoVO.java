@@ -12,6 +12,8 @@ public class ChargeVideoVO {
 
     private Integer id;
 
+    private Integer typeId;
+
     private String typeName;
 
     private String videoPath;

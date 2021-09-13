@@ -21,6 +21,7 @@ public interface ChargeConvert {
     List<ChargeBannerVO> convertBanner(List<ChargeBanner> list);
 
     @Mappings({
+            @Mapping(target = "typeId", source = "type.id"),
             @Mapping(target = "typeName", source = "type.name"),
     })
     ChargeVideoVO convertVideo(ChargeVideo entity);
@@ -32,6 +33,7 @@ public interface ChargeConvert {
     List<ChargeMTypeVO> convertMType(List<ChargeMType> list);
 
     @Mappings({
+            @Mapping(target = "typeId", source = "type.id"),
             @Mapping(target= "typeName", source = "type.name")
     })
     ChargeWallpaperVO convertWallpaper(ChargeWallpaper entity);

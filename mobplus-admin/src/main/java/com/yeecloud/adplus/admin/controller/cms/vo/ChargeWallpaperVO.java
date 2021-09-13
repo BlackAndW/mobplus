@@ -17,7 +17,7 @@ public class ChargeWallpaperVO {
 
     private Integer id;
 
-    private String name;
+    private Integer typeId;
 
     private String typeName;
 

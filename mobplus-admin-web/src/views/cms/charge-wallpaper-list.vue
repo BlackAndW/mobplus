@@ -95,10 +95,6 @@ const columns = [
         dataIndex: 'id'
     },
     {
-        title: '名称',
-        dataIndex: 'name'
-    },
-    {
         title: '分类',
         dataIndex: 'typeName',
         width: 50
