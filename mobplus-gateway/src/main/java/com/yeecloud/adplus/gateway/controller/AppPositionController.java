@@ -9,6 +9,7 @@ import com.yeecloud.adplus.gateway.service.AppPositionService;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 广告位管理
  * @author: Leonard
  * @create: 2021/1/27
  */
-
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/app")
@@ -32,8 +33,16 @@ public class AppPositionController {
     @Autowired
     AppPositionService appPositionService;
 
+    /**
+     *
+     * @param body json字符串【appId: string; channel: string; pkgVersion: string】
+     * @param m 加密标识，m=1
+     * @return
+     * @throws ServiceException
+     */
+    @ApiDoc
     @RequestMapping("/position")
-    public Result getAppPositionList (@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
+    public Result getAppPositionList (@RequestBody String body, @RequestParam(value = "m") String m) throws ServiceException {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
@@ -51,6 +60,13 @@ public class AppPositionController {
         return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
     }
 
+    /**
+     *
+     * @param body
+     * @param m
+     * @return
+     * @throws ServiceException
+     */
     @RequestMapping("/positionNew")
     public Result getAppPositionListNew (@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
         boolean needCodec = m == null || m.trim().length() == 0;
