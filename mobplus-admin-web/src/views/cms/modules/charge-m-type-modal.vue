@@ -7,6 +7,11 @@
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入分类名称' }] }]"
                     />
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="英文名">
+                    <a-input
+                        v-decorator="[ 'enName', {initialValue: model.enName, rules: [ { required: true, message: '请输入英文名' }] }]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="素材类别">
                     <a-radio-group button-style="solid" v-decorator="[ 'style', {initialValue: model.style || 1 , rules: [{ required: true }]}]">
                         <a-radio-button :value="1">视频</a-radio-button>

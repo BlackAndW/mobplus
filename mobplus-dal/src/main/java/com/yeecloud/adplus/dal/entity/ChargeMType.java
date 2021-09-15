@@ -25,6 +25,9 @@ public class ChargeMType extends AuditorEntity{
     @Column(name = "n_name")
     private String name;
 
+    @Column(name = "n_en_name")
+    private String enName;
+
     /** 1:视频；2:壁纸 */
     @Column(name = "n_style")
     private Integer style;

@@ -16,6 +16,9 @@ public class ChargeMTypeVO {
     /** 类型名 */
     private String name;
 
+    /** 英文名 */
+    private String enName;
+
     /** 排序根据 例如：日期，权重 */
     private String orderColumn;
 }

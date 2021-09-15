@@ -77,7 +77,7 @@ public class ChargeServiceImpl implements ChargeService {
         // 默认按创建时间降序排
         String orderProperty = "createdAt";
         Integer order = 1;
-        if (type != null && type > 0) {
+        if (type != null && type > 0 && type != 1) {
             ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
             orderProperty = mType.getOrderColumn();
             order = mType.getOrder();
@@ -97,7 +97,7 @@ public class ChargeServiceImpl implements ChargeService {
             ChargeVideoVO vo = new ChargeVideoVO();
             BeanUtils.copyProperties(chargeVideo, vo);
             vo.setTypeId(chargeVideo.getType().getId());
-            vo.setTypeName(chargeVideo.getType().getName());
+            vo.setTypeName(chargeVideo.getType().getEnName());
             videoListVO.add(vo);
         }
         return videoListVO;
@@ -116,7 +116,7 @@ public class ChargeServiceImpl implements ChargeService {
         // 默认按创建时间降序排
         String orderProperty = "createdAt";
         Integer order = 1;
-        if (type != null && type > 0) {
+        if (type != null && type > 0 && type != 100) {
             ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
             orderProperty = mType.getOrderColumn();
             order = mType.getOrder();
@@ -136,7 +136,7 @@ public class ChargeServiceImpl implements ChargeService {
             ChargeWallpaperVO vo = new ChargeWallpaperVO();
             BeanUtils.copyProperties(chargeWallpaper, vo);
             vo.setTypeId(chargeWallpaper.getType().getId());
-            vo.setTypeName(chargeWallpaper.getType().getName());
+            vo.setTypeName(chargeWallpaper.getType().getEnName());
             wallpaperListVO.add(vo);
         }
         return wallpaperListVO;

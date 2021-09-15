@@ -51,7 +51,7 @@ public class ChargeShowController {
 
     /**
      * 获取视频列表
-     * @description 传【pageNo, type】 ('全部'类型的typeId为1)
+     * @description 入参: [ pageNo, type ] ('全部'类型的typeId为1)
      * @param form
      * @return
      * @throws ServiceException
@@ -64,7 +64,7 @@ public class ChargeShowController {
 
     /**
      * 获取壁纸列表
-     * @description 传【pageNo, type】 ('全部'类型的typeId为100)
+     * @description 入参: [ pageNo, type ] ('全部'类型的typeId为100)
      * @param form
      * @return
      * @throws ServiceException
@@ -77,7 +77,7 @@ public class ChargeShowController {
 
     /**
      * 更新视频数据
-     * @description 传【vid, showNum, useNum】
+     * @description 入参: [ vid, showNum, useNum ]
      * @param form
      * @return
      */
@@ -89,7 +89,7 @@ public class ChargeShowController {
 
     /**
      * 更新壁纸数据
-     * @description 传【wpid, showNum, useNum】
+     * @description 入参: [ wpid, showNum, useNum ]
      * @param form
      * @return
      */
