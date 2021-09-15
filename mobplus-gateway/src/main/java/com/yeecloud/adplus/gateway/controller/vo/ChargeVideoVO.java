@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.gateway.controller.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 /**
@@ -28,12 +29,18 @@ public class ChargeVideoVO {
     /** 视频封面 */
     private String videoCover;
 
-    /** 视频封面缩略图 */
-    private String videoCoverThumb;
+    /** 壁纸图片地址 */
+    private String imgUrl;
+
+    /** 视频封面/壁纸 缩略图 */
+    private String thumbUrl;
 
     /** 虚拟使用次数(前端展示用) */
     private String useNumFake;
 
     /** 用户使用限制(会员)，1:限制; 2:无限制 */
     private Integer useLimit;
+
+    /** 素材类型 1:视频; 2:壁纸 */
+    private Integer style;
 }

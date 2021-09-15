@@ -30,4 +30,7 @@ public class ChargeWallpaperVO {
 
     /** 用户使用限制(会员)，1:限制; 2:无限制 */
     private Integer useLimit;
+
+    /** 素材类型 1:视频; 2:壁纸 */
+    private Integer style;
 }
