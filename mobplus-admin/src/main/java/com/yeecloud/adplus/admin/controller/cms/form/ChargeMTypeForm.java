@@ -12,6 +12,8 @@ public class ChargeMTypeForm {
 
     private String name;
 
+    private String enName;
+
     private Integer style;
 
     private String orderColumn;

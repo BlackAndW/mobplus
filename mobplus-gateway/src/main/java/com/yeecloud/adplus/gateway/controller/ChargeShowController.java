@@ -1,14 +1,14 @@
 package com.yeecloud.adplus.gateway.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.yeecloud.adplus.dal.entity.ChargeMType;
-import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
+import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
+import com.yeecloud.adplus.gateway.controller.vo.ChargeVideoVO;
+import com.yeecloud.adplus.gateway.controller.vo.ChargeWallpaperVO;
 import com.yeecloud.adplus.gateway.service.ChargeService;
+import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
-import com.yeecloud.meeto.common.result.Result;
-import com.yeecloud.meeto.common.util.Query;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * 充电秀
  * @author: Leonard
  * @create: 2021/7/1
  */
-
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/cs")
@@ -28,34 +28,74 @@ public class ChargeShowController {
     @Autowired
     ChargeService chargeService;
 
+    /***
+     * 获取banner
+     * @throws ServiceException
+     */
+    @ApiDoc
     @PostMapping("bannerList")
-    public Result getBannerList() throws ServiceException {
+    public Result<List<ChargeBannerVO>> getBannerList() throws ServiceException {
         return Result.SUCCESS(chargeService.queryBanner());
     }
 
+    /**
+     * 获取类型列表
+     * @param style 1:视频;2:壁纸
+     */
+    @ApiDoc
     @GetMapping("type")
-    public Result getType(@RequestParam Integer style) {
+    public Result<List<ChargeMTypeVO>> getType(@RequestParam Integer style) {
         List<ChargeMTypeVO> result = chargeService.queryTypeList(style);
         return Result.SUCCESS(result);
     }
 
+    /**
+     * 获取视频列表
+     * @description 入参: [ pageNo, type ] ('全部'类型的typeId为1)
+     * @param form
+     * @return
+     * @throws ServiceException
+     */
+    @ApiDoc
     @PostMapping("videoList")
-    public Result getVideoList(@RequestBody ChargeShowForm form) throws ServiceException {
+    public Result<List<ChargeVideoVO>> getVideoList(@RequestBody ChargeShowForm form) throws ServiceException {
         return Result.SUCCESS(chargeService.queryVideo(form));
     }
 
+    /**
+     * 获取壁纸列表
+     * @description 入参: [ pageNo, type ] ('全部'类型的typeId为100)
+     * @param form
+     * @return
+     * @throws ServiceException
+     */
+    @ApiDoc
     @PostMapping("wallpaperList")
-    public Result getWallpaperList(@RequestBody ChargeShowForm form) throws ServiceException {
+    public Result<List<ChargeWallpaperVO>> getWallpaperList(@RequestBody ChargeShowForm form) throws ServiceException {
         return Result.SUCCESS(chargeService.queryWallpaper(form));
     }
 
+    /**
+     * 更新视频数据
+     * @description 入参: [ vid, showNum, useNum ]
+     * @param form
+     * @return
+     */
+    @ApiDoc
     @PostMapping("uploadData")
-    public Result uploadData(@RequestBody ChargeShowForm form) {
+    public Result<String> uploadData(@RequestBody ChargeShowForm form) {
         return chargeService.uploadDataV(form);
     }
 
+    /**
+     * 更新壁纸数据
+     * @description 入参: [ wpid, showNum, useNum ]
+     * @param form
+     * @return
+     */
+    @ApiDoc
     @PostMapping("uploadDataWP")
-    public Result uploadDataWP(@RequestBody ChargeShowForm form) {
+    public Result<String> uploadDataWP(@RequestBody ChargeShowForm form) {
         return chargeService.uploadDataWP(form);
     }
 

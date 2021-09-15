@@ -90,6 +90,10 @@ const columns = [
         dataIndex: 'name'
     },
     {
+        title: '英文名',
+        dataIndex: 'enName'
+    },
+    {
         title: '素材类别',
         dataIndex: 'style',
         scopedSlots: { customRender: 'styleSlot' }

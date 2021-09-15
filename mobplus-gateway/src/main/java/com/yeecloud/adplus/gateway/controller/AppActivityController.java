@@ -44,7 +44,6 @@ public class AppActivityController {
      * @param m 解码标识
      * @return
      */
-    @ApiDoc
     @RequestMapping("/activityList")
     public Result getAppActivityList(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) {
         boolean needCodec = m == null || m.trim().length() == 0;

@@ -9,8 +9,8 @@ import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeVideoVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeWallpaperVO;
+import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
-import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.Query;
 
 import java.util.List;

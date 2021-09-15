@@ -86,8 +86,9 @@ public class GameController {
      * @return
      * @throws ServiceException
      */
+    @ApiDoc
     @GetMapping("list")
-    public Result getGameListNew() throws ServiceException {
+    public Result<JSONObject> getGameListNew() throws ServiceException {
         List<Game> gameList = gameService.findGameListNew();
         JSONObject gameDataList = new JSONObject();
         JSONArray gameArray = new JSONArray();
