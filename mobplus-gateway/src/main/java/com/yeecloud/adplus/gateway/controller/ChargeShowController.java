@@ -3,8 +3,7 @@ package com.yeecloud.adplus.gateway.controller;
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
-import com.yeecloud.adplus.gateway.controller.vo.ChargeVideoVO;
-import com.yeecloud.adplus.gateway.controller.vo.ChargeWallpaperVO;
+import com.yeecloud.adplus.gateway.controller.vo.ChargeMaterialVO;
 import com.yeecloud.adplus.gateway.service.ChargeService;
 import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -50,33 +49,20 @@ public class ChargeShowController {
     }
 
     /**
-     * 获取视频列表
-     * @description 入参: [ pageNo, type ] ('全部'类型的typeId为1)
+     * 获取素材列表
+     * @description 入参: [ pageNo, type ,style ] ('全部'类型的typeId为1, 壁纸的为100)
      * @param form
      * @return
      * @throws ServiceException
      */
     @ApiDoc
     @PostMapping("videoList")
-    public Result<List<ChargeVideoVO>> getVideoList(@RequestBody ChargeShowForm form) throws ServiceException {
-        return Result.SUCCESS(chargeService.queryVideo(form));
+    public Result<List<ChargeMaterialVO>> getMaterialList(@RequestBody ChargeShowForm form) throws ServiceException {
+        return Result.SUCCESS(chargeService.queryMaterial(form));
     }
 
     /**
-     * 获取壁纸列表
-     * @description 入参: [ pageNo, type ] ('全部'类型的typeId为100)
-     * @param form
-     * @return
-     * @throws ServiceException
-     */
-    @ApiDoc
-    @PostMapping("wallpaperList")
-    public Result<List<ChargeWallpaperVO>> getWallpaperList(@RequestBody ChargeShowForm form) throws ServiceException {
-        return Result.SUCCESS(chargeService.queryWallpaper(form));
-    }
-
-    /**
-     * 更新视频数据
+     * 更新素材数据
      * @description 入参: [ vid, showNum, useNum ]
      * @param form
      * @return
@@ -85,18 +71,6 @@ public class ChargeShowController {
     @PostMapping("uploadData")
     public Result<String> uploadData(@RequestBody ChargeShowForm form) {
         return chargeService.uploadDataV(form);
-    }
-
-    /**
-     * 更新壁纸数据
-     * @description 入参: [ wpid, showNum, useNum ]
-     * @param form
-     * @return
-     */
-    @ApiDoc
-    @PostMapping("uploadDataWP")
-    public Result<String> uploadDataWP(@RequestBody ChargeShowForm form) {
-        return chargeService.uploadDataWP(form);
     }
 
 }

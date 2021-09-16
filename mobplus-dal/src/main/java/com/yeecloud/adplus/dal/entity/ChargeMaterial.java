@@ -13,7 +13,8 @@ import java.util.Random;
  */
 
 @Data
-@MappedSuperclass
+@Entity
+@Table(name = "t_charge_material")
 public class ChargeMaterial extends AuditorEntity {
 
     private static final long serialVersionUID = 1L;
@@ -26,11 +27,47 @@ public class ChargeMaterial extends AuditorEntity {
     @Column(name = "n_name")
     private String name;
 
+    /** 源视频地址 */
+    @Column(name = "n_video_path")
+    private String videoPath = "";
+
+    /** 源视频名 */
+    @Column(name = "n_video_name")
+    private String videoName;
+
+    /** 预览视频地址 */
+    @Column(name = "n_video_introduce")
+    private String videoIntroduce = "";
+
+    /** 预览视频地址 */
+    @Column(name = "n_video_introduce_name")
+    private String videoIntroduceName;
+
+    /** 视频封面地址 */
+    @Column(name = "n_video_cover")
+    private String videoCover = "";
+
+    /** 视频封面缩略图地址 */
+    @Column(name = "n_video_cover_thumb")
+    private String videoCoverThumb = "";
+
+    /** 壁纸原图 */
+    @Column(name = "n_img_url")
+    private String imgUrl = "";
+
+    /** 壁纸缩略图 */
+    @Column(name = "n_thumb_url")
+    private String thumbUrl = "";
+
     /** 素材分类 */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "c_type_id")
     private ChargeMType type;
+
+    /** 素材类型 1:视频 2:壁纸 */
+    @Column(name = "n_style")
+    private Integer style;
 
     /** 使用次数 */
     @Column(name = "n_use_num")

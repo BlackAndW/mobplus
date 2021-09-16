@@ -1,17 +1,16 @@
 package com.yeecloud.adplus.admin.service.impl;
 
+import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeBannerForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMTypeForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeVideoForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeWallpaperForm;
+import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
 import com.yeecloud.adplus.admin.service.ChargeService;
 import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
-import com.yeecloud.adplus.dal.repository.ChargeVideoRepository;
-import com.yeecloud.adplus.dal.repository.ChargeWallpaperRepository;
+import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import org.springframework.beans.BeanUtils;
@@ -47,13 +46,10 @@ public class ChargeServiceImpl implements ChargeService {
     ChargeBannerRepository chargeBannerRepository;
 
     @Autowired
-    ChargeVideoRepository chargeVideoRepository;
+    ChargeMaterialRepository chargeMaterialRepository;
 
     @Autowired
     ChargeMTypeRepository chargeMTypeRepository;
-
-    @Autowired
-    ChargeWallpaperRepository chargeWallpaperRepository;
 
     /***
      * Banner CURD
@@ -114,46 +110,59 @@ public class ChargeServiceImpl implements ChargeService {
      * @throws ServiceException
      */
     @Override
-    public Page<ChargeVideo> queryVideo(Query query) throws ServiceException {
-        QChargeVideo chargeVideo = QChargeVideo.chargeVideo;
-        Predicate predicate = chargeVideo.deleted.eq(false);
+    public Page<ChargeMaterial> queryMaterial(Query query) throws ServiceException {
+        QChargeMaterial chargeMaterial = QChargeMaterial.chargeMaterial;
+        Predicate predicate = chargeMaterial.deleted.eq(false);
         Integer type;
         type = query.get("type", Integer.class);
-        if (type != null && type != 1 && type > 0) {
-            predicate = ExpressionUtils.and(predicate, chargeVideo.type.id.eq(type));
+        if (type != null && type != 1 && type != 100 && type > 0) {
+            predicate = ExpressionUtils.and(predicate, chargeMaterial.type.id.eq(type));
+        }
+        Integer style = query.get("style", Integer.class);
+        if (style != null && style > 0) {
+            predicate = ExpressionUtils.and(predicate, chargeMaterial.style.eq(style));
         }
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
         PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-        return chargeVideoRepository.findAll(predicate, pagRequest);
+        return chargeMaterialRepository.findAll(predicate, pagRequest);
     }
 
     @Override
-    public ChargeVideo findVideoById(Integer id) throws ServiceException {
+    public ChargeMaterial findMaterialById(Integer id) throws ServiceException {
         return null;
     }
 
     @Override
-    public void createVideo(ChargeVideoForm form) throws ServiceException {
+    public void createMaterial(ChargeMaterialForm form) throws ServiceException {
         try {
-            ChargeVideo video = new ChargeVideo();
-            BeanUtils.copyProperties(form, video);
-            video.setVideoPath(rootPath + videoKeyPath + "material/" + form.getVideoName());
-            video.setVideoIntroduce(rootPath + videoKeyPath + "material/" + form.getVideoIntroduceName());
-            chargeVideoRepository.save(video);
+            ChargeMaterial material = new ChargeMaterial();
+            NewBeanUtils.copyProperties(material, form, true);
+            ChargeMType mType = chargeMTypeRepository.findById(form.getType().getId()).orElse(null);
+            if (mType != null) {
+                if (mType.getStyle() == 1){
+                    material.setVideoPath(rootPath + videoKeyPath + "material/" + form.getVideoName());
+                    material.setVideoIntroduce(rootPath + videoKeyPath + "material/" + form.getVideoIntroduceName());
+                }
+                material.setStyle(mType.getStyle());
+            }
+            chargeMaterialRepository.save(material);
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateVideo(Integer id, ChargeVideoForm form) throws ServiceException {
+    public void updateMaterial(Integer id, ChargeMaterialForm form) throws ServiceException {
         try {
-            ChargeVideo video = chargeVideoRepository.findById(id).orElse(null);
-            if (video != null && !video.isDeleted()) {
-                BeanUtils.copyProperties(form, video);
-                video.setVideoPath(rootPath + videoKeyPath + "material/" + form.getVideoName());
-                video.setVideoIntroduce(rootPath + videoKeyPath + "material/" + form.getVideoIntroduceName());
-                chargeVideoRepository.save(video);
+            ChargeMaterial material = chargeMaterialRepository.findById(id).orElse(null);
+            if (material != null && !material.isDeleted()) {
+                NewBeanUtils.copyProperties(material, form, true);
+                ChargeMType mType = chargeMTypeRepository.findById(form.getType().getId()).orElse(null);
+                if (mType != null && mType.getStyle() == 1) {
+                    material.setVideoPath(rootPath + videoKeyPath + "material/" + form.getVideoName());
+                    material.setVideoIntroduce(rootPath + videoKeyPath + "material/" + form.getVideoIntroduceName());
+                }
+                chargeMaterialRepository.save(material);
             }
         } catch (Throwable e) {
             throw new ServiceException(e);
@@ -161,62 +170,8 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
-    public void deleteVideo(Integer[] ids) throws ServiceException {
-        chargeVideoRepository.deleteById(ids);
-    }
-
-    /***
-     * 壁纸CURD
-     * @param query
-     * @return
-     * @throws ServiceException
-     */
-    @Override
-    public Page<ChargeWallpaper> queryWallpaper(Query query) throws ServiceException {
-        QChargeWallpaper chargeWallpaper = QChargeWallpaper.chargeWallpaper;
-        Predicate predicate = chargeWallpaper.deleted.eq(false);
-        Integer type;
-        type = query.get("type", Integer.class);
-        if (type != null && type != 100 && type > 0) {
-            predicate = ExpressionUtils.and(predicate, chargeWallpaper.type.id.eq(type));
-        }
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
-        PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
-        return chargeWallpaperRepository.findAll(predicate, pagRequest);
-    }
-
-    @Override
-    public ChargeWallpaper findWallpaperById(Integer id) throws ServiceException {
-        return null;
-    }
-
-    @Override
-    public void createWallpaper(ChargeWallpaperForm form) throws ServiceException {
-        try {
-            ChargeWallpaper wallpaper = new ChargeWallpaper();
-            BeanUtils.copyProperties(form, wallpaper);
-            chargeWallpaperRepository.save(wallpaper);
-        } catch (Throwable e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void updateWallpaper(Integer id, ChargeWallpaperForm form) throws ServiceException {
-        try {
-            ChargeWallpaper wallpaper = chargeWallpaperRepository.findById(id).orElse(null);
-            if (wallpaper != null && !wallpaper.isDeleted()) {
-                BeanUtils.copyProperties(form, wallpaper);
-                chargeWallpaperRepository.save(wallpaper);
-            }
-        } catch (Throwable e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public void deleteWallpaper(Integer[] ids) throws ServiceException {
-        chargeWallpaperRepository.deleteById(ids);
+    public void deleteMaterial(Integer[] ids) throws ServiceException {
+        chargeMaterialRepository.deleteById(ids);
     }
 
     /***
@@ -279,24 +234,24 @@ public class ChargeServiceImpl implements ChargeService {
     @Async
     @Override
     public void updateWeight() {
-        QChargeVideo chargeVideo = QChargeVideo.chargeVideo;
-        Predicate predicate = chargeVideo.deleted.eq(false);
-        List<ChargeVideo> list = (List<ChargeVideo>)chargeVideoRepository.findAll(predicate);
+        QChargeMaterial chargeMaterial = QChargeMaterial.chargeMaterial;
+        Predicate predicate = chargeMaterial.deleted.eq(false);
+        List<ChargeMaterial> list = (List<ChargeMaterial>)chargeMaterialRepository.findAll(predicate);
         list.forEach( item -> {
             item.updateWeight();
-            chargeVideoRepository.save(item);
+            chargeMaterialRepository.save(item);
         });
     }
 
     @Override
-    public boolean checkVideoByName(String name) {
-        QChargeVideo video = QChargeVideo.chargeVideo;
+    public boolean checkMaterialByName(String name) {
+        QChargeMaterial video = QChargeMaterial.chargeMaterial;
         Predicate predicate = video.deleted.eq(false);
         if (name != null && name.length() > 0) {
             predicate = ExpressionUtils.and(predicate, video.videoName.eq(name));
             predicate = ExpressionUtils.or(predicate, video.videoIntroduceName.eq(name));
         }
-        List<ChargeVideo> result = (List<ChargeVideo>) chargeVideoRepository.findAll(predicate);
+        List<ChargeMaterial> result = (List<ChargeMaterial>) chargeMaterialRepository.findAll(predicate);
         return result.size() > 0;
     }
 }

@@ -2,8 +2,8 @@ package com.yeecloud.adplus.admin.service;
 
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeBannerForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMTypeForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeVideoForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeWallpaperForm;
+import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
+import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
 import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
@@ -25,25 +25,15 @@ public interface ChargeService{
 
     void deleteBanner(Integer[] ids) throws ServiceException;
 
-    Page<ChargeVideo> queryVideo(Query query) throws ServiceException;
+    Page<ChargeMaterial> queryMaterial(Query query) throws ServiceException;
 
-    ChargeVideo findVideoById(Integer id) throws ServiceException;
+    ChargeMaterial findMaterialById(Integer id) throws ServiceException;
 
-    void createVideo(ChargeVideoForm form) throws ServiceException;
+    void createMaterial(ChargeMaterialForm form) throws ServiceException;
 
-    void updateVideo(Integer id, ChargeVideoForm form) throws ServiceException;
+    void updateMaterial(Integer id, ChargeMaterialForm form) throws ServiceException;
 
-    void deleteVideo(Integer[] ids) throws ServiceException;
-
-    Page<ChargeWallpaper> queryWallpaper(Query query) throws ServiceException;
-
-    ChargeWallpaper findWallpaperById(Integer id) throws ServiceException;
-
-    void createWallpaper(ChargeWallpaperForm form) throws ServiceException;
-
-    void updateWallpaper(Integer id, ChargeWallpaperForm form) throws ServiceException;
-
-    void deleteWallpaper(Integer[] ids) throws ServiceException;
+    void deleteMaterial(Integer[] ids) throws ServiceException;
 
     Page<ChargeMType> queryMType(Query query) throws ServiceException;
 
@@ -57,5 +47,5 @@ public interface ChargeService{
 
     void updateWeight();
 
-    boolean checkVideoByName(String name);
+    boolean checkMaterialByName(String name);
 }

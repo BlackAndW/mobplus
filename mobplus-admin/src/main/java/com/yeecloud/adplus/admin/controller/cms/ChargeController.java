@@ -3,8 +3,7 @@ package com.yeecloud.adplus.admin.controller.cms;
 import com.yeecloud.adplus.admin.controller.cms.convert.ChargeConvert;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeBannerForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMTypeForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeVideoForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeWallpaperForm;
+import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
 import com.yeecloud.adplus.admin.controller.cms.vo.*;
 import com.yeecloud.adplus.admin.service.ChargeService;
 import com.yeecloud.adplus.dal.entity.*;
@@ -20,10 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * @author: Leonard
@@ -98,45 +95,45 @@ public class ChargeController {
      */
     @GetMapping("material")
     @RequiresPermissions("cms:charge:query")
-    public Result getVideo(@RequestParam Map<String, Object> params) throws Exception {
-        Page<ChargeVideo> page = chargeService.queryVideo(new Query(params));
-        PageInfo<ChargeVideoVO> result = convertVideo(page);
+    public Result getMaterial(@RequestParam Map<String, Object> params) throws Exception {
+        Page<ChargeMaterial> page = chargeService.queryMaterial(new Query(params));
+        PageInfo<ChargeMaterialVO> result = convertMaterial(page);
         return Result.SUCCESS(result);
     }
 
     @PostMapping("material")
     @RequiresPermissions("cms:charge:create")
-    public Result createVideo(@RequestBody @Valid ChargeVideoForm form, BindingResult bindingResult) throws Exception {
+    public Result createMaterial(@RequestBody @Valid ChargeMaterialForm form, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
             return Result.FAILURE(message);
         }
-        chargeService.createVideo(form);
+        chargeService.createMaterial(form);
         return Result.SUCCESS();
     }
 
     @PutMapping("material/{id}")
     @RequiresPermissions("cms:charge:edit")
-    public Result updateVideo(@PathVariable Integer id, @RequestBody @Valid ChargeVideoForm form, BindingResult bindingResult) throws Exception {
+    public Result updateMaterial(@PathVariable Integer id, @RequestBody @Valid ChargeMaterialForm form, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
             return Result.FAILURE(message);
         }
-        chargeService.updateVideo(id, form);
+        chargeService.updateMaterial(id, form);
         return Result.SUCCESS();
     }
 
     @DeleteMapping("material")
     @RequiresPermissions("cms:charge:delete")
-    public Result deleteVideo(@RequestBody Integer[] ids) throws ServiceException {
-        chargeService.deleteVideo(ids);
+    public Result deleteMaterial(@RequestBody Integer[] ids) throws ServiceException {
+        chargeService.deleteMaterial(ids);
         return Result.SUCCESS();
     }
 
     @GetMapping("material/isCopy")
     @RequiresPermissions("cms:charge:create")
     public Result isCopy(@RequestParam String name) {
-        boolean isCopy = chargeService.checkVideoByName(name);
+        boolean isCopy = chargeService.checkMaterialByName(name);
         return Result.SUCCESS(isCopy ? 1 : 2);
     }
 
@@ -145,63 +142,9 @@ public class ChargeController {
      * @param result
      * @return
      */
-    private PageInfo<ChargeVideoVO> convertVideo(Page<ChargeVideo> result) {
-        result.forEach(ChargeVideo::fakeData);
-        List<ChargeVideoVO> resultList = chargeConvert.convertVideo(result.getContent());
-        return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
-    }
-
-    /**
-     * 壁纸管理
-     * @param params
-     * @return
-     * @throws Exception
-     */
-    @GetMapping("wallpaper")
-    @RequiresPermissions("cms:charge:query")
-    public Result getWallpaper(@RequestParam Map<String, Object> params) throws Exception {
-        Page<ChargeWallpaper> page = chargeService.queryWallpaper(new Query(params));
-        PageInfo<ChargeWallpaperVO> result = convertWallpaper(page);
-        return Result.SUCCESS(result);
-    }
-
-    @PostMapping("wallpaper")
-    @RequiresPermissions("cms:charge:create")
-    public Result createWallpaper(@RequestBody @Valid ChargeWallpaperForm form, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
-            return Result.FAILURE(message);
-        }
-        chargeService.createWallpaper(form);
-        return Result.SUCCESS();
-    }
-
-    @PutMapping("wallpaper/{id}")
-    @RequiresPermissions("cms:charge:edit")
-    public Result updateWallpaper(@PathVariable Integer id, @RequestBody @Valid ChargeWallpaperForm form, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
-            return Result.FAILURE(message);
-        }
-        chargeService.updateWallpaper(id, form);
-        return Result.SUCCESS();
-    }
-
-    @DeleteMapping("wallpaper")
-    @RequiresPermissions("cms:charge:delete")
-    public Result deleteWallpaper(@RequestBody Integer[] ids) throws ServiceException {
-        chargeService.deleteWallpaper(ids);
-        return Result.SUCCESS();
-    }
-
-    /**
-     * 修改壁纸虚拟数据
-     * @param result
-     * @return
-     */
-    private PageInfo<ChargeWallpaperVO> convertWallpaper(Page<ChargeWallpaper> result) {
-        result.forEach(ChargeWallpaper::fakeData);
-        List<ChargeWallpaperVO> resultList = chargeConvert.convertWallpaper(result.getContent());
+    private PageInfo<ChargeMaterialVO> convertMaterial(Page<ChargeMaterial> result) {
+        result.forEach(ChargeMaterial::fakeData);
+        List<ChargeMaterialVO> resultList = chargeConvert.convertMaterial(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
 

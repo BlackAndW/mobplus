@@ -25,12 +25,12 @@
                         action="/api/file/upload/aws/img/wallpaper"
                         :before-upload="beforeUpload"
                         @change="handleChange"
-                        v-decorator="[ 'thumb',{initialValue: model.thumbUrl, rules: [ { required: true, message: '请上传壁纸图' }] }]"
+                        v-decorator="[ 'thumb',{initialValue: model.imgUrl, rules: [ { required: true, message: '请上传壁纸图' }] }]"
                     >
                         <img
                             class="img-model"
-                            v-if="model.thumbUrl"
-                            :src="model.thumbUrl"
+                            v-if="model.imgUrl"
+                            :src="model.imgUrl"
                         />
                         <div v-else>
                             <a-icon :type="loading ? 'loading' : 'plus'"/>
@@ -91,14 +91,14 @@ export default {
             this.confirmLoading = false;
             this.model = {};
             this.typeList = typeList;
-            this.url = '/cms/charge/wallpaper';
+            this.url = '/cms/charge/material';
             this.visible = true;
         },
         edit: function (record, typeList) {
             this.title = '编辑壁纸:' + record.name;
             this.model = record;
             this.typeList = typeList;
-            this.url = '/cms/charge/wallpaper/' + record.id;
+            this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
             this.visible = true;

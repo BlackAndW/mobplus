@@ -218,8 +218,7 @@ export default {
             this.$refs.table.refresh(true);
         },
         loadDataList: function (params) {
-            console.log(params);
-            return this.$http.get(url, Object.assign(params, this.queryParam));
+            return this.$http.get(url + '?style=1', Object.assign(params, this.queryParam));
         }
     }
 };
