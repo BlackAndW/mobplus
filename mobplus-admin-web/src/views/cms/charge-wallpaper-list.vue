@@ -135,7 +135,7 @@ const columns = [
     }
 ];
 
-const url = '/cms/charge/wallpaper';
+const url = '/cms/charge/material';
 export default {
     mixins: [mixinDevice],
     components: {
@@ -199,7 +199,7 @@ export default {
             this.selectedRows = selectedRows;
         },
         loadDataList: function (params) {
-            return this.$http.get(url, Object.assign(params, this.queryParam));
+            return this.$http.get(url + '?style=2', Object.assign(params, this.queryParam));
         }
     }
 };

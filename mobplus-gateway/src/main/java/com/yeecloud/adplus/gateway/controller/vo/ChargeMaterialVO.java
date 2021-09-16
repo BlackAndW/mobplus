@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.gateway.controller.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 /**
@@ -8,9 +9,9 @@ import lombok.Data;
  */
 
 @Data
-public class ChargeWallpaperVO {
+public class ChargeMaterialVO {
 
-    /** 壁纸 id */
+    /** video id */
     private Integer id;
 
     /** 类型id */
@@ -19,10 +20,22 @@ public class ChargeWallpaperVO {
     /** 类型名 */
     private String typeName;
 
-    /** 图片地址 */
+    /** 视频路径 */
+    private String videoPath;
+
+    /** 预览视频路径 */
+    private String videoIntroduce;
+
+    /** 视频封面 */
+    private String videoCover;
+
+    /** 视频封面缩略图 */
+    private String videoCoverThumb;
+
+    /** 壁纸图片地址 */
     private String imgUrl;
 
-    /** 缩略图地址 */
+    /** 视频封面/壁纸 缩略图 */
     private String thumbUrl;
 
     /** 虚拟使用次数(前端展示用) */

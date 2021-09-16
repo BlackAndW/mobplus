@@ -12,7 +12,7 @@ import java.util.Random;
  */
 
 @Data
-public class ChargeVideoVO {
+public class ChargeMaterialVO {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +33,10 @@ public class ChargeVideoVO {
     private String videoCover;
 
     private String videoCoverThumb;
+
+    private String imgUrl;
+
+    private String thumbUrl;
 
     private long useNum;
 

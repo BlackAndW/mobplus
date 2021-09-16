@@ -24,19 +24,12 @@ public interface ChargeConvert {
             @Mapping(target = "typeId", source = "type.id"),
             @Mapping(target = "typeName", source = "type.name"),
     })
-    ChargeVideoVO convertVideo(ChargeVideo entity);
+    ChargeMaterialVO convertMaterial(ChargeMaterial entity);
 
-    List<ChargeVideoVO> convertVideo(List<ChargeVideo> list);
+    List<ChargeMaterialVO> convertMaterial(List<ChargeMaterial> list);
 
     ChargeMTypeVO convertMType(ChargeMType entity);
 
     List<ChargeMTypeVO> convertMType(List<ChargeMType> list);
 
-    @Mappings({
-            @Mapping(target = "typeId", source = "type.id"),
-            @Mapping(target= "typeName", source = "type.name")
-    })
-    ChargeWallpaperVO convertWallpaper(ChargeWallpaper entity);
-
-    List<ChargeWallpaperVO> convertWallpaper(List<ChargeWallpaper> list);
 }

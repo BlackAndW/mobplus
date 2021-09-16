@@ -129,7 +129,7 @@ public class GameController {
         }
         String result  = sb.toString();
         JSONObject jsonObject = JSONObject.parseObject(result);
-        String[] typeList = new String[] {"Puzzle", "Action", "Jump & Run", "Shooting", "Sports", "Racing", "Adventure", "Role playing", "Tower Defence"};
+        String[] typeList = new String[] {"Puzzle", "Action", "Jump and Run", "Shooting", "Sports", "Racing", "Adventure", "Role playing", "Tower Defence"};
         System.out.println(typeList);
         save(typeList, jsonObject);
     }

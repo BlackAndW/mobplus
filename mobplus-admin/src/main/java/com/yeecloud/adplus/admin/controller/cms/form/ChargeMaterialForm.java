@@ -11,11 +11,21 @@ import javax.validation.constraints.NotBlank;
  */
 
 @Data
-public class ChargeWallpaperForm {
+public class ChargeMaterialForm {
+
+//    @NotBlank(message = "名称不能为空")
+//    private String name;
 
     private ChargeMType type;
 
-    @NotBlank(message = "图片未上传")
+    private String videoName;
+
+    private String videoIntroduceName;
+
+    private String videoCover;
+
+    private String videoCoverThumb;
+
     private String imgUrl;
 
     private String thumbUrl;

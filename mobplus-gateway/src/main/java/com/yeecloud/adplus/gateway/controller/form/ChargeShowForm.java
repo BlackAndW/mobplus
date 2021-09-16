@@ -15,16 +15,16 @@ public class ChargeShowForm {
     /** 类型id */
     private Integer type;
 
-    /** video id */
+    /** 素材 id */
     private Integer vid;
-
-    /** 壁纸 id */
-    private Integer wpid;
 
     /** 使用次数 传0或1 */
     private Integer useNum;
 
     /** 展示次数 传0或1 */
     private Integer showNum;
+
+    /** 素材类型 1:视频(默认), 2:壁纸 */
+    private Integer style;
 
 }
