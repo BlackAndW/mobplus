@@ -29,7 +29,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/data/vpn")
-public class VpnAccountLogController extends HttpServlet {
+public class VpnLogController extends HttpServlet {
 
     @Autowired
     private HttpServletRequest request;
@@ -53,6 +53,14 @@ public class VpnAccountLogController extends HttpServlet {
         String downloadFilename = OkHttpUtils.ResponseJSON(request).get("file").toString();
         log.info("download filename is: " + downloadFilename);
         return Result.SUCCESS("http://res.turbovpns.com/" + downloadFilename);
+    }
+
+    @GetMapping("errorLog")
+    @RequiresPermissions("dataManager:query")
+    public Result getErrorLog(@RequestParam Map<String, Object> params) throws ServiceException, IOException {
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(OkHttpUtils.VPN_URL + "/app/api/v1/vpn/list/errorLog").newBuilder();
+        final Request request = getRequest(httpBuilder, params);
+        return Result.SUCCESS(OkHttpUtils.ResponseJSON(request));
     }
 
     private Request getRequest(HttpUrl.Builder httpBuilder, Map<String, Object> params) throws ServiceException {

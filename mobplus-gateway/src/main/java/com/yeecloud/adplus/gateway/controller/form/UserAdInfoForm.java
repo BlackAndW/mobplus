@@ -12,9 +12,11 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UserAdInfoForm {
 
+    /** appId */
     @NotNull
     private String appId;
 
+    /** uuid */
     @NotNull
     private String uuid;
 
