@@ -57,6 +57,7 @@ const constantRouterComponents = {
 
     // 数据管理
     VpnAccountLog: () => import('@/views/dataManager/vpnAccount-log'),
+    VpnErrorLog: () => import('@/views/dataManager/vpn-error-log'),
     AppStatistics: () => import('@/views/dataManager/appStatistics'),
     GoogleAdmobApi: () => import('@/views/dataManager/googleAdmobApi'),
     FacebookMarketApi: () => import('@/views/dataManager/facebookMarketApi')

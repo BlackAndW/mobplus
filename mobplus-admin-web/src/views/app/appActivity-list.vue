@@ -260,11 +260,9 @@ export default {
             this.appVersionList = await this.$http.get('/app/version/sct', {
                 appId: appId
             });
-            console.log(this.appVersionList);
         },
         loadChannelList: async function () {
             this.channelList = await this.$http.get('/release/channel/sct', {});
-            console.log(this.channelList);
         },
         onQueryDict: function (item) {
             this.currentApp = item;

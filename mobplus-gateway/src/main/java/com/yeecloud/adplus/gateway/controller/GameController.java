@@ -82,11 +82,11 @@ public class GameController {
 //    }
 
     /**
-     *
+     * 获取游戏列表
      * @return
      * @throws ServiceException
      */
-    @ApiDoc
+    @ApiDoc(stringResult = "{ code:2000, message:'ok', result: { gameType: [{keyName: 'keyValue'}...], ... } }")
     @GetMapping("list")
     public Result<JSONObject> getGameListNew() throws ServiceException {
         List<Game> gameList = gameService.findGameListNew();
@@ -112,8 +112,15 @@ public class GameController {
         return Result.SUCCESS(gameDataList);
     }
 
+    /**
+     * 更新游戏数据
+     * @param form
+     * @return
+     * @throws ServiceException
+     */
+    @ApiDoc
     @PostMapping("update")
-    public Result update(@RequestBody GameForm form) throws ServiceException {
+    public Result<String> update(@RequestBody GameForm form) throws ServiceException {
         gameService.updateLogById(form);
         return Result.SUCCESS("game log updated");
     }

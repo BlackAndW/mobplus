@@ -221,6 +221,22 @@
 
     <profiles>
         <profile>
+            <id>te</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                            <!-- 修改代码时自动更新生效，无需重启 -->
+                            <fork>true</fork>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>dev</id>
             <build>
                 <plugins>

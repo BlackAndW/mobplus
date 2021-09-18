@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
-import com.yeecloud.adplus.gateway.controller.vo.AppActivityVO;
+import com.yeecloud.adplus.gateway.controller.vo.AppFunctionVO;
 import com.yeecloud.adplus.gateway.service.AppPositionService;
+import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.exception.ServiceException;
-import com.yeecloud.meeto.common.result.Result;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * 广告位管理
+ * 配置管理（项目）和功能管理
  * @author: Leonard
  * @create: 2021/1/27
  */
@@ -34,7 +33,7 @@ public class AppPositionController {
     AppPositionService appPositionService;
 
     /**
-     *
+     * 获取配置管理（项目）中的JSON格式的配置
      * @param body json字符串【appId: string; channel: string; pkgVersion: string】
      * @param m 加密标识，m=1
      * @return
@@ -42,7 +41,7 @@ public class AppPositionController {
      */
     @ApiDoc
     @RequestMapping("/position")
-    public Result getAppPositionList (@RequestBody String body, @RequestParam(value = "m") String m) throws ServiceException {
+    public Result<List> getAppPositionList (@RequestBody String body, @RequestParam(value = "m") String m) throws ServiceException {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
@@ -61,14 +60,15 @@ public class AppPositionController {
     }
 
     /**
-     *
-     * @param body
-     * @param m
+     * 功能管理-获取列表
+     * @param body json字符串【appId: string; channel: string; pkgVersion: string】
+     * @param m 加密标识，m=1
      * @return
      * @throws ServiceException
      */
+    @ApiDoc
     @RequestMapping("/positionNew")
-    public Result getAppPositionListNew (@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
+    public Result<List<AppFunctionVO>> getAppPositionListNew (@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
