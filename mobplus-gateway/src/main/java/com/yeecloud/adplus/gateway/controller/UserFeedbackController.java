@@ -53,7 +53,7 @@ public class UserFeedbackController {
         try {
             String ipAddress = ParamUtils.getIpAddr(request);
             Map<String, Object> params = new HashMap<>();
-            params.put("ip", "192.155.85.6");
+            params.put("ip", ipAddress);
             MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
             final Request request = new Request.Builder()
                     .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04//query/ip")

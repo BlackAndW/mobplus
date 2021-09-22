@@ -17,8 +17,8 @@ import java.security.cert.X509Certificate;
  */
 public class OkHttpUtils {
 
-    //    public final static String VPN_URL = "https://api.turbovpns.com";
-    public final static String VPN_URL = "http://localhost:9092";
+        public final static String VPN_URL = "https://api.turbovpns.com";
+//    public final static String VPN_URL = "http://localhost:9092";
 
     // 格式化result数据,将value添加到key为data中
     public static JSONObject ResponseData(Request request) throws IOException {
