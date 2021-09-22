@@ -24,9 +24,6 @@ public class UserFeedback extends AuditorEntity{
     @JoinColumn(name = "n_app_id")
     private App app;
 
-    @Column(name = "n_username")
-    private String username;
-
     @Column(name = "n_pkg_version")
     private String version;
 

@@ -17,21 +17,24 @@ import java.security.cert.X509Certificate;
  */
 public class OkHttpUtils {
 
+    //    public final static String VPN_URL = "https://api.turbovpns.com";
+    public final static String VPN_URL = "http://localhost:9092";
+
     // 格式化result数据,将value添加到key为data中
-    public static JSONObject getGETResponseData(Request request) throws IOException {
+    public static JSONObject ResponseData(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         JSONObject jsonObject = JSONObject.parseObject(response.body().string());
         return getDataResult(jsonObject);
     }
 
     // 响应转化为JSON对象
-    public static JSONObject getGETResponseJSON(Request request) throws IOException {
+    public static JSONObject ResponseJSON(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         return JSONObject.parseObject(response.body().string());
     }
 
     // 直接返回响应字符串
-    public static String getGETResponse(Request request) throws IOException {
+    public static String Response(Request request) throws IOException {
         Response response = OkHttpUtils.buildNoVerifyClient().newCall(request).execute();
         return response.body().string();
     }

@@ -78,7 +78,7 @@ public class ScannerServiceImpl implements ScannerService {
                 final Request request = new Request.Builder()
                         .url(getAccessTokenUrl)
                         .get().build();
-                String token = OkHttpUtils.getGETResponseJSON(request).getString("access_token");
+                String token = OkHttpUtils.ResponseJSON(request).getString("access_token");
                 tokenCache.put("tokenCache", token);
                 return token;
             } catch (Exception e) {
@@ -160,7 +160,7 @@ public class ScannerServiceImpl implements ScannerService {
         final Request request = new Request.Builder()
                 .url(wikiUrl)
                 .get().build();
-        JSONObject resultObject = OkHttpUtils.getGETResponseJSON(request);
+        JSONObject resultObject = OkHttpUtils.ResponseJSON(request);
         long wikiApiTime = System.currentTimeMillis();
         log.info("wikiApi: " + (wikiApiTime - startTime));
         if (resultObject.get("parse") != null) {

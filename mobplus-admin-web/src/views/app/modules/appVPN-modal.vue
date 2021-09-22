@@ -26,18 +26,18 @@
                         </a-select-option>
                     </a-select>
                 </a-form-item>
-                <!-- <div v-show="false">
+                <div v-show="false">
                     <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="节点英文名">
                         <a-input
-                            v-decorator="[ 'b02', {initialValue: model.b02}]"
+                            v-decorator="[ 'b02_en' ]"
                         />
                     </a-form-item>
                     <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="节点说明">
                         <a-input
-                            v-decorator="[ 'b03', {initialValue: model.b03}]"
+                            v-decorator="[ 'b03' ]"
                         />
                     </a-form-item>
-                </div> -->
+                </div>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="地区">
                     <a-input
                         v-decorator="[ 'region', {initialValue: model.region, rules: [ { required: true, message: '请输入地区名称' }] }]"
@@ -139,7 +139,7 @@ export default {
             for (const item of this.countryList) {
                 if (item.value === value) {
                     this.form.setFieldsValue({
-                        b02: item.name_en,
+                        b02_en: item.name_en,
                         b03: item.summary_en
                     });
                 }

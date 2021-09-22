@@ -1,20 +1,26 @@
 package com.yeecloud.adplus.admin.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.app.form.AppForm;
 import com.yeecloud.adplus.admin.service.AppService;
+import com.yeecloud.adplus.admin.util.OkHttpUtils;
 import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.AppConfigRepository;
 import com.yeecloud.adplus.dal.repository.AppProjectRepository;
 import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.dal.repository.AppVersionRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
+import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.Query;
 import com.yeecloud.meeto.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +28,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -105,10 +114,23 @@ public class AppServiceImpl implements AppService {
             entity.setAppId(IdUtil.objectId());
             entity.setConf(form.getExtra().toJSONString());
             NewBeanUtils.copyProperties(entity, form, true);
+            createVPNApp(form.getName(), form.getPkgName());
             appRepository.save(entity);
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
+    }
+
+    private void createVPNApp(String appName, String pkgName) throws IOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", appName);
+        params.put("pkgName", pkgName);
+        MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+        final Request request = new Request.Builder()
+                .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/create/app")
+                .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
+                .build();
+        OkHttpUtils.ResponseJSON(request);
     }
 
     @Override

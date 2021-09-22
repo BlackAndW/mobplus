@@ -95,10 +95,6 @@ import moment from 'moment';
 
 const columns = [
     {
-        title: '用户名',
-        dataIndex: 'username'
-    },
-    {
         title: '应用名',
         dataIndex: 'appName'
     },
