@@ -9,5 +9,5 @@ import com.yeecloud.meeto.common.exception.ServiceException;
  */
 public interface UserFeedbackService {
 
-    void commit(UserFeedbackForm form) throws ServiceException;
+    void commit(UserFeedbackForm form, String ip, String area) throws ServiceException;
 }

@@ -28,12 +28,14 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
 
     @Transactional
     @Override
-    public void commit(UserFeedbackForm form) throws ServiceException {
+    public void commit(UserFeedbackForm form, String ip, String area) throws ServiceException {
         UserFeedback userFeedback = new UserFeedback();
         NewBeanUtils.copyProperties(userFeedback, form, true);
         App app = appRepository.findByAppId(form.getAppId());
         if (!EmptyUtil.isEmpty(app)) {
             userFeedback.setApp(app);
+            userFeedback.setIp(ip);
+            userFeedback.setArea(area);
         } else {
             throw new ServiceException("appId:" + form.getAppId() + ",this app is not exist");
         }

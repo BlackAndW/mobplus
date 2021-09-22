@@ -1,14 +1,23 @@
 package com.yeecloud.adplus.gateway.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.gateway.controller.form.UserFeedbackForm;
 import com.yeecloud.adplus.gateway.service.UserFeedbackService;
+import com.yeecloud.adplus.gateway.util.OkHttpUtils;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.result.Result;
+import com.yeecloud.meeto.common.util.ParamUtils;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MediaType;
+import okhttp3.Request;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用户反馈
@@ -22,6 +31,9 @@ public class UserFeedbackController {
 
     @Autowired
     UserFeedbackService userFeedbackService;
+
+    @Autowired
+    HttpServletRequest request;
 
     /**
      * 用户反馈信息提交
@@ -39,8 +51,18 @@ public class UserFeedbackController {
         }
         String response = "";
         try {
-//            UserFeedbackForm form = JSON.parseObject(body, UserFeedbackForm.class);
-            userFeedbackService.commit(form);
+            String ipAddress = ParamUtils.getIpAddr(request);
+            Map<String, Object> params = new HashMap<>();
+            params.put("ip", "192.155.85.6");
+            MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
+            final Request request = new Request.Builder()
+                    .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04//query/ip")
+                    .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
+                    .build();
+            String area = OkHttpUtils.Response(request);
+            // 去除双引号
+            area = area.substring(1, area.length() - 1);
+            userFeedbackService.commit(form, ipAddress, area);
         }catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }

@@ -14,13 +14,11 @@ public class UserFeedbackVO {
     private Integer id;
     private Integer appId;
     private String appName;
-    private String username;
     private String version;
     private String device;
     private String os;
     private String ip;
     private String area;
-    //    private String phone;
     private String content;
     private String email;
     private Integer status;
