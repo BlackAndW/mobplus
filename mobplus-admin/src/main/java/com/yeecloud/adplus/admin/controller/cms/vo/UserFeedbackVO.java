@@ -24,4 +24,5 @@ public class UserFeedbackVO {
     private Integer status;
     private String result;
     private String remark;
+    private long createdAt;
 }

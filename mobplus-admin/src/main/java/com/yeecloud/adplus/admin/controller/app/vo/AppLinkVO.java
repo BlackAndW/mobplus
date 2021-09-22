@@ -24,4 +24,6 @@ public class AppLinkVO {
     private Integer clickNum;
 
     private Integer showNum;
+
+    private long createdAt;
 }

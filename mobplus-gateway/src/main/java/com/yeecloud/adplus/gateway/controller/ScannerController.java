@@ -76,7 +76,7 @@ public class ScannerController {
             List<ScannerVO> result = scannerService.getResult(form);
             return Result.SUCCESS(result);
         } catch (Exception e) {
-            return Result.SUCCESS(e.getMessage());
+            return Result.FAILURE(e.getMessage());
         }
     }
 
