@@ -6,6 +6,7 @@ import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.data.form.AdMobForm;
 import com.yeecloud.adplus.admin.controller.data.form.FbAccountForm;
 import com.yeecloud.adplus.admin.service.AdAccountService;
+import com.yeecloud.adplus.admin.util.OkHttpUtils;
 import com.yeecloud.adplus.dal.entity.AdAccount;
 import com.yeecloud.adplus.dal.entity.QAdAccount;
 import com.yeecloud.adplus.dal.repository.AdAccountRepository;
@@ -66,23 +67,7 @@ public class AdAccountServiceImpl implements AdAccountService {
 
     @Override
     public PageInfo dataFBPage(List dataList, FbAccountForm form) {
-        if (dataList.size() > 0) {
-            int startNum = (form.getPageNo() - 1) * form.getPageSize();
-            int endNum = startNum + form.getPageSize();
-            int resultEndNum = dataList.size();
-
-            List resultPage = new ArrayList<>();
-            if (resultEndNum > 0) {
-                if (resultEndNum > endNum) {
-                    resultPage = dataList.subList(startNum, endNum);
-                } else {
-                    resultPage = dataList.subList(startNum, resultEndNum);
-                }
-            }
-            PageInfo pageInfo = new PageInfo(form.getPageNo(), form.getPageSize(), resultEndNum, resultPage);
-            return pageInfo;
-        }
-        return null;
+        return OkHttpUtils.dataPage(dataList, form.getPageNo(), form.getPageSize());
     }
 
     private void dataTransfer(List<JSONObject> dataList, AdMobForm form, JSONArray dataArray) {

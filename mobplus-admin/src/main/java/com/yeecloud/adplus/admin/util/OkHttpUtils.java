@@ -2,6 +2,8 @@ package com.yeecloud.adplus.admin.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.admin.controller.app.AppVPNController;
+import com.yeecloud.adplus.admin.controller.data.form.FbAccountForm;
+import com.yeecloud.meeto.common.util.PageInfo;
 import okhttp3.*;
 
 import javax.net.ssl.*;
@@ -9,6 +11,9 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author: Leonard
@@ -43,6 +48,8 @@ public class OkHttpUtils {
         OkHttpClient.Builder mBuilder = new OkHttpClient.Builder();
         mBuilder.sslSocketFactory(createSSLSocketFactory());
         mBuilder.hostnameVerifier(new TrustAllHostnameVerifier());
+        mBuilder.connectTimeout(120, TimeUnit.SECONDS);
+        mBuilder.readTimeout(120, TimeUnit.SECONDS);
         return mBuilder.build();
     }
 
@@ -86,5 +93,25 @@ public class OkHttpUtils {
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
+    }
+
+    public static PageInfo dataPage(List dataList, int pageNo, int pageSize) {
+        if (dataList.size() > 0) {
+            int startNum = (pageNo - 1) * pageSize;
+            int endNum = startNum + pageSize;
+            int resultEndNum = dataList.size();
+
+            List resultPage = new ArrayList<>();
+            if (resultEndNum > 0) {
+                if (resultEndNum > endNum) {
+                    resultPage = dataList.subList(startNum, endNum);
+                } else {
+                    resultPage = dataList.subList(startNum, resultEndNum);
+                }
+            }
+            PageInfo pageInfo = new PageInfo(pageNo, pageSize, resultEndNum, resultPage);
+            return pageInfo;
+        }
+        return null;
     }
 }

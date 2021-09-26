@@ -31,30 +31,18 @@
                             <a-form-item>
                                 <a-range-picker @change="onChangeDate"/>
                             </a-form-item>
-                            <!-- <a-form-item class="float-right">
-                                <div>
-                                    <a-button
-                                        icon="download"
-                                        @click="downloadFile"
-                                    >导出</a-button><br />
-                                </div>
-                            </a-form-item> -->
-                            <a-form-item>
-                                <div v-if="currentApp!=null">
-                                    <a-button-group class="btn-grp-margin-top">
-                                        <a-button
-                                            icon="sync"
-                                            v-action="['dataManager:query']"
-                                            @click="$refs.table.refresh(false)"
-                                        />
-                                        <a-button
-                                            type="primary"
-                                            icon="search"
-                                            @click="$refs.table.refresh(true)"
-                                        >查询</a-button>
-                                    </a-button-group>
-                                </div>
-                            </a-form-item>
+                            <a-button-group class="btn-grp-margin-top" v-if="currentApp!=null">
+                                <a-button
+                                    icon="sync"
+                                    v-action="['dataManager:query']"
+                                    @click="$refs.table.refresh(false)"
+                                />
+                                <a-button
+                                    type="primary"
+                                    icon="search"
+                                    @click="$refs.table.refresh(true)"
+                                >查询</a-button>
+                            </a-button-group>
                         </div>
                     </a-form>
                     <!--       -->
