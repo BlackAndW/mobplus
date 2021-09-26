@@ -49,22 +49,18 @@
                                     >导出</a-button><br />
                                 </div>
                             </a-form-item>
-                            <a-form-item>
-                                <div class="r" v-if="currentApp!=null">
-                                    <a-button-group class="btn-grp-margin-top">
-                                        <a-button
-                                            icon="sync"
-                                            v-action="['dataManager:query']"
-                                            @click="$refs.table.refresh(false)"
-                                        />
-                                        <a-button
-                                            type="primary"
-                                            icon="search"
-                                            @click="$refs.table.refresh(true)"
-                                        >查询</a-button>
-                                    </a-button-group>
-                                </div>
-                            </a-form-item>
+                            <a-button-group class="btn-grp-margin-top" v-if="currentApp!=null">
+                                <a-button
+                                    icon="sync"
+                                    v-action="['dataManager:query']"
+                                    @click="$refs.table.refresh(false)"
+                                />
+                                <a-button
+                                    type="primary"
+                                    icon="search"
+                                    @click="$refs.table.refresh(true)"
+                                >查询</a-button>
+                            </a-button-group>
                         </div>
                     </a-form>
                     <!--       -->
