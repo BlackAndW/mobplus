@@ -127,9 +127,12 @@ export default {
             this.queryParam.endDate = dateString[1];
         },
         downloadFile () {
-            this.queryParam.downloadFlag = true;
-            this.$refs.table.refresh(true);
-            // window.location.href = 'http://res.turbovpns.com/GamezopData.xlsx';
+            this.$http.get(
+                url + '?downloadFlag=true',
+                Object.assign(this.queryParam)
+            ).then(res => {
+                window.location.href = 'http://res.turbovpns.com/GamezopData.xlsx';
+            });
         },
         onDelete: function (record) {
             var params = [];

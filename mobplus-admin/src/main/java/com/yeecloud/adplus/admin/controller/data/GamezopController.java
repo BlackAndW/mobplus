@@ -31,8 +31,6 @@ public class GamezopController {
 
     @GetMapping
     public Result getApiResult(@RequestParam Map<String, Object> params) throws IOException {
-        int pageNo = Integer.valueOf(params.get("pageNo").toString());
-        int pageSize = Integer.valueOf(params.get("pageSize").toString());
 
         JSONObject apiForm = new JSONObject();
         if (params.get("startDate") != null && params.get("endDate") != null) {
@@ -59,12 +57,15 @@ public class GamezopController {
         JSONArray resultList = jsonObject.getJSONArray("report");
         if (params.get("downloadFlag") != null && Boolean.valueOf(params.get("downloadFlag").toString())) {
             data2excel(resultList);
+            return Result.SUCCESS();
         }
+        int pageNo = Integer.valueOf(params.get("pageNo").toString());
+        int pageSize = Integer.valueOf(params.get("pageSize").toString());
         return Result.SUCCESS(OkHttpUtils.dataPage(resultList, pageNo, pageSize));
     }
 
     private void data2excel(JSONArray resultList) throws FileNotFoundException {
-        File file = new File("GamezopData.xlsx");
+        File file = new File("../GamezopData.xlsx");
         try(OutputStream os = new FileOutputStream(file);
             Workbook wb = new SXSSFWorkbook()){
             Sheet sheet = wb.createSheet();
