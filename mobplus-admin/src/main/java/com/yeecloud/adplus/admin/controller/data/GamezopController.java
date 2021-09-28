@@ -1,18 +1,23 @@
 package com.yeecloud.adplus.admin.controller.data;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.admin.util.OkHttpUtils;
 import com.yeecloud.meeto.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.Request;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: Leonard
@@ -51,7 +56,44 @@ public class GamezopController {
         if (jsonObject.get("statusCode") != null && Integer.valueOf(jsonObject.get("statusCode").toString()) != 200) {
             return Result.FAILURE("请求失败");
         }
-        List resultList = jsonObject.getJSONArray("report");
+        JSONArray resultList = jsonObject.getJSONArray("report");
+        if (params.get("downloadFlag") != null && Boolean.valueOf(params.get("downloadFlag").toString())) {
+            data2excel(resultList);
+        }
         return Result.SUCCESS(OkHttpUtils.dataPage(resultList, pageNo, pageSize));
+    }
+
+    private void data2excel(JSONArray resultList) throws FileNotFoundException {
+        File file = new File("GamezopData.xlsx");
+        try(OutputStream os = new FileOutputStream(file);
+            Workbook wb = new SXSSFWorkbook()){
+            Sheet sheet = wb.createSheet();
+            List<String> title = Arrays.asList("广告单元", "国家", "总展示次数", "ecpm", "总点击次数", "广告点击率", "总收入", "伙伴收入", "日期");
+            for (int rowNo = 0; rowNo < resultList.size(); rowNo++) {
+                Row row = sheet.createRow(rowNo);
+                List<String> dataRow = new ArrayList<>();
+                if (rowNo == 0) {
+                    dataRow = title;
+                } else {
+                    dataRow = Arrays.asList(
+                            resultList.getJSONObject(rowNo - 1).getString("ad_unit"),
+                            resultList.getJSONObject(rowNo - 1).getString("country"),
+                            resultList.getJSONObject(rowNo - 1).getString("total_impressions"),
+                            resultList.getJSONObject(rowNo - 1).getString("total_average_ecpm_usd"),
+                            resultList.getJSONObject(rowNo - 1).getString("total_clicks"),
+                            resultList.getJSONObject(rowNo - 1).getString("total_average_ctr"),
+                            resultList.getJSONObject(rowNo - 1).getString("total_revenue_usd"),
+                            resultList.getJSONObject(rowNo - 1).getString("partner_revenue_usd"),
+                            resultList.getJSONObject(rowNo - 1).getString("date")
+                    );
+                }
+                for (int cellNo = 0; cellNo < 9; cellNo++) {
+                    row.createCell(cellNo).setCellValue(dataRow.get(cellNo));
+                }
+            }
+            wb.write(os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

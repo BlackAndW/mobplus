@@ -11,6 +11,7 @@ import com.yeecloud.adplus.gateway.service.SdkService;
 import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.ParamUtils;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * 展示位管理
  * @author: Huang
  * @create: 2020-12-09 14:18
  */
@@ -31,10 +33,16 @@ public class SdkController {
     private SdkService sdkService;
 
     /**
-     * 国内
+     * 获取展示位列表(旧)
+     * @description 没有做版本渠道控制
+     * @param body body json字符串【appId: string】
+     * @param m 加密标识，m=1
+     * @param request
+     * @return
      */
+    @ApiDoc(stringResult = "{code:2000, message:'ok', result: {adv:{}, enabled: 'boolean', interval: 300000, pos:{appPositionCode:{cfg:{}, position: [{ad_type: 'int', adv: 'string', limit_click_count:'int', limit_show_count:'int', pos_id:'string', ratio:'int', type_ratio: 'int', unit_id: 'int'}]}}}}")
     @PostMapping("/cfg")
-    public String getSdkCfg(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m, HttpServletRequest request) {
+    public String getSdkCfg(@RequestBody String body, @RequestParam String m, HttpServletRequest request) {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
@@ -56,8 +64,14 @@ public class SdkController {
     }
 
     /**
-     * 海外
+     * 获取展示位列表(旧|海外版)
+     * @description 没有做版本渠道控制
+     * @param body body json字符串【appId: string】
+     * @param m 加密标识，m=1
+     * @param request
+     * @return
      */
+    @ApiDoc(stringResult = "{code:2000, message:'ok', result: {adv:{}, enabled: 'boolean', interval: 300000, pos:{appPositionCode:{cfg:{}, position: [{ad_type: 'int', adv: 'string', limit_click_count:'int', limit_show_count:'int', pos_id:'string', ratio:'int', type_ratio: 'int', unit_id: 'int'}]}}}}")
     @PostMapping("/en/cfg")
     public String getSdkCfgEn(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m, HttpServletRequest request) {
         boolean needCodec = m == null || m.trim().length() == 0;
@@ -81,10 +95,16 @@ public class SdkController {
     }
 
     /**
-     * 合并后的新接口
+     * 获取展示位列表(新)
+     * @description 有做版本渠道控制
+     * @param body json字符串【appId: string; channel: string; pkgVersion: string】
+     * @param m 加密标识，m=1
+     * @param request
+     * @return
      */
+    @ApiDoc(stringResult = "{code:2000, message:'ok', result: {adv:{}, enabled: 'boolean', interval: 300000, pos:{appPositionCode:{cfg:{}, position: [{ad_type: 'int', adv: 'string', limit_click_count:'int', limit_show_count:'int', pos_id:'string', ratio:'int', type_ratio: 'int', unit_id: 'int'}]}}}}")
     @PostMapping("/appPosition")
-    public String getAppPosition(@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m, HttpServletRequest request) {
+    public String getAppPosition(@RequestBody String body, @RequestParam String m, HttpServletRequest request) {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);

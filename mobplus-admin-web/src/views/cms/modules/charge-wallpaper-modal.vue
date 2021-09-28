@@ -95,7 +95,7 @@ export default {
             this.visible = true;
         },
         edit: function (record, typeList) {
-            this.title = '编辑壁纸:' + record.name;
+            this.title = '编辑壁纸:' + record.id;
             this.model = record;
             this.typeList = typeList;
             this.url = '/cms/charge/material/' + record.id;

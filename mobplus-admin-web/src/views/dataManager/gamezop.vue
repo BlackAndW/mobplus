@@ -24,6 +24,14 @@
                                 >查询</a-button>
                             </a-button-group>
                         </div>
+                        <a-form-item class="float-right">
+                                <div>
+                                    <a-button
+                                        icon="download"
+                                        @click="downloadFile"
+                                    >导出</a-button><br />
+                                </div>
+                            </a-form-item>
                     </a-form>
                     <!--       -->
                     <s-table
@@ -81,6 +89,10 @@ const columns = [
     {
         title: '伙伴收入',
         dataIndex: 'partner_revenue_usd'
+    },
+    {
+        title: '日期',
+        dataIndex: 'date'
     }
 ];
 
@@ -114,7 +126,11 @@ export default {
             this.queryParam.startDate = dateString[0];
             this.queryParam.endDate = dateString[1];
         },
-
+        downloadFile () {
+            this.queryParam.downloadFlag = true;
+            this.$refs.table.refresh(true);
+            // window.location.href = 'http://res.turbovpns.com/GamezopData.xlsx';
+        },
         onDelete: function (record) {
             var params = [];
             if (record !== undefined) {
