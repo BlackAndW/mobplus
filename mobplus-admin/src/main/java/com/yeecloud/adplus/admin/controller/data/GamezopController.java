@@ -65,7 +65,7 @@ public class GamezopController {
     }
 
     private void data2excel(JSONArray resultList) throws FileNotFoundException {
-        File file = new File("../GamezopData.xlsx");
+        File file = new File("/www/wwwroot/res.turbovpns.com/GamezopData.xlsx");
         try(OutputStream os = new FileOutputStream(file);
             Workbook wb = new SXSSFWorkbook()){
             Sheet sheet = wb.createSheet();
