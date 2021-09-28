@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author: Huang
@@ -21,6 +22,8 @@ public class AppPositionVO implements Serializable {
     private Integer status;
     private Integer limitShowConfig;
     private Integer limitClickConfig;
+    private String appVersionCheckList;
+    private String channelCheckList;
 
     private Integer createdBy;
     private Integer modifiedBy;

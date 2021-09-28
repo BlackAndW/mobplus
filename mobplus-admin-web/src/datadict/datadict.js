@@ -120,5 +120,6 @@ export const LevelList = [
 
 export const ChargeOrderList = [
     { key: '日期', value: 'createdAt' },
-    { key: '权重', value: 'weight' }
+    { key: '权重', value: 'weight' },
+    { key: '使用次数', value: 'useNum' }
 ];

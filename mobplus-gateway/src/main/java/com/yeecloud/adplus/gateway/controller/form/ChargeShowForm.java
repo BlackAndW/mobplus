@@ -16,7 +16,7 @@ public class ChargeShowForm {
     private Integer type;
 
     /** 素材 id */
-    private Integer vid;
+    private Integer id;
 
     /** 使用次数 传0或1 */
     private Integer useNum;

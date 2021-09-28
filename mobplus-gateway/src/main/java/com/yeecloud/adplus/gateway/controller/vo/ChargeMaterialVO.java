@@ -35,7 +35,7 @@ public class ChargeMaterialVO {
     /** 壁纸图片地址 */
     private String imgUrl;
 
-    /** 视频封面/壁纸 缩略图 */
+    /** 壁纸 缩略图 */
     private String thumbUrl;
 
     /** 虚拟使用次数(前端展示用) */

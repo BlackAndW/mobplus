@@ -56,14 +56,14 @@ public class ChargeShowController {
      * @throws ServiceException
      */
     @ApiDoc
-    @PostMapping("videoList")
+    @PostMapping("materialList")
     public Result<List<ChargeMaterialVO>> getMaterialList(@RequestBody ChargeShowForm form) throws ServiceException {
         return Result.SUCCESS(chargeService.queryMaterial(form));
     }
 
     /**
      * 更新素材数据
-     * @description 入参: [ vid, showNum, useNum ]
+     * @description 入参: [ id, showNum, useNum ]
      * @param form
      * @return
      */

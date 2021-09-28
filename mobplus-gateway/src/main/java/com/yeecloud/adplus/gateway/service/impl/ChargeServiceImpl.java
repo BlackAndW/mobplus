@@ -102,10 +102,10 @@ public class ChargeServiceImpl implements ChargeService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public synchronized Result uploadDataV(ChargeShowForm form) {
-        if (form.getVid() == null || form.getVid() < 1) {
+        if (form.getId() == null || form.getId() < 1) {
             return Result.FAILURE("id is null");
         }
-        ChargeMaterial material = chargeMaterialRepository.getOne(form.getVid());
+        ChargeMaterial material = chargeMaterialRepository.getOne(form.getId());
         if (form.getShowNum() != null && form.getShowNum() > 0) {
             material.setShowNum(material.getShowNum() + 1);
         }

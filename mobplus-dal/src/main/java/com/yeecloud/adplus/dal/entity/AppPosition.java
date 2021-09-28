@@ -53,6 +53,12 @@ public class AppPosition extends AuditorEntity {
     @Column(name = "n_limit_click_config")
     private Integer limitClickConfig = 0;
 
+    @Column(name = "n_app_version_list")
+    private String appVersionCheckList;
+
+    @Column(name = "n_channel_list")
+    private String channelCheckList;
+
     @Column(name = "n_status")
     private Integer status;
 

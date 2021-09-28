@@ -53,7 +53,7 @@ public class SdkServiceImpl implements SdkService {
 
     @Override
     public SdkCfgVO getSdkCfg(DeviceForm form) throws ServiceException {
-        deviceService.createOrUpdateOpenDevice(form);
+//        deviceService.createOrUpdateOpenDevice(form);
         // 根据安卓端请求的值查找对应的应用
         String appId = form.getAppId();
         App app = appRepository.findByAppId(appId);
@@ -79,13 +79,13 @@ public class SdkServiceImpl implements SdkService {
         // 获取应用对应广告平台的配置
         addAdvertiserList(vo, app);
         // 获取应用的所有展示位
-        addAppPositionList(vo, app, false);
+        addAppPositionList(form, vo, app, false);
         return vo;
     }
 
     @Override
     public SdkCfgVO getSdkCfgEn(DeviceForm form) throws ServiceException {
-        deviceService.createOrUpdateOpenDevice(form);
+//        deviceService.createOrUpdateOpenDevice(form);
         // 根据安卓端请求的值查找对应的应用
         String appId = form.getAppId();
         App app = appRepository.findByAppId(appId);
@@ -97,13 +97,13 @@ public class SdkServiceImpl implements SdkService {
         // 获取应用对应广告平台的配置
         addAdvertiserList(vo, app);
         // 获取应用的所有展示位
-        addAppPositionList(vo, app, true);
+        addAppPositionList(form, vo, app, true);
         return vo;
     }
 
     @Override
     public SdkCfgVO getPosList(DeviceForm form) throws ServiceException {
-        deviceService.createOrUpdateOpenDevice(form);
+//        deviceService.createOrUpdateOpenDevice(form);
         AppConfigVOV2 appConfigVOV2 = appConfigService.getAppProjectConfigV2(form);
         // 根据安卓端请求的值查找对应的应用
         String appId = form.getAppId();
@@ -113,9 +113,9 @@ public class SdkServiceImpl implements SdkService {
         }
         // 构造配置参数
         SdkCfgVO vo = new SdkCfgVO();
-        // 获取应用的所有展示位
+        // 获取应用对应版本渠道的展示位（默认获取所有）
         if (appConfigVOV2.getAdSwitch() == 1) {
-            addAppPositionList(vo, app, true);
+            addAppPositionList(form, vo, app, true);
         }
         return vo;
     }
@@ -128,7 +128,7 @@ public class SdkServiceImpl implements SdkService {
         return v;
     }
 
-    private void addAppPositionList(SdkCfgVO vo, App app, Boolean isEn) throws ServiceException {
+    private void addAppPositionList(DeviceForm form, SdkCfgVO vo, App app, Boolean isEn) throws ServiceException {
         List<AppPosition> appPositionList = appPositionRepository.findByApp(app);
         if (appPositionList.isEmpty()) {
             if (isEn) {
@@ -142,6 +142,14 @@ public class SdkServiceImpl implements SdkService {
             }
             if (appPosition.getStatus()==2){
                 continue;
+            }
+            if (!appPosition.getAppVersionCheckList().isEmpty() && !appPosition.getChannelCheckList().isEmpty()) {
+                if (null != form.getPkgVersion() || null != form.getChannel()) {
+                    if (!appPosition.getAppVersionCheckList().contains(form.getPkgVersion())
+                            || !appPosition.getChannelCheckList().contains(form.getChannel())) {
+                        continue;
+                    }
+                }
             }
             AppPosCfgVO appPosCfgVO = new AppPosCfgVO();
             // 获取展示位绑定的广告位

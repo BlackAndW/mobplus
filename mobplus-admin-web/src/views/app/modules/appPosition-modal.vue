@@ -19,6 +19,46 @@
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入展示位名称' }] }]"
                     />
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="版本">
+                    <a-checkbox :indeterminate="indeterminateVersion" :checked="checkAllVersion" @change="onVersionCheckAllChange">
+                        全选
+                    </a-checkbox>
+                    <a-checkbox-group
+                        @change="onVersionChange"
+                        v-decorator="[ 'appVersionCheckList', {initialValue: model.appVersionCheckList, rules: [ { required: true, message: '请选择版本' }] }]">
+                        <a-row class="checkbox-width">
+                            <a-col
+                                v-for="appVersion in appVersionList"
+                                :key="appVersion.id"
+                                span="6">
+                                    <a-checkbox
+                                        :value="appVersion.code"
+                                        >{{ appVersion.code }}
+                                    </a-checkbox>
+                            </a-col>
+                        </a-row>
+                    </a-checkbox-group>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="渠道">
+                    <a-checkbox :indeterminate="indeterminateChannel" :checked="checkAllChannel" @change="onChannelCheckAllChange">
+                        全选
+                    </a-checkbox>
+                    <a-checkbox-group
+                        @change="onChannelChange"
+                        v-decorator="[ 'channelCheckList', {initialValue: model.channelCheckList, rules: [ { required: true, message: '请选择渠道' }] }]">
+                        <a-row class="checkbox-width">
+                            <a-col
+                                v-for="channel in channelList"
+                                :key="channel.id"
+                                span="6">
+                                    <a-checkbox
+                                        :value="channel.code"
+                                        >{{ channel.name }}
+                                    </a-checkbox>
+                            </a-col>
+                        </a-row>
+                    </a-checkbox-group>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="全局展示次数配置">
                     <a-radio-group @change="changeShowConfig" button-style="solid" v-decorator="[ 'limitShowConfig', {initialValue: model.limitShowConfig || 0}]">
                         <a-radio-button :value="1">开启</a-radio-button>
@@ -58,7 +98,12 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-
+            appVersionList: [],
+            channelList: [],
+            indeterminateVersion: true,
+            checkAllVersion: false,
+            indeterminateChannel: true,
+            checkAllChannel: false,
             advList: [],
             limitShowConfigFlag: 0,
             limitClickConfigFlag: 0,
@@ -85,6 +130,8 @@ export default {
             this.limitShowConfigFlag = 0;
             this.limitClickConfigFlag = 0;
             this.visible = true;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         edit: function (record, currentApp) {
             this.title = '编辑展示位:' + record.id;
@@ -96,6 +143,8 @@ export default {
             this.visible = true;
             this.limitShowConfigFlag = this.model.limitShowConfig;
             this.limitClickConfigFlag = this.model.limitClickConfig;
+            this.loadAppVersionList(currentApp);
+            this.loadChannelList();
         },
         close: function (success) {
             this.$emit('close', success || false);
@@ -110,6 +159,50 @@ export default {
         },
         changeClickConfig (e) {
             this.limitClickConfigFlag = e.target.value;
+        },
+        onVersionChange () {
+            this.$nextTick(() => {
+                const checkedList = this.form.getFieldValue('appVersionCheckList');
+                this.indeterminateVersion = !!checkedList.length && checkedList.length < this.appVersionList.length;
+                this.checkAllVersion = checkedList.length === this.appVersionList.length;
+            });
+        },
+        onVersionCheckAllChange (e) {
+            const checkAllList = [];
+            this.appVersionList.forEach(item => {
+                checkAllList.push(item.code);
+            });
+            this.form.setFieldsValue({
+                'appVersionCheckList': e.target.checked ? checkAllList : []
+            });
+            this.indeterminateVersion = false;
+            this.checkAllVersion = e.target.checked;
+        },
+        onChannelChange () {
+            this.$nextTick(() => {
+                const checkedList = this.form.getFieldValue('channelCheckList');
+                this.indeterminateChannel = !!checkedList.length && checkedList.length < this.channelList.length;
+                this.checkAllChannel = checkedList.length === this.channelList.length;
+            });
+        },
+        onChannelCheckAllChange (e) {
+            const checkAllList = [];
+            this.channelList.forEach(item => {
+                checkAllList.push(item.code);
+            });
+            this.form.setFieldsValue({
+                'channelCheckList': e.target.checked ? checkAllList : []
+            });
+            this.indeterminateChannel = false;
+            this.checkAllChannel = e.target.checked;
+        },
+        loadChannelList: async function () {
+            this.channelList = await this.$http.get('/release/channel/sct', {});
+        },
+        loadAppVersionList: async function (currentApp) {
+            this.appVersionList = await this.$http.get('/app/version/sct', {
+                appId: currentApp.key
+            });
         },
         onSubmit: function () {
             const $self = this;
@@ -139,5 +232,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+    .checkbox-width {
+        width: 400px;
+    }
 </style>

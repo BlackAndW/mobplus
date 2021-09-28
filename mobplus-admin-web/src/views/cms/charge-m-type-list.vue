@@ -68,6 +68,7 @@
                 <template slot="columnSlot" slot-scope="text">
                     <span v-if="text==='createdAt'">日期</span>
                     <span v-else-if="text==='weight'">权重</span>
+                    <span v-else-if="text==='useNum'">使用次数</span>
                 </template>
                 <template slot="orderSlot" slot-scope="text">
                     <span v-if="text===1">降序</span>
