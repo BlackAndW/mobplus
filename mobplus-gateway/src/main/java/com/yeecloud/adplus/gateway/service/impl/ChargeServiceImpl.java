@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,13 +70,11 @@ public class ChargeServiceImpl implements ChargeService {
             style = form.getStyle();
         }
         Integer type = form.getType();
-        // 默认按创建时间降序排
-        String orderProperty = "createdAt";
-        Integer order = 1;
-        if (type != null && type > 0 && !(style == 1 && type == 1) && !(style == 2 && type == 100)) {
-            ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
-            orderProperty = mType.getOrderColumn();
-            order = mType.getOrder();
+        List<Integer> allStyle = Arrays.asList(1, 2, 100, 107);
+        ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
+        String orderProperty = mType.getOrderColumn();
+        int order = mType.getOrder();
+        if (type > 0 && !allStyle.contains(type)) {
             predicate = ExpressionUtils.and(predicate, material.type.id.eq(type));
         }
         predicate = ExpressionUtils.and(predicate, material.style.eq(style));

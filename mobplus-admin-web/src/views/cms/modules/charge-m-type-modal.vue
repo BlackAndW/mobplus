@@ -90,13 +90,13 @@ export default {
             this.confirmLoading = false;
             this.visible = true;
         },
-        handleChangeOrder (params) {
-            if (params === 'createdAt' || params === 'weight') {
-                this.form.setFieldsValue({ order: 1 });
-            } else {
-                this.form.setFieldsValue({ order: 2 });
-            }
-        },
+        // handleChangeOrder (params) {
+        //     if (params === 'createdAt' || params === 'weight') {
+        //         this.form.setFieldsValue({ order: 1 });
+        //     } else {
+        //         this.form.setFieldsValue({ order: 2 });
+        //     }
+        // },
         close: function (success) {
             this.$emit('close', success || false);
             this.visible = false;
