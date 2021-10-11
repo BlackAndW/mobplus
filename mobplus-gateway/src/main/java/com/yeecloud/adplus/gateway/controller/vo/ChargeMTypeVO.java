@@ -16,7 +16,7 @@ public class ChargeMTypeVO {
     /** 类型名 */
     private String name;
 
-    /** 英文名 */
+    /** 翻译后的类型名(默认英文) */
     private String enName;
 
     /** 排序根据 例如：日期，权重 */

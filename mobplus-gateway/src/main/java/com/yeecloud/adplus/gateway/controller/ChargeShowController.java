@@ -43,8 +43,8 @@ public class ChargeShowController {
      */
     @ApiDoc
     @GetMapping("type")
-    public Result<List<ChargeMTypeVO>> getType(@RequestParam Integer style) {
-        List<ChargeMTypeVO> result = chargeService.queryTypeList(style);
+    public Result<List<ChargeMTypeVO>> getType(@RequestParam Integer style, @RequestParam(required = false) String toLang) {
+        List<ChargeMTypeVO> result = chargeService.queryTypeList(style, toLang);
         return Result.SUCCESS(result);
     }
 

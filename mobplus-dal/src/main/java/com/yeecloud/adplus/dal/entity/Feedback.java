@@ -20,12 +20,15 @@ public class Feedback extends AuditorEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /** 满意度1(满意)~4(不满意) */
     @Column(name = "n_evaluate")
     private Integer evaluate;
 
+    /** 不准确的类型 */
     @Column(name = "n_err_type")
     private String errType;
 
+    /** 意见文本 */
     @Column(name = "n_suggestion")
     private String suggestion;
 }

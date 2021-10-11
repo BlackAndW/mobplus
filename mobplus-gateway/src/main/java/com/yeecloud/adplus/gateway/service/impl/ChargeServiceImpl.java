@@ -7,10 +7,12 @@ import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
+import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMaterialVO;
 import com.yeecloud.adplus.gateway.service.ChargeService;
+import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +41,9 @@ public class ChargeServiceImpl implements ChargeService {
 
     @Autowired
     ChargeMTypeRepository chargeMTypeRepository;
+
+    @Autowired
+    TranslateService translateService;
 
     @Override
     public List<ChargeBannerVO> queryBanner() throws ServiceException {
@@ -116,13 +121,20 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
-    public List<ChargeMTypeVO> queryTypeList(Integer style) {
+    public List<ChargeMTypeVO> queryTypeList(Integer style, String toLang) {
         QChargeMType type = QChargeMType.chargeMType;
         Predicate predicate = type.deleted.eq(false);
         if (style != null && style > 0) {
             predicate = ExpressionUtils.and(predicate, type.style.eq(style));
             Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "rankOrder"));
             List<ChargeMType> resultList =   (List<ChargeMType>)chargeMTypeRepository.findAll(predicate, sort);
+            if (toLang != null && toLang.length() > 0) {
+                resultList.forEach(result -> {
+                    TranslateForm form = new TranslateForm(result.getEnName(), toLang);
+                    String newName = translateService.translation(form);
+                    result.setEnName(newName);
+                });
+            }
             return convertMType(resultList);
         }
         return new ArrayList<>();

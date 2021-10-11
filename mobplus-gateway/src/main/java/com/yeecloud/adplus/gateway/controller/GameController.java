@@ -15,6 +15,7 @@ import com.yeecloud.meeto.common.codec.Codec;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import io.github.yedaxia.apidocs.ApiDoc;
+import io.github.yedaxia.apidocs.Ignore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -86,9 +87,12 @@ public class GameController {
      * @return
      * @throws ServiceException
      */
-    @ApiDoc(stringResult = "{ code:2000, message:'ok', result: { gameType: [{keyName: 'keyValue'}...], ... } }")
+    @Ignore
+    @ApiDoc(stringResult = "{ code:2000, message:'ok', result: { gameType: [{keyName: 'keyValue'}] } }")
     @GetMapping("list")
     public Result<JSONObject> getGameListNew() throws ServiceException {
+        log.info("start to get list");
+        long startTime = System.currentTimeMillis();
         List<Game> gameList = gameService.findGameListNew();
         JSONObject gameDataList = new JSONObject();
         JSONArray gameArray = new JSONArray();
@@ -109,6 +113,8 @@ public class GameController {
             }
         }
         gameDataList.put(curType, gameArray);
+        long endTime = System.currentTimeMillis();
+        log.info("end to get list, total time is:{}", endTime - startTime);
         return Result.SUCCESS(gameDataList);
     }
 
