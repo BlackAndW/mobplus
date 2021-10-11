@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.apache.commons.beanutils.NewBeanUtils;
 import com.yeecloud.adplus.dal.entity.Feedback;
 import com.yeecloud.adplus.dal.repository.FeedbackRepository;
+import com.yeecloud.adplus.gateway.controller.form.FeedbackForm;
 import com.yeecloud.adplus.gateway.controller.form.ScannerForm;
 import com.yeecloud.adplus.gateway.controller.form.ScannerType;
 import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
@@ -200,9 +201,11 @@ public class ScannerServiceImpl implements ScannerService {
 //    }
 
     @Override
-    public void insertFeedbackLog(Feedback form) {
+    public void insertFeedbackLog(FeedbackForm form) {
         if (form != null) {
-            feedbackRepository.save(form);
+            Feedback entity = new Feedback();
+            NewBeanUtils.copyProperties(entity, form, true);
+            feedbackRepository.save(entity);
         }
     }
 }

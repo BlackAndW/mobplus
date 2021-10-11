@@ -33,7 +33,7 @@ public class AppConfigController {
 
     /**
      * 获取app项目配置v1
-     * @description 备注: 1为开启, 2为关闭
+     * @description 返回result: 1为开启, 2为关闭
      * @param body  json字符串【appId: string; projectCode: string】
      * @param m 加密标识，m=1
      * @return
@@ -62,7 +62,7 @@ public class AppConfigController {
 
     /**
      * 获取app项目配置v2
-     * @description 备注: 1为开启, 2为关闭
+     * @description 返回result: 1为开启, 2为关闭
      * @param body json字符串【appId: string; channel: string; pkgVersion: string】
      * @param m 加密标识，m=1
      * @return

@@ -2,6 +2,7 @@ package com.yeecloud.adplus.gateway.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.yeecloud.adplus.dal.entity.Feedback;
+import com.yeecloud.adplus.gateway.controller.form.FeedbackForm;
 import com.yeecloud.adplus.gateway.controller.form.ScannerForm;
 import com.yeecloud.adplus.gateway.controller.vo.ScannerVO;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -20,5 +21,5 @@ public interface ScannerService {
 
     List<ScannerVO> getResult(ScannerForm form) throws IOException, ServiceException;
 
-    void insertFeedbackLog(Feedback form);
+    void insertFeedbackLog(FeedbackForm form);
 }

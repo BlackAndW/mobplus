@@ -11,9 +11,12 @@ import java.math.BigDecimal;
 @Data
 public class ScannerVO {
 
+    /** 结果名 */
     private String name;
 
+    /** 识别准确率 */
     private BigDecimal score;
 
+    /** 结果描述 */
     private String des;
 }

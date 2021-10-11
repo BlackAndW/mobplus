@@ -4,17 +4,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.google.cloud.vision.v1.*;
 import com.google.protobuf.ByteString;
 import com.yeecloud.adplus.dal.entity.Feedback;
+import com.yeecloud.adplus.gateway.controller.form.FeedbackForm;
 import com.yeecloud.adplus.gateway.controller.form.ScannerForm;
 import com.yeecloud.adplus.gateway.controller.vo.ScannerVO;
 import com.yeecloud.adplus.gateway.service.ScannerService;
 import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.Base64Util;
+import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
-import com.yeecloud.meeto.common.result.Result;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 智能识图
  * @author: Leonard
  * @create: 2021/6/22
  */
@@ -67,10 +68,19 @@ public class ScannerController {
         return Result.SUCCESS(result);
     }
 
-
+    /**
+     * 图像识别
+     * @param form
+     * @return
+     * @throws IOException
+     * @throws ServiceException
+     */
+    @ApiDoc
     @RequestMapping("/imageScan")
-    public Result imageScan(@RequestBody ScannerForm form) throws IOException, ServiceException {
+    public Result<List<ScannerVO>> imageScan(@RequestBody ScannerForm form) throws IOException, ServiceException {
         try {
+            String test = "";
+            System.out.println(test.substring(2));
             String imgParam = URLEncoder.encode(form.getImageBase64(), "UTF-8");
             form.setImageBase64(imgParam);
             List<ScannerVO> result = scannerService.getResult(form);
@@ -80,8 +90,14 @@ public class ScannerController {
         }
     }
 
+    /**
+     * 用户反馈
+     * @param form
+     * @return
+     */
+    @ApiDoc
     @RequestMapping("/feedback")
-    public Result feedback(@RequestBody Feedback form) {
+    public Result feedback(@RequestBody FeedbackForm form) {
         scannerService.insertFeedbackLog(form);
         return Result.SUCCESS();
     }
