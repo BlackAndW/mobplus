@@ -21,5 +21,5 @@ public interface ChargeService {
 
     Result uploadDataV(ChargeShowForm form);
 
-    List<ChargeMTypeVO> queryTypeList(Integer style);
+    List<ChargeMTypeVO> queryTypeList(Integer style, String toLang);
 }

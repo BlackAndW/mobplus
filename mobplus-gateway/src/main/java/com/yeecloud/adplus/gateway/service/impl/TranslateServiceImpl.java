@@ -52,7 +52,8 @@ public class TranslateServiceImpl implements TranslateService {
     public String translation(TranslateForm form) {
         long transStartTime = System.currentTimeMillis();
         Translate translate = getTranslateService();
-        if (!checkSupportedLang(form.getToLang(), translate)) return null;
+        // 语言不支持则不翻译
+        if (!checkSupportedLang(form.getToLang(), translate)) return form.getSourceString();
         Translation translation =
                 translate.translate(
                         form.getSourceString(),
