@@ -22,6 +22,19 @@
                                     @change="onChangeDate" />
                                 </a-range-picker>
                             </a-form-item>
+                            <a-form-item label="反馈类型">
+                                <a-select placeholder="反馈类型" v-model="queryParam.type" style="width:120px">
+                                    <a-select-option :value="0">不限</a-select-option>
+                                    <a-select-option :value="1">应用崩溃</a-select-option>
+                                    <a-select-option :value="2">无响应</a-select-option>
+                                    <a-select-option :value="3">功能异常</a-select-option>
+                                    <a-select-option :value="4">消耗流量</a-select-option>
+                                    <a-select-option :value="5">投诉</a-select-option>
+                                    <a-select-option :value="6">广告</a-select-option>
+                                    <a-select-option :value="7">通知</a-select-option>
+                                    <a-select-option :value="8">建议</a-select-option>
+                                </a-select>
+                            </a-form-item>
                             <a-form-item label="处理状态">
                                 <a-select placeholder="处理状态" v-model="queryParam.status" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
@@ -63,6 +76,7 @@
                         :columns="columns"
                         :data="loadData"
                         :lazy="false"
+                        :scroll="{ x: 1800 }"
                     >
                         <a-row slot="expandedRowRender" slot-scope="record" class="table-expand">
                             <a-col :span="24">
@@ -72,6 +86,16 @@
                             </a-col>
                         </a-row>
                         <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
+                        <template slot="typeSlot" slot-scope="text">
+                            <span v-if="text===1">应用崩溃</span>
+                            <span v-else-if="text===2">无响应</span>
+                            <span v-else-if="text===3">功能异常</span>
+                            <span v-else-if="text===4">消耗流量</span>
+                            <span v-else-if="text===5">投诉</span>
+                            <span v-else-if="text===6">广告</span>
+                            <span v-else-if="text===7">通知</span>
+                            <span v-else-if="text===8">建议</span>
+                        </template>
                         <template slot="statusSlot" slot-scope="text">
                             <span v-if="text===1">未处理</span>
                             <span v-else-if="text===2">已处理</span>
@@ -96,44 +120,59 @@ import moment from 'moment';
 const columns = [
     {
         title: '应用名',
-        dataIndex: 'appName'
+        dataIndex: 'appName',
+        width: 150,
+        fixed: 'left'
     },
     {
         title: '版本',
-        dataIndex: 'version'
+        dataIndex: 'version',
+        align: 'center',
+        width: 80
     },
     {
         title: '设备名',
+        align: 'center',
         dataIndex: 'device'
     },
     {
         title: '系统',
-        dataIndex: 'os'
+        dataIndex: 'os',
+        align: 'center',
+        width: 50
     },
     {
         title: 'ip',
-        dataIndex: 'ip'
+        dataIndex: 'ip',
+        align: 'center',
+        width: 120
     },
     {
         title: '地区',
-        dataIndex: 'area'
+        dataIndex: 'area',
+        align: 'center',
+        width: 150
     },
-    // {
-    //     title: '电话',
-    //     dataIndex: 'phone'
-    // },
     {
         title: '留言评价内容',
         dataIndex: 'content',
-        width: 200
+        width: 400
     },
     {
         title: '联系邮箱',
-        dataIndex: 'email'
+        dataIndex: 'email',
+        align: 'center'
+    },
+    {
+        title: '反馈类型',
+        dataIndex: 'type',
+        align: 'center',
+        scopedSlots: { customRender: 'typeSlot' }
     },
     {
         title: '处理状态',
         dataIndex: 'status',
+        align: 'center',
         scopedSlots: { customRender: 'statusSlot' }
     },
     {
@@ -143,6 +182,7 @@ const columns = [
     {
         title: '日期',
         dataIndex: 'createdAt',
+        align: 'center',
         scopedSlots: { customRender: 'dateSlot' },
         customRender: (text, record) => {
             return moment(text).format('YYYY-MM-DD');
@@ -152,6 +192,8 @@ const columns = [
         title: '操作',
         dataIndex: 'action',
         align: 'center',
+        width: 80,
+        fixed: 'right',
         scopedSlots: { customRender: 'actionSlot' }
     }
 ];
@@ -187,8 +229,12 @@ export default {
     methods: {
         moment,
         onChangeDate (date, dateString) {
-            this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
-            this.queryParam.endTimeStr = dateString[1] + ' 23:59:59';
+            if (date.length > 0) {
+                this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
+                this.queryParam.endTimeStr = dateString[1] + ' 23:59:59';
+            } else {
+                this.queryParam.startTimeStr = this.queryParam.endTimeStr = '';
+            }
         },
         onDelete: function (record) {
             var params = [];

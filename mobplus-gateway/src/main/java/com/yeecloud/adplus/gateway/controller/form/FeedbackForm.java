@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 public class FeedbackForm {
 
-    /** 满意度1(满意)~4(不满意) */
+    /** ---满意度1(满意)~4(不满意) */
     private Integer evaluate;
 
-    /** 不准确的类型 */
+    /** ---不准确的类型 */
     private String errType;
 
-    /** 意见文本 */
+    /** ---意见文本 */
     private String suggestion;
 }

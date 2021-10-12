@@ -152,8 +152,12 @@ export default {
     computed: {},
     methods: {
         onChangeDate (date, dateString) {
-            this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
-            this.queryParam.endTimeStr = dateString[1] + ' 23:59:59';
+            if (date.length > 0) {
+                this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
+                this.queryParam.endTimeStr = dateString[1] + ' 23:59:59';
+            } else {
+                this.queryParam.startTimeStr = this.queryParam.endTimeStr = '';
+            }
         },
 
         onDelete: function (record) {

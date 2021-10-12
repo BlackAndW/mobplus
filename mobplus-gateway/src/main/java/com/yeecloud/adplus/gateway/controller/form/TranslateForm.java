@@ -29,7 +29,7 @@ public class TranslateForm implements Serializable {
     @Ignore
     String fromLang;
 
-    /** 目标语言 */
+    /** ---目标语言 */
     String toLang;
 
     /** 针对简单字符串文本的构造器 */
