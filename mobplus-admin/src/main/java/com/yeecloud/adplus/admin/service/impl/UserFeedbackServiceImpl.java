@@ -47,6 +47,10 @@ public class UserFeedbackServiceImpl implements UserFeedbackService {
         if (status != null && status > 0) {
             predicate = ExpressionUtils.and(predicate, QuserFeedback.status.eq(status));
         }
+        Integer type = query.get("type", Integer.class);
+        if (type != null && type > 0) {
+            predicate = ExpressionUtils.and(predicate, QuserFeedback.type.eq(type));
+        }
         // 按时间选择框筛选数据，默认展示所有数据
         String startTimeStr = query.get("startTimeStr", String.class);
         String endTimeStr = query.get("endTimeStr", String.class);

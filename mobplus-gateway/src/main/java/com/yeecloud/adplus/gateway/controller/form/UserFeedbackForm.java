@@ -9,21 +9,24 @@ import lombok.Data;
 @Data
 public class UserFeedbackForm {
 
-    /** appId "必传" */
+    /** ---appId ---必传 */
     private String appId;
 
-    /** 版本号 "必传" */
+    /** ---版本号 ---必传 */
     private String version;
 
-    /** 设备名 */
+    /** ---设备名 */
     private String device;
 
-    /** 操作系统 */
+    /** ---操作系统 */
     private String os;
 
-    /** 评价内容 */
+    /** ---评价内容 */
     private String content;
 
-    /** email */
+    /** ---email */
     private String email;
+
+    /** ---反馈类型 ---1:应用崩溃，2:无响应，3:功能异常，4:消耗流量，5:投诉，6:广告，7:通知，8:建议 */
+    private Integer type;
 }

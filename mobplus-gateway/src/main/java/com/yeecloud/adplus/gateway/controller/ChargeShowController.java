@@ -40,6 +40,7 @@ public class ChargeShowController {
     /**
      * 获取类型列表
      * @param style 1:视频;2:壁纸
+     * @param toLang 语言简称,例如:zh, en
      */
     @ApiDoc
     @GetMapping("type")

@@ -50,6 +50,10 @@ public class UserFeedback extends AuditorEntity{
     @Column(name = "n_email")
     private String email;
 
+    /** 反馈类型 */
+    @Column(name = "n_type")
+    private Integer type;
+
     /** 处理状态：1：未处理，2：已处理 */
     @Column(name = "n_status")
     private Integer status = 1;

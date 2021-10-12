@@ -181,8 +181,6 @@ export default {
             }
         },
         onChangeDate (date, dateString) {
-            console.log(date);
-            console.log(dateString);
             this.queryParam.dateRange = [dateString[0], dateString[1]];
         },
         getAccountList () {

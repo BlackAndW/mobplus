@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user/feedback")
+    @RequestMapping("/api/v1/user/feedback")
 public class UserFeedbackController {
 
     @Autowired

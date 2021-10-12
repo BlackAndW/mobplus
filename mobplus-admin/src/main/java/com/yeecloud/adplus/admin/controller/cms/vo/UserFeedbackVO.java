@@ -21,6 +21,7 @@ public class UserFeedbackVO {
     private String area;
     private String content;
     private String email;
+    private Integer type;
     private Integer status;
     private String result;
     private String remark;
