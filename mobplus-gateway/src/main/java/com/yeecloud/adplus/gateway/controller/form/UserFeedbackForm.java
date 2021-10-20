@@ -2,6 +2,8 @@ package com.yeecloud.adplus.gateway.controller.form;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author: Leonard
  * @create: 2021/9/3
@@ -9,10 +11,12 @@ import lombok.Data;
 @Data
 public class UserFeedbackForm {
 
-    /** ---appId ---必传 */
+    /** ---appId */
+    @NotNull
     private String appId;
 
     /** ---版本号 ---必传 */
+    @NotNull
     private String version;
 
     /** ---设备名 */

@@ -63,6 +63,10 @@ public class AppActivityController {
         return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
     }
 
+    /**
+     * 获取系统时间
+     * @return
+     */
     @RequestMapping("/today")
     public long getToday() {
         return new Date().getTime();

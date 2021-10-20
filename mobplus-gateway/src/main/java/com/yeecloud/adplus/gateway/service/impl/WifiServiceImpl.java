@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.gateway.service.impl;
 
+import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.dal.entity.QWifiInfo;
@@ -41,7 +42,7 @@ public class WifiServiceImpl implements WifiService {
             double distance = GPSUtil.GetPointDistance(wifiInfo.getGps(), wifiInfoItem.getGps());
             if (distance <= distanceRange) {
                 WifiInfoVO vo = new WifiInfoVO();
-                BeanUtils.copyProperties(wifiInfoItem, vo);
+                NewBeanUtils.copyProperties(vo, wifiInfoItem, true);
                 vo.setDistance(distance);
                 resultList.add(vo);
             }
@@ -56,7 +57,7 @@ public class WifiServiceImpl implements WifiService {
         predicate = ExpressionUtils.and(predicate, qWifiInfo.gps.eq(wifiInfo.getGps()));
         WifiInfo result = wifiInfoRepository.findOne(predicate).orElse(null);
         WifiInfoVO vo = new WifiInfoVO();
-        BeanUtils.copyProperties(result, vo);
+        NewBeanUtils.copyProperties(vo, result, true);
         return vo;
     }
 

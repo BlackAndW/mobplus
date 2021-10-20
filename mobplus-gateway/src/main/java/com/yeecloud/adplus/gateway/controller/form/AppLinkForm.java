@@ -9,15 +9,15 @@ import lombok.Data;
 @Data
 public class AppLinkForm {
 
-    /** ---链接id */
+    /** 链接id */
     private Integer id;
 
-    /** ---appId */
+    /** appId */
     private String appId;
 
-    /** ---点击次数 ---传0或1 */
+    /** 点击次数 传0或1 */
     private Integer clickNum;
 
-    /** ---展示次数 ---传0或1 */
+    /** 展示次数 传0或1 */
     private Integer showNum;
 }

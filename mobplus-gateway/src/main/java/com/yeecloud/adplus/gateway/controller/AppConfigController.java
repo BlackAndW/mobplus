@@ -3,6 +3,7 @@ package com.yeecloud.adplus.gateway.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.yeecloud.adplus.gateway.controller.form.AppLinkForm;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
 import com.yeecloud.adplus.gateway.controller.vo.AppConfigVO;
 import com.yeecloud.adplus.gateway.controller.vo.AppConfigVOV2;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,13 +36,17 @@ public class AppConfigController {
     /**
      * 获取app项目配置v1
      * @description 返回result: 1为开启, 2为关闭
-     * @param body  json字符串【appId: string; projectCode: string】
      * @param m 加密标识，m=1
+     * @param appId 【body参数】appId
+     * @param projectCode 【body参数】项目编码
      * @return
      */
     @ApiDoc(stringResult = "{ code:2000, message:'ok', result: {ad: 1, cms: 1, index: 1} }")
     @PostMapping("/api/v1/app/conf")
-    public String getAppProjectConfigV1(@RequestBody(required = true) String body, @RequestParam(value = "m", required = true) String m) {
+    public String getAppProjectConfigV1(@RequestBody String body,
+                                        @RequestParam(required = true, defaultValue = "") String appId,
+                                        @RequestParam(required = true, defaultValue = "") String projectCode,
+                                        @RequestParam String m) {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
@@ -63,13 +69,18 @@ public class AppConfigController {
     /**
      * 获取app项目配置v2
      * @description 返回result: 1为开启, 2为关闭
-     * @param body json字符串【appId: string; channel: string; pkgVersion: string】
      * @param m 加密标识，m=1
-     * @return
+     * @param appId 【body参数】appId
+     * @param channel 【body参数】渠道
+     * @param pkgVersion 【body参数】版本
      */
     @ApiDoc(stringResult = "{ code:2000, message:'ok', result: {ad: 1, content: 1, index: 1} }")
     @PostMapping("/api/v2/app/conf")
-    public String getAppProjectConfigV2(@RequestBody(required = true) String body, @RequestParam(value = "m", required = true) String m) {
+    public String getAppProjectConfigV2(@RequestBody String body,
+                                        @RequestParam(required = true, defaultValue = "") String appId,
+                                        @RequestParam(required = true, defaultValue = "") String channel,
+                                        @RequestParam(required = true, defaultValue = "") String pkgVersion,
+                                        @RequestParam String m) {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
@@ -91,13 +102,19 @@ public class AppConfigController {
 
     /**
      * 获取应用配置
-     * @param body json字符串【appId: string; channel: string; pkgVersion: string】
      * @param m 加密标识，m=1
+     * @param appId 【body参数】appId
+     * @param channel 【body参数】渠道
+     * @param pkgVersion 【body参数】版本
      * @return
      */
     @ApiDoc(stringResult = "{ code:2000, message:'ok', result: { keyName: 'keyValue' } }")
     @PostMapping("/api/v1/app/mobile/conf")
-    public String getAppConfig(@RequestBody(required = true) String body, @RequestParam(value = "m", required = true) String m) {
+    public String getAppConfig(@RequestBody String body,
+                               @RequestParam(required = true, defaultValue = "") String appId,
+                               @RequestParam(required = true, defaultValue = "") String channel,
+                               @RequestParam(required = true, defaultValue = "") String pkgVersion,
+                               @RequestParam String m) {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
