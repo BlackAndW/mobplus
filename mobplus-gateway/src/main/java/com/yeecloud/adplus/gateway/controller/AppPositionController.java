@@ -34,14 +34,20 @@ public class AppPositionController {
 
     /**
      * 获取配置管理（项目）中的JSON格式的配置
-     * @param body json字符串【appId: string; channel: string; pkgVersion: string】
      * @param m 加密标识，m=1
+     * @param appId 【body参数】appId
+     * @param channel 【body参数】渠道
+     * @param pkgVersion 【body参数】版本
      * @return
      * @throws ServiceException
      */
     @ApiDoc
     @RequestMapping("/position")
-    public Result<List> getAppPositionList (@RequestBody String body, @RequestParam(value = "m") String m) throws ServiceException {
+    public Result<List> getAppPositionList (@RequestBody String body,
+                                            @RequestParam(required = true, defaultValue = "") String appId,
+                                            @RequestParam(required = true, defaultValue = "") String channel,
+                                            @RequestParam(required = true, defaultValue = "") String pkgVersion,
+                                            @RequestParam String m) throws ServiceException {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);
@@ -61,14 +67,20 @@ public class AppPositionController {
 
     /**
      * 功能管理-获取列表
-     * @param body json字符串【appId: string; channel: string; pkgVersion: string】
      * @param m 加密标识，m=1
+     * @param appId 【body参数】appId
+     * @param channel 【body参数】渠道
+     * @param pkgVersion 【body参数】版本
      * @return
      * @throws ServiceException
      */
     @ApiDoc
     @RequestMapping("/positionNew")
-    public Result<List<AppFunctionVO>> getAppPositionListNew (@RequestBody(required = false) String body, @RequestParam(value = "m", required = false) String m) throws ServiceException {
+    public Result<List<AppFunctionVO>> getAppPositionListNew (@RequestBody String body,
+                                                              @RequestParam(required = true, defaultValue = "") String appId,
+                                                              @RequestParam(required = true, defaultValue = "") String channel,
+                                                              @RequestParam(required = true, defaultValue = "") String pkgVersion,
+                                                              @RequestParam String m) throws ServiceException {
         boolean needCodec = m == null || m.trim().length() == 0;
         if (body != null && needCodec) {
             body = Codec.decode(body);

@@ -31,7 +31,7 @@ public class TranslateServiceImpl implements TranslateService {
 
         Translate translate = getTranslateService();
 
-        if (!checkSupportedLang(form.getToLang(), translate)) return null;
+        if (!checkSupportedLang(form.getToLang(), translate)) return form.getSourceList();
 
         List<Translation> translations =
                 translate.translate(

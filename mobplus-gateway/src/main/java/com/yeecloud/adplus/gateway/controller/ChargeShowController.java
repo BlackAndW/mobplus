@@ -51,26 +51,34 @@ public class ChargeShowController {
 
     /**
      * 获取素材列表
-     * @description 入参: [ pageNo, type ,style ] ('全部'类型的typeId为1, 壁纸的为100)
-     * @param form
+     * @param pageNo 【body参数】页码 起始页为0
+     * @param type 【body参数】类型id ('全部'类型的typeId为1, 壁纸的为100)
+     * @param style 【body参数】素材类型 1:视频(默认), 2:壁纸
      * @return
      * @throws ServiceException
      */
     @ApiDoc
     @PostMapping("materialList")
-    public Result<List<ChargeMaterialVO>> getMaterialList(@RequestBody ChargeShowForm form) throws ServiceException {
+    public Result<List<ChargeMaterialVO>> getMaterialList(@RequestBody ChargeShowForm form,
+                                                          @RequestParam(required = true, defaultValue = "0") Integer pageNo,
+                                                          @RequestParam(required = true, defaultValue = "0") Integer type,
+                                                          @RequestParam(required = true, defaultValue = "0") Integer style) throws ServiceException {
         return Result.SUCCESS(chargeService.queryMaterial(form));
     }
 
     /**
      * 更新素材数据
-     * @description 入参: [ id, showNum, useNum ]
-     * @param form
+     * @param id 【body参数】素材id
+     * @param showNum 【body参数】展示次数 传0或1
+     * @param useNum 【body参数】使用次数 传0或1
      * @return
      */
     @ApiDoc
     @PostMapping("uploadData")
-    public Result<String> uploadData(@RequestBody ChargeShowForm form) {
+    public Result<String> uploadData(@RequestBody ChargeShowForm form,
+                                     @RequestParam(required = true, defaultValue = "0") Integer id,
+                                     @RequestParam(required = true, defaultValue = "0") Integer showNum,
+                                     @RequestParam(required = true, defaultValue = "0") Integer useNum) {
         return chargeService.uploadDataV(form);
     }
 

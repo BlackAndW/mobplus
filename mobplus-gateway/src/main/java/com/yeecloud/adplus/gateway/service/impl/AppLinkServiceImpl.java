@@ -8,11 +8,10 @@ import com.yeecloud.adplus.dal.repository.AppLinkLogRepository;
 import com.yeecloud.adplus.dal.repository.AppLinkRepository;
 import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.gateway.controller.form.AppLinkForm;
-import com.yeecloud.adplus.gateway.controller.form.GameForm;
 import com.yeecloud.adplus.gateway.controller.vo.AppLinkVO;
 import com.yeecloud.adplus.gateway.service.AppLinkService;
 import com.yeecloud.adplus.gateway.util.EmptyUtil;
-import com.yeecloud.meeto.common.result.Result;
+import com.yeecloud.adplus.gateway.util.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
@@ -24,7 +23,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 

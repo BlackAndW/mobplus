@@ -55,13 +55,22 @@ public class GamezopController {
             return Result.FAILURE("请求失败");
         }
         JSONArray resultList = jsonObject.getJSONArray("report");
+        // 根据点击次数排序
+        JSONArray sortedArr = new JSONArray();
+        List<JSONObject> jsonValues = JSONArray.parseArray(resultList.toJSONString(), JSONObject.class);
+        jsonValues.sort((o1, o2) -> {
+            Integer val_1 = o1.getInteger("total_clicks");
+            Integer val_2 = o2.getInteger("total_clicks");
+            return -val_1.compareTo(val_2);
+        });
+        sortedArr = JSONArray.parseArray(jsonValues.toString());
         if (params.get("downloadFlag") != null && Boolean.valueOf(params.get("downloadFlag").toString())) {
-            data2excel(resultList);
+            data2excel(sortedArr);
             return Result.SUCCESS();
         }
         int pageNo = Integer.valueOf(params.get("pageNo").toString());
         int pageSize = Integer.valueOf(params.get("pageSize").toString());
-        return Result.SUCCESS(OkHttpUtils.dataPage(resultList, pageNo, pageSize));
+        return Result.SUCCESS(OkHttpUtils.dataPage(sortedArr, pageNo, pageSize));
     }
 
     private void data2excel(JSONArray resultList) throws FileNotFoundException {

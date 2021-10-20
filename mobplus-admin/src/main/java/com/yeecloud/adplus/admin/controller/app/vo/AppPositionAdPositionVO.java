@@ -38,8 +38,13 @@ public class AppPositionAdPositionVO implements Serializable, Comparable<AppPosi
     /** 按广告平台id升序排序 */
     @Override
     public int compareTo(@NotNull AppPositionAdPositionVO o) {
-        if (adPos.getAdvId() >= o.getAdPos().getAdvId()) {
+        if (adPos == null) {
+            return -1;
+        }
+        if (adPos.getAdvId() > o.getAdPos().getAdvId()) {
             return 1;
+        } else if (adPos.getAdvId().equals(o.getAdPos().getAdvId())) {
+            return 0;
         } else {
             return -1;
         }

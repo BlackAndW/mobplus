@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.gateway.service.impl;
 
+import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.dal.entity.*;
@@ -15,7 +16,6 @@ import com.yeecloud.adplus.gateway.service.ChargeService;
 import com.yeecloud.adplus.gateway.service.TranslateService;
 import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -54,7 +54,7 @@ public class ChargeServiceImpl implements ChargeService {
         List<ChargeBannerVO> bannerListVO = new ArrayList<>( bannerList.size() );
         for ( ChargeBanner chargeBanner : bannerList ) {
             ChargeBannerVO vo = new ChargeBannerVO();
-            BeanUtils.copyProperties(chargeBanner, vo);
+            NewBeanUtils.copyProperties(vo, chargeBanner, true);
             bannerListVO.add(vo);
         }
         return bannerListVO;
@@ -95,7 +95,7 @@ public class ChargeServiceImpl implements ChargeService {
         List<ChargeMaterialVO> materialListVO = new ArrayList<>( materialList.size() );
         for ( ChargeMaterial chargeMaterial : materialList ) {
             ChargeMaterialVO vo = new ChargeMaterialVO();
-            BeanUtils.copyProperties(chargeMaterial, vo);
+            NewBeanUtils.copyProperties(vo, chargeMaterial, true);
             vo.setTypeId(chargeMaterial.getType().getId());
             vo.setTypeName(chargeMaterial.getType().getEnName());
             materialListVO.add(vo);
@@ -144,7 +144,7 @@ public class ChargeServiceImpl implements ChargeService {
         List<ChargeMTypeVO> mTypeVOS = new ArrayList<>( resultList.size() );
         for ( ChargeMType chargeMType : resultList ) {
             ChargeMTypeVO vo = new ChargeMTypeVO();
-            BeanUtils.copyProperties(chargeMType, vo);
+            NewBeanUtils.copyProperties(vo, chargeMType, true);
             mTypeVOS.add(vo);
         }
         return mTypeVOS;

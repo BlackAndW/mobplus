@@ -6,20 +6,18 @@ import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.ParamUtils;
 import com.yeecloud.meeto.common.util.StringUtils;
+import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * app广告数据统计
  * @author: Leonard
  * @create: 2021/3/23
  */
-
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/user")
@@ -31,6 +29,13 @@ public class UserAdInfoController {
     @Autowired
     HttpServletRequest request;
 
+    /**
+     * 数据更新
+     * @param userForm
+     * @return
+     * @throws ServiceException
+     */
+    @ApiDoc
     @PostMapping("/count")
     public Result setCounting(@RequestBody UserAdInfoForm userForm) throws ServiceException {
         String ipAddress = ParamUtils.getIpAddr(request);
