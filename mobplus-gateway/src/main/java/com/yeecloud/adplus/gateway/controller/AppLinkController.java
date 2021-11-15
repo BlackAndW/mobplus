@@ -27,33 +27,28 @@ public class AppLinkController {
     /**
      * 获取链接
      * @description 随机获取一个结果
-     * @param id 【body参数】链接id
-     * @param appId 【body参数】appId
+     * @param form-id 【body参数】链接id
+     * @param form-appId 【body参数】appId
      * @return
      */
     @ApiDoc
     @PostMapping("list")
-    public Result<AppLinkVO> getLinks(@RequestBody AppLinkForm form,
-                                      @RequestParam(required = false, defaultValue = "0") Integer id,
-                                      @RequestParam(required = true, defaultValue = "") String appId,
-                                      @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
+    public Result getLinks(@RequestBody AppLinkForm form,
+                           @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         AppLinkVO appLinkVO = appLinkService.query(form);
         return Result.isEncode(apiVersion, appLinkVO);
     }
 
     /**
      * 更新链接数据
-     * @param id 【body参数】链接id
-     * @param clickNum 【body参数】点击次数 传0或1
-     * @param showNum 【body参数】展示次数 传0或1
+     * @param form-id 【body参数】链接id
+     * @param form-clickNum 【body参数】点击次数 传0或1
+     * @param form-showNum 【body参数】展示次数 传0或1
      * @return
      */
     @ApiDoc
     @PostMapping("update")
-    public Result<String> updateData(@RequestBody AppLinkForm form,
-                                     @RequestParam(required = true, defaultValue = "0") Integer id,
-                                     @RequestParam(required = true, defaultValue = "0") Integer clickNum,
-                                     @RequestParam(required = true, defaultValue = "0") Integer showNum) {
+    public Result<String> updateData(@RequestBody AppLinkForm form) {
         return appLinkService.updateData(form);
     }
 }
