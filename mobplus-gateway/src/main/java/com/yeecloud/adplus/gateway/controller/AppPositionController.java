@@ -12,10 +12,7 @@ import com.yeecloud.meeto.common.exception.ServiceException;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,26 +40,23 @@ public class AppPositionController {
      */
     @ApiDoc
     @RequestMapping("/position")
-    public Result<List> getAppPositionList (@RequestBody String body,
+    public Result getAppPositionList (@RequestBody String body,
                                             @RequestParam(required = true, defaultValue = "") String appId,
                                             @RequestParam(required = true, defaultValue = "") String channel,
                                             @RequestParam(required = true, defaultValue = "") String pkgVersion,
-                                            @RequestParam String m) throws ServiceException {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (body != null && needCodec) {
-            body = Codec.decode(body);
-        }
+                                            @RequestParam(required = false) String m,
+                                            @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
         Result response;
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
             List resultMap = appPositionService.getAdTypeConfList(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = Result.SUCCESS(resultMap);
+            response = Result.isEncode(apiVersion, resultMap);
         } catch (Throwable e) {
             throw new org.hibernate.service.spi.ServiceException(e.getMessage());
         }
-        return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
+        return response;
     }
 
     /**
@@ -76,25 +70,22 @@ public class AppPositionController {
      */
     @ApiDoc
     @RequestMapping("/positionNew")
-    public Result<List<AppFunctionVO>> getAppPositionListNew (@RequestBody String body,
+    public Result getAppPositionListNew (@RequestBody String body,
                                                               @RequestParam(required = true, defaultValue = "") String appId,
                                                               @RequestParam(required = true, defaultValue = "") String channel,
                                                               @RequestParam(required = true, defaultValue = "") String pkgVersion,
-                                                              @RequestParam String m) throws ServiceException {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (body != null && needCodec) {
-            body = Codec.decode(body);
-        }
+                                                              @RequestParam(required = false) String m,
+                                                              @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
         Result response;
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
             List resultMap = appPositionService.getAdTypeConfListNew(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = Result.SUCCESS(resultMap);
+            response = Result.isEncode(apiVersion, resultMap);
         } catch (Throwable e) {
             throw new org.hibernate.service.spi.ServiceException(e.getMessage());
         }
-        return needCodec ? Result.SUCCESS(Codec.encode(JSON.toJSONString(response))) : response;
+        return response;
     }
 }
