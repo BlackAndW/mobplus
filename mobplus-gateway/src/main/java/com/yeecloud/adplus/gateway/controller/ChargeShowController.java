@@ -33,8 +33,8 @@ public class ChargeShowController {
      */
     @ApiDoc
     @PostMapping("bannerList")
-    public Result<List<ChargeBannerVO>> getBannerList() throws ServiceException {
-        return Result.SUCCESS(chargeService.queryBanner());
+    public Result getBannerList(@RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
+        return Result.isEncode(apiVersion, chargeService.queryBanner());
     }
 
     /**
@@ -44,9 +44,11 @@ public class ChargeShowController {
      */
     @ApiDoc
     @GetMapping("type")
-    public Result<List<ChargeMTypeVO>> getType(@RequestParam Integer style, @RequestParam(required = false) String toLang) {
+    public Result getType(@RequestParam Integer style,
+                          @RequestParam(required = false) String toLang,
+                          @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         List<ChargeMTypeVO> result = chargeService.queryTypeList(style, toLang);
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 
     /**
@@ -59,11 +61,12 @@ public class ChargeShowController {
      */
     @ApiDoc
     @PostMapping("materialList")
-    public Result<List<ChargeMaterialVO>> getMaterialList(@RequestBody ChargeShowForm form,
+    public Result getMaterialList(@RequestBody ChargeShowForm form,
                                                           @RequestParam(required = true, defaultValue = "0") Integer pageNo,
                                                           @RequestParam(required = true, defaultValue = "0") Integer type,
-                                                          @RequestParam(required = true, defaultValue = "0") Integer style) throws ServiceException {
-        return Result.SUCCESS(chargeService.queryMaterial(form));
+                                                          @RequestParam(required = true, defaultValue = "0") Integer style,
+                                                          @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
+        return Result.isEncode(apiVersion, chargeService.queryMaterial(form));
     }
 
     /**
@@ -75,7 +78,7 @@ public class ChargeShowController {
      */
     @ApiDoc
     @PostMapping("uploadData")
-    public Result<String> uploadData(@RequestBody ChargeShowForm form,
+    public Result uploadData(@RequestBody ChargeShowForm form,
                                      @RequestParam(required = true, defaultValue = "0") Integer id,
                                      @RequestParam(required = true, defaultValue = "0") Integer showNum,
                                      @RequestParam(required = true, defaultValue = "0") Integer useNum) {

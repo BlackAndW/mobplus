@@ -1,7 +1,7 @@
 package com.yeecloud.adplus.gateway.util;
 
 /**
- * Base64 工具类
+ * Base64 工具类(百度API专用)
  */
 public class Base64Util {
     private static final char last2byte = (char) Integer.parseInt("00000011", 2);

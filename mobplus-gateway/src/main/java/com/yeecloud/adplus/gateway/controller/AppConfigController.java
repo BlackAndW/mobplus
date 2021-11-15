@@ -3,21 +3,17 @@ package com.yeecloud.adplus.gateway.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.PropertyNamingStrategy;
 import com.alibaba.fastjson.serializer.SerializeConfig;
-import com.yeecloud.adplus.gateway.controller.form.AppLinkForm;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
 import com.yeecloud.adplus.gateway.controller.vo.AppConfigVO;
 import com.yeecloud.adplus.gateway.controller.vo.AppConfigVOV2;
 import com.yeecloud.adplus.gateway.service.AppConfigService;
+import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.codec.Codec;
-import com.yeecloud.meeto.common.result.Result;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,16 +37,12 @@ public class AppConfigController {
      * @param projectCode 【body参数】项目编码
      * @return
      */
-    @ApiDoc(stringResult = "{ code:2000, message:'ok', result: {ad: 1, cms: 1, index: 1} }")
     @PostMapping("/api/v1/app/conf")
     public String getAppProjectConfigV1(@RequestBody String body,
-                                        @RequestParam(required = true, defaultValue = "") String appId,
-                                        @RequestParam(required = true, defaultValue = "") String projectCode,
-                                        @RequestParam String m) {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (body != null && needCodec) {
-            body = Codec.decode(body);
-        }
+                                        @RequestParam(defaultValue = "") String appId,
+                                        @RequestParam(defaultValue = "") String projectCode,
+                                        @RequestParam(required = false) String m,
+                                        @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         log.debug("ReqFromApp:{}", body);
         String response = "";
         try {
@@ -58,12 +50,12 @@ public class AppConfigController {
             AppConfigVO vo = appConfigService.getAppProjectConfigV1(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = JSON.toJSONString(Result.SUCCESS(vo), config);
+            response = JSON.toJSONString(Result.isEncode(apiVersion, vo), config);
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
         log.debug("RespToApp:{}", response);
-        return needCodec ? Codec.encode(response) : response;
+        return response;
     }
 
     /**
@@ -74,17 +66,13 @@ public class AppConfigController {
      * @param channel 【body参数】渠道
      * @param pkgVersion 【body参数】版本
      */
-    @ApiDoc(stringResult = "{ code:2000, message:'ok', result: {ad: 1, content: 1, index: 1} }")
     @PostMapping("/api/v2/app/conf")
     public String getAppProjectConfigV2(@RequestBody String body,
                                         @RequestParam(required = true, defaultValue = "") String appId,
                                         @RequestParam(required = true, defaultValue = "") String channel,
                                         @RequestParam(required = true, defaultValue = "") String pkgVersion,
-                                        @RequestParam String m) {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (body != null && needCodec) {
-            body = Codec.decode(body);
-        }
+                                        @RequestParam(required = false) String m,
+                                        @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         log.debug("ReqFromApp:{}", body);
         String response = "";
         try {
@@ -92,12 +80,12 @@ public class AppConfigController {
             AppConfigVOV2 vo = appConfigService.getAppProjectConfigV2(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = JSON.toJSONString(Result.SUCCESS(vo), config);
+            response = JSON.toJSONString(Result.isEncode(apiVersion, vo), config);
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
         log.debug("RespToApp:{}", response);
-        return needCodec ? Codec.encode(response) : response;
+        return response;
     }
 
     /**
@@ -114,11 +102,8 @@ public class AppConfigController {
                                @RequestParam(required = true, defaultValue = "") String appId,
                                @RequestParam(required = true, defaultValue = "") String channel,
                                @RequestParam(required = true, defaultValue = "") String pkgVersion,
-                               @RequestParam String m) {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (body != null && needCodec) {
-            body = Codec.decode(body);
-        }
+                               @RequestParam(required = false) String m,
+                               @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         log.debug("ReqFromApp:{}", body);
         String response = "";
         try {
@@ -126,11 +111,11 @@ public class AppConfigController {
             Map<String,String > result = appConfigService.getAppConfig(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = JSON.toJSONString(Result.SUCCESS(result), config);
+            response = JSON.toJSONString(Result.isEncode(apiVersion, result), config);
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
         log.debug("RespToApp:{}", response);
-        return needCodec ? Codec.encode(response) : response;
+        return response;
     }
 }

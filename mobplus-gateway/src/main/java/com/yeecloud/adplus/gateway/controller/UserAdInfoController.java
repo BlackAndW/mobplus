@@ -2,8 +2,8 @@ package com.yeecloud.adplus.gateway.controller;
 
 import com.yeecloud.adplus.gateway.controller.form.UserAdInfoForm;
 import com.yeecloud.adplus.gateway.service.UserAdInfoService;
+import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
-import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.ParamUtils;
 import com.yeecloud.meeto.common.util.StringUtils;
 import io.github.yedaxia.apidocs.ApiDoc;
@@ -37,13 +37,14 @@ public class UserAdInfoController {
      */
     @ApiDoc
     @PostMapping("/count")
-    public Result setCounting(@RequestBody UserAdInfoForm userForm) throws ServiceException {
+    public Result setCounting(@RequestBody UserAdInfoForm userForm,
+                              @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
         String ipAddress = ParamUtils.getIpAddr(request);
         if (StringUtils.isEmpty(ipAddress)) {
             return Result.FAILURE("ipAddress is empty!");
         }
         String result = userAdInfoService.createOrUpdateInfo(userForm, ipAddress);
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 
 }

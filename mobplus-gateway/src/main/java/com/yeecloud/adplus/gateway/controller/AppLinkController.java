@@ -34,10 +34,11 @@ public class AppLinkController {
     @ApiDoc
     @PostMapping("list")
     public Result<AppLinkVO> getLinks(@RequestBody AppLinkForm form,
-                                      @RequestParam(required = true, defaultValue = "0") Integer id,
-                                      @RequestParam(required = true, defaultValue = "") String appId) {
+                                      @RequestParam(required = false, defaultValue = "0") Integer id,
+                                      @RequestParam(required = true, defaultValue = "") String appId,
+                                      @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         AppLinkVO appLinkVO = appLinkService.query(form);
-        return Result.SUCCESS(appLinkVO);
+        return Result.isEncode(apiVersion, appLinkVO);
     }
 
     /**

@@ -72,15 +72,16 @@ public class ScannerController {
      */
     @ApiDoc
     @RequestMapping("/imageScan")
-    public Result<List<ScannerVO>> imageScan(@RequestBody ScannerForm form,
+    public Result imageScan(@RequestBody ScannerForm form,
                                              @RequestParam(required = true, defaultValue = "") String imageBase64,
                                              @RequestParam(required = true, defaultValue = "0") Integer type,
-                                             @RequestParam(required = true, defaultValue = "") String toLang) throws IOException, ServiceException {
+                                             @RequestParam(required = true, defaultValue = "") String toLang,
+                                             @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws IOException, ServiceException {
         try {
             String imgParam = URLEncoder.encode(form.getImageBase64(), "UTF-8");
             form.setImageBase64(imgParam);
             List<ScannerVO> result = scannerService.getResult(form);
-            return Result.SUCCESS(result);
+            return Result.isEncode(apiVersion, result);
         } catch (Exception e) {
             return Result.FAILURE(e.getMessage());
         }
@@ -110,10 +111,11 @@ public class ScannerController {
     public Result translateText(@RequestBody TranslateForm form,
                                 @RequestParam(required = true, defaultValue = "") String sourceString,
                                 @RequestParam(required = false, defaultValue = "") String fromLang,
-                                @RequestParam(required = true, defaultValue = "") String toLang){
+                                @RequestParam(required = true, defaultValue = "") String toLang,
+                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion){
         String result = translateService.translation(form);
         if (result == null) { return Result.FAILURE("translation error!"); }
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 
     /**
@@ -125,12 +127,13 @@ public class ScannerController {
      */
     @ApiDoc
     @RequestMapping("/translateList")
-    public Result<List<String>> translateTextList(@RequestBody TranslateForm form,
+    public Result translateTextList(@RequestBody TranslateForm form,
                                 @RequestParam(required = true, defaultValue = "") String sourceList,
                                 @RequestParam(required = false, defaultValue = "") String fromLang,
-                                @RequestParam(required = true, defaultValue = "") String toLang){
+                                @RequestParam(required = true, defaultValue = "") String toLang,
+                                                  @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion){
         List<String> result = translateService.translationList(form);
         if (result == null) { return Result.FAILURE("translation error!"); }
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 }
