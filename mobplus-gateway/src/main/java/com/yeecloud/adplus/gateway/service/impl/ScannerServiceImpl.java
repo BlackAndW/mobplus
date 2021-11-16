@@ -91,7 +91,6 @@ public class ScannerServiceImpl implements ScannerService {
 
     @Override
     public List<ScannerVO> getResult(ScannerForm form) throws IOException, ServiceException {
-        long startTime = System.currentTimeMillis();
         String image = "image=" + form.getImageBase64();
         String baike_num = "&baike_num=6";
         String typeName = ScannerType.getType(form.getType());
@@ -99,6 +98,7 @@ public class ScannerServiceImpl implements ScannerService {
         if (form.getType() == 0) {
             resUrl = resUrl.replaceAll("/v1/", "/v2/");
         }
+        long startTime = System.currentTimeMillis();
         final Request request = new Request.Builder()
                 .url(resUrl)
                 .post(okhttp3.RequestBody.create(MediaType.parse("Content-Type:application/x-www-form-urlencoded; charset=utf-8"), image + baike_num))
@@ -106,7 +106,7 @@ public class ScannerServiceImpl implements ScannerService {
         String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
         long endTime = System.currentTimeMillis();
         log.info("百度api用时：" + (endTime - startTime));
-        System.out.println(result);
+
         JSONArray responseArray = JSONObject.parseObject(result).getJSONArray("result");
         List<ScannerVO> vos = new ArrayList<>();
 
