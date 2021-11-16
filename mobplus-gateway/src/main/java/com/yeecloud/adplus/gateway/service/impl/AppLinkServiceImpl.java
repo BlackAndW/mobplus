@@ -65,6 +65,7 @@ public class AppLinkServiceImpl implements AppLinkService {
             Integer randomIndex = new Random().nextInt(appLinks.size());
             AppLink appLink = appLinks.get(randomIndex);
             NewBeanUtils.copyProperties(vo, appLink, true);
+            return vo;
         }
         return null;
     }

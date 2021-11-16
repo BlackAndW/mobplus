@@ -102,6 +102,9 @@ public class AppLinkServiceImpl implements AppLinkService {
                 entity.setApp(app);
                 NewBeanUtils.copyProperties(entity, form, true);
                 appLinkRepository.save(entity);
+                AppLinkLog entityLog = new AppLinkLog();
+                entityLog.setAppLink(entity);
+                appLinkLogRepository.save(entityLog);
             }
         } catch (Throwable e) {
             throw new ServiceException(e);
