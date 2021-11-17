@@ -91,31 +91,23 @@ public class AppConfigController {
     /**
      * 获取应用配置
      * @param m 加密标识，m=1
-     * @param appId 【body参数】appId
-     * @param channel 【body参数】渠道
-     * @param pkgVersion 【body参数】版本
+     * @param body-appId 【body参数】appId
+     * @param body-channel 【body参数】渠道
+     * @param body-pkgVersion 【body参数】版本
      * @return
      */
-    @ApiDoc(stringResult = "{ code:2000, message:'ok', result: { keyName: 'keyValue' } }")
     @PostMapping("/api/v1/app/mobile/conf")
-    public String getAppConfig(@RequestBody String body,
-                               @RequestParam(required = true, defaultValue = "") String appId,
-                               @RequestParam(required = true, defaultValue = "") String channel,
-                               @RequestParam(required = true, defaultValue = "") String pkgVersion,
+    public Result getAppConfig(@RequestBody String body,
                                @RequestParam(required = false) String m,
                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         log.debug("ReqFromApp:{}", body);
-        String response = "";
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
             Map<String,String > result = appConfigService.getAppConfig(form);
-            SerializeConfig config = new SerializeConfig();
-            config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = JSON.toJSONString(Result.isEncode(apiVersion, result), config);
+            log.debug("RespToApp:{}", result);
+            return Result.isEncode(apiVersion, result);
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
-        log.debug("RespToApp:{}", response);
-        return response;
     }
 }
