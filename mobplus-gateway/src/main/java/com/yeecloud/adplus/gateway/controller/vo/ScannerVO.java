@@ -19,4 +19,7 @@ public class ScannerVO {
 
     /** 结果描述 */
     private String des;
+
+    /** wiki封面url */
+    private String imgUrl;
 }
