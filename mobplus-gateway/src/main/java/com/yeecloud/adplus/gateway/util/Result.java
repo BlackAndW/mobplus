@@ -6,6 +6,7 @@ package com.yeecloud.adplus.gateway.util;
  */
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.yeecloud.meeto.common.result.ResultCode;
 import org.apache.commons.codec.binary.Base64;
 
@@ -74,7 +75,7 @@ public class Result<T> {
     }
 
     public static <T> Result ENCODE(T result) {
-        String resultStr = result.toString();
+        String resultStr = JSONArray.toJSON(result).toString();
         final Base64 base64 = new Base64();
         String encodedBase64 = base64.encodeToString(resultStr.getBytes(StandardCharsets.UTF_8));
         return new Result(2000, "ok", new StringBuilder(encodedBase64).reverse().toString());
