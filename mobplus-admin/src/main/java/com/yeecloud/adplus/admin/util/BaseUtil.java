@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.admin.util;
 
+import com.yeecloud.meeto.common.util.Query;
 import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
@@ -27,4 +28,10 @@ public class BaseUtil {
         return stringBuilder.toString();
     }
 
+    public static List getPageList (Query query, List resultList) {
+        int startIndex = (query.getPageNo() - 1) * query.getPageSize();
+        int endIndex = query.getPageNo() * query.getPageSize();
+        if (endIndex > resultList.size()) endIndex = resultList.size();
+        return resultList.subList(startIndex, endIndex);
+    }
 }
