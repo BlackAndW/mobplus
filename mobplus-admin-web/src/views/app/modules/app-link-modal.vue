@@ -112,7 +112,6 @@ export default {
             if (info.file.status === 'done') {
                 console.log(info);
                 this.model.imgPath = info.file.response.result.url;
-                console.log(this.model.imgPath);
                 this.loading = false;
             }
         },

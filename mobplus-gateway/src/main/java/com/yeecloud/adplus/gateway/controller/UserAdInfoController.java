@@ -35,7 +35,6 @@ public class UserAdInfoController {
      * @return
      * @throws ServiceException
      */
-    @ApiDoc
     @PostMapping("/count")
     public Result setCounting(@RequestBody UserAdInfoForm userForm,
                               @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {

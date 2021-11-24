@@ -22,6 +22,7 @@ public interface AppLinkConvert {
     List<AppLinkVO> convert(List<AppLink> list);
 
     @Mappings({
+            @Mapping(target = "id", source = "appLink.id"),
             @Mapping(target = "name", source = "appLink.name"),
             @Mapping(target = "imgPath", source = "appLink.imgPath"),
             @Mapping(target = "imgUrl", source = "appLink.imgUrl")
