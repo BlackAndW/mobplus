@@ -131,6 +131,7 @@ public class ScannerServiceImpl implements ScannerService {
                 vo.setScore(imageInfo.getBigDecimal("score"));
                 String description = getDescription(form.getToLang(), imageNameTrans, imageInfo);
                 vo.setDes(description);
+                vo.setImgUrl(getImgUrl(form.getToLang(), imageNameTrans));
                 vos.add(vo);
             }
         } else {
@@ -188,17 +189,27 @@ public class ScannerServiceImpl implements ScannerService {
         return translateService.translation(form);
     }
 
-//    private String processWikiText2(String text) {
-//        String regex = "<p>.*?</p>";
-//        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
-//        Matcher matcher = pattern.matcher(text);
-//        String text2 = "";
-//        while (matcher.find()) {
-//            System.out.println(matcher.group());
-//            text2 = StringUtils.trim(matcher.group());
-//        }
-//        return text2;
-//    }
+    private synchronized String getImgUrl(String lang, String title) throws IOException {
+        String wikiUrl = "https://" +
+                lang +
+                ".wikipedia.org/w/api.php" +
+                "?action=query&format=json" +
+                "&titles=" +
+                title +
+                "&prop=pageimages&piprop=original&utf8=1&formatversion=2";
+        final Request request = new Request.Builder()
+                .url(wikiUrl)
+                .get().build();
+        JSONObject resultObject = OkHttpUtils.ResponseJSON(request);
+        if (resultObject.get("query") != null) {
+            JSONObject object = resultObject.getJSONObject("query").getJSONArray("pages").getJSONObject(0);
+            JSONObject org = object.getJSONObject("original");
+            if (org != null) {
+                return org.getString("source");
+            }
+        }
+        return "";
+    }
 
     @Override
     public void insertFeedbackLog(FeedbackForm form) {

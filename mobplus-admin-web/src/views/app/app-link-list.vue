@@ -16,7 +16,14 @@
             <a-col :span="20">
                 <a-card :bordered="true" class="card-search card-list">
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                        <div class="l">
+                        <div class="l" v-if="currentApp!=null">
+                            <a-form-item>
+                                <a-button
+                                    type="primary"
+                                    v-action="['app:link:query']"
+                                    @click="changeMode"
+                                >{{ modeText }}<a-icon type="right" /></a-button>
+                            </a-form-item>
                             <a-form-item>
                                 <a-range-picker
                                     v-decorator="[ 'time', { initialValue: [moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')] } ]"
@@ -125,6 +132,9 @@ const columns = [
         dataIndex: 'createdAt',
         scopedSlots: { customRender: 'dateSlot' },
         customRender: (text, record) => {
+            if (text === 0) {
+                return moment(moment()).format('YYYY-MM-DD');
+            }
             return moment(text).format('YYYY-MM-DD');
         }
     },
@@ -160,6 +170,9 @@ export default {
             currentApp: null,
             treeloading: false,
             appTreeData: [],
+            modeText: '切换到日统计模式',
+            modeType: 1,
+            dateString: [moment, moment],
             // 加载数据方法
             loadData: this.loadDataList
         };
@@ -168,13 +181,24 @@ export default {
     mounted () {
         this.loadAppTreeData();
     },
-    computed: {},
+    computed: { },
     methods: {
         moment,
+        changeMode () {
+            this.modeType = Math.abs(this.modeType - 1);
+            if (this.modeType === 0) {
+                this.modeText = '切换到累计模式';
+            } else {
+                this.modeText = '切换到日统计模式';
+            }
+            this.queryParam.modeType = this.modeType;
+            this.$refs.table.refresh(true);
+        },
         onChangeDate (date, dateString) {
             if (date.length > 0) {
                 this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
                 this.queryParam.endTimeStr = dateString[1] + ' 23:59:59';
+                this.dateString = dateString;
             } else {
                 this.queryParam.startTimeStr = this.queryParam.endTimeStr = '';
             }
@@ -210,7 +234,8 @@ export default {
         },
         loadDataList: function (params) {
             return this.$http.get(
-                url + '?appId=' + this.currentApp.key,
+                url + '?appId=' + this.currentApp.key +
+                '&modeType=' + this.modeType,
                 Object.assign(params, this.queryParam)
             );
         },
