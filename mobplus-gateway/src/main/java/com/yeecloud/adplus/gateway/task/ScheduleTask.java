@@ -60,7 +60,7 @@ public class ScheduleTask {
 
     private static final String FILE_NAME = "result.json";
 
-//    @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
+    @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
     private void getAppConfigCfg() {
         QApp qApp = QApp.app;
         Predicate predicate = qApp.deleted.eq(Boolean.FALSE);
@@ -99,7 +99,7 @@ public class ScheduleTask {
                             appVersion + "/" +
                             channel + "/";
 
-                    genConfigFile(dirName, appConfigController.getAppConfig(body,"", "1.1"));
+                    genConfigFile(dirName, appConfigController.getAppConfig(body,"", "1.0"));
                 });
             });
         });
