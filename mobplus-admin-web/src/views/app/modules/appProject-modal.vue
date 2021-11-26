@@ -93,7 +93,6 @@ export default {
         edit: function (record, currentApp) {
             this.title = '编辑项目';
             this.model = record;
-            console.log(this.model);
             this.url = '/app/project/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
@@ -112,7 +111,7 @@ export default {
             const $self = this;
             // 触发表单验证
             this.form.validateFields((err, values) => {
-                console.log(values);
+                // console.log(values);
                 if (!err) {
                     $self.confirmLoading = true;
                     $self

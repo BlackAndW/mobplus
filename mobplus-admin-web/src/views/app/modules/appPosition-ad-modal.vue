@@ -40,6 +40,9 @@
                     <span>{{ text }}</span><br />
                     <span v-if="record.adPos.advName == 'mintegral'">unitId: {{ record.adPos.mintegralUnitId }} </span>
                 </template>
+                <template slot="orderSlot" slot-scope="text, record">
+                        <a-input :value="text" @change="e => handleCellChange(e, 'order', record)"/>
+                </template>
                 <template slot="limitShowCountSlot" slot-scope="text, record">
                     <span v-if="model.limitShowConfig === 0">
                         <a-input :value="text" @change="e => handleCellChange(e, 'limitShowCount', record)"/>
@@ -121,6 +124,12 @@ const columns = [
         width: 120,
         dataIndex: 'typeRatio',
         scopedSlots: { customRender: 'typeRatioSlot' }
+    },
+    {
+        title: '排序',
+        width: 50,
+        dataIndex: 'order',
+        scopedSlots: { customRender: 'orderSlot' }
     }
 ];
 
@@ -175,7 +184,7 @@ export default {
         onSubmit: function () {
             const params = [];
             this.selectedRows.forEach(ele => {
-                console.log(ele);
+                // console.log(ele);
                 params.push({
                     adPos: {
                         id: ele.adPos.id
@@ -185,7 +194,8 @@ export default {
                     ratioFlag: ele.ratioFlag,
                     typeRatio: ele.typeRatio,
                     limitShowCount: ele.limitShowCount,
-                    limitClickCount: ele.limitClickCount
+                    limitClickCount: ele.limitClickCount,
+                    order: ele.order
                 });
             });
             if (params.length === 0) {

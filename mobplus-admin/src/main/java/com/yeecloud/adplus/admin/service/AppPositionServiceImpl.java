@@ -88,14 +88,6 @@ public class AppPositionServiceImpl implements AppPositionService {
     @Override
     public void create(AppPosition form) throws ServiceException {
         try {
-//            // 判断广告类型是否为插屏视频
-//            if (form.getType().getId().equals(4)){
-//                form.setParams("{\"style\":3}");
-//            }
-//            // 判断广告类型是否为插屏
-//            if (form.getType().getId().equals(3)){
-//                form.setParams("{\"style\":1}");
-//            }
             appPositionRepository.save(form);
         } catch (Throwable e) {
             throw new ServiceException(e);
@@ -106,14 +98,6 @@ public class AppPositionServiceImpl implements AppPositionService {
     public void update(Integer id, AppPosition form) throws ServiceException {
         try {
             AppPosition entity = appPositionRepository.findById(id).orElse(null);
-//            // 判断广告类型是否为插屏视频
-//            if (form.getType().getId().equals(4)){
-//                form.setParams("{\"style\":3}");
-//            }
-//            // 判断广告类型是否为插屏
-//            if (form.getType().getId().equals(3)){
-//                form.setParams("{\"style\":1}");
-//            }
             if (entity != null && !entity.isDeleted()) {
                 NewBeanUtils.copyProperties(entity, form, true);
                 appPositionRepository.save(entity);
@@ -145,4 +129,5 @@ public class AppPositionServiceImpl implements AppPositionService {
         });
         appPositionAdPositionRepository.saveAll(adPosList);
     }
+
 }

@@ -110,7 +110,7 @@ export default {
                 return;
             }
             if (info.file.status === 'done') {
-                console.log(info);
+                // console.log(info);
                 this.model.imgPath = info.file.response.result.url;
                 this.loading = false;
             }
@@ -129,7 +129,7 @@ export default {
             const $self = this;
             // 触发表单验证
             this.form.validateFields((err, values) => {
-                console.log(values);
+                // console.log(values);
                 if (!err) {
                     $self.confirmLoading = true;
                     $self

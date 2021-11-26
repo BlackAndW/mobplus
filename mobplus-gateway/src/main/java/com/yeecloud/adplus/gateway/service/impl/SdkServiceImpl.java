@@ -154,6 +154,7 @@ public class SdkServiceImpl implements SdkService {
             AppPosCfgVO appPosCfgVO = new AppPosCfgVO();
             // 获取展示位绑定的广告位
             appPosCfgVO.setParams(appPosition.getParameters());
+            appPosCfgVO.setOrderConfig(appPosition.getOrderConfig());
             List<AppPositionAdPosition> adPositionList = appPosition.getAdPosList();
 
             // 查看全局配置
@@ -173,6 +174,7 @@ public class SdkServiceImpl implements SdkService {
                 adPositionVO.setTypeRatio(appPosAdPosition.getTypeRatio());
                 adPositionVO.setLimitShowCount(appPosAdPosition.getLimitShowCount());
                 adPositionVO.setLimitClickCount(appPosAdPosition.getLimitClickCount());
+                adPositionVO.setOrder(appPosAdPosition.getOrder());
                 // 根据配置，设置限制次数
                 Map<String, Integer> limitCountMap = getLimitCountMap(appPosAdPosition.getAdPosition());
                 adPositionVO = setAdPositionVO(adPositionVO, appPosAdPosition.getAdPosition(), limitCountMap, showConfig, clickConfig);

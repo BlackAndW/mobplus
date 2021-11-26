@@ -121,7 +121,7 @@ export default {
         edit: function (record, currentApp) {
             this.title = '编辑配置';
             this.model = record;
-            console.log(record);
+            // console.log(record);
             this.model.app = currentApp.key;
             this.url = '/app/mobile/conf/' + record.id;
             this.func = this.$http.put;
