@@ -26,12 +26,11 @@ public class AppLinkController {
 
     /**
      * 获取链接
-     * @description 随机获取一个结果
-     * @param form-id 【body参数】链接id
+     * @description
+     * @param form-id 【body参数】链接id，若不传则随机获取一个
      * @param form-appId 【body参数】appId
      * @return
      */
-    @ApiDoc
     @PostMapping("list")
     public Result getLinks(@RequestBody AppLinkForm form,
                            @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
@@ -46,7 +45,6 @@ public class AppLinkController {
      * @param form-showNum 【body参数】展示次数 传0或1
      * @return
      */
-    @ApiDoc
     @PostMapping("update")
     public Result<String> updateData(@RequestBody AppLinkForm form) {
         return appLinkService.updateData(form);

@@ -120,7 +120,6 @@ export default {
         edit: function (record) {
             this.title = '编辑节点:' + record.b01;
             this.model = record;
-            console.log(record);
             this.url = '/app/vpn/' + record.b01;
             this.disabledIP = true;
             this.func = this.$http.put;

@@ -120,20 +120,15 @@ public class GameController {
 
     /**
      * 更新游戏数据
-     * @param id 游戏id
-     * @param clickNum 点击数 传0或1
-     * @param ipNum 访问人(ip)数 传0或1
-     * @param playTime 游玩时间 单位：秒/s
+     * @param form-id 游戏id
+     * @param form-clickNum 点击数 传0或1
+     * @param form-ipNum 访问人(ip)数 传0或1
+     * @param form-playTime 游玩时间 单位：秒/s
      * @return
      * @throws ServiceException
      */
-    @ApiDoc
     @PostMapping("update")
-    public Result<String> update(@RequestBody GameForm form,
-                                 @RequestParam(required = true, defaultValue = "0") Integer id,
-                                 @RequestParam(required = false, defaultValue = "0") Integer clickNum,
-                                 @RequestParam(required = false, defaultValue = "0") Integer ipNum,
-                                 @RequestParam(required = false, defaultValue = "0") Integer playTime) throws ServiceException {
+    public Result<String> update(@RequestBody GameForm form) throws ServiceException {
         gameService.updateLogById(form);
         return Result.SUCCESS("game log updated");
     }

@@ -38,7 +38,6 @@ public class AppPositionController {
      * @return
      * @throws ServiceException
      */
-    @ApiDoc
     @RequestMapping("/position")
     public Result getAppPositionList (@RequestBody String body,
                                             @RequestParam(required = true, defaultValue = "") String appId,
@@ -68,7 +67,6 @@ public class AppPositionController {
      * @return
      * @throws ServiceException
      */
-    @ApiDoc
     @RequestMapping("/positionNew")
     public Result getAppPositionListNew (@RequestBody String body,
                                                               @RequestParam(required = true, defaultValue = "") String appId,

@@ -207,7 +207,6 @@ export default {
                 Object.assign(params, this.queryParam)
             ).then(res => {
                 this.downloadUrl = res;
-                console.log(this.downloadUrl);
                 window.location.href = this.downloadUrl;
             });
         },

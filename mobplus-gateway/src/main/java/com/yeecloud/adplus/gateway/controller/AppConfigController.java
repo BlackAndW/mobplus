@@ -33,14 +33,13 @@ public class AppConfigController {
      * 获取app项目配置v1
      * @description 返回result: 1为开启, 2为关闭
      * @param m 加密标识，m=1
-     * @param appId 【body参数】appId
-     * @param projectCode 【body参数】项目编码
+     * @param body-appId 【body参数】appId
+     * @param body-projectCode 【body参数】项目编码
+     * @param apiVersion 【header参数】Api-Version:版本号
      * @return
      */
     @PostMapping("/api/v1/app/conf")
     public String getAppProjectConfigV1(@RequestBody String body,
-                                        @RequestParam(defaultValue = "") String appId,
-                                        @RequestParam(defaultValue = "") String projectCode,
                                         @RequestParam(required = false) String m,
                                         @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         log.debug("ReqFromApp:{}", body);
@@ -62,15 +61,13 @@ public class AppConfigController {
      * 获取app项目配置v2
      * @description 返回result: 1为开启, 2为关闭
      * @param m 加密标识，m=1
-     * @param appId 【body参数】appId
-     * @param channel 【body参数】渠道
-     * @param pkgVersion 【body参数】版本
+     * @param body-appId 【body参数】appId
+     * @param body-channel 【body参数】渠道
+     * @param body-pkgVersion 【body参数】版本
+     * @param apiVersion 【header参数】Api-Version:版本号
      */
     @PostMapping("/api/v2/app/conf")
     public String getAppProjectConfigV2(@RequestBody String body,
-                                        @RequestParam(required = true, defaultValue = "") String appId,
-                                        @RequestParam(required = true, defaultValue = "") String channel,
-                                        @RequestParam(required = true, defaultValue = "") String pkgVersion,
                                         @RequestParam(required = false) String m,
                                         @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         log.debug("ReqFromApp:{}", body);
@@ -90,10 +87,11 @@ public class AppConfigController {
 
     /**
      * 获取应用配置
-     * @param m 加密标识，m=1
+     * @param m 加密标识，m=1【1.1版本后弃用】
      * @param body-appId 【body参数】appId
      * @param body-channel 【body参数】渠道
      * @param body-pkgVersion 【body参数】版本
+     * @param apiVersion 【header参数】Api-Version:版本号
      * @return
      */
     @PostMapping("/api/v1/app/mobile/conf")

@@ -201,7 +201,7 @@ export default {
             this.form.validateFields((err, values) => {
                 if (!err) {
                     $self.confirmLoading = true;
-                    console.log(values);
+                    // console.log(values);
                     $self
                         .func($self.url, values)
                         .then(data => {

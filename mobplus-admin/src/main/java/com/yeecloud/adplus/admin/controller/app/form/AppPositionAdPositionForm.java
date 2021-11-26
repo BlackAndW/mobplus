@@ -16,4 +16,5 @@ public class AppPositionAdPositionForm {
     private Integer typeRatio;
     private Integer limitShowCount;
     private Integer limitClickCount;
+    private Integer order;
 }

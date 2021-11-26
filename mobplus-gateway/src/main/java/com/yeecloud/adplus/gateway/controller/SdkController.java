@@ -33,17 +33,14 @@ public class SdkController {
     /**
      * 获取展示位列表(旧)
      * @param m 加密标识，m=1
-     * @param appId 【body参数】appId
-     * @param channel 【body参数】渠道
-     * @param pkgVersion 【body参数】版本
+     * @param body-appId 【body参数】appId
+     * @param body-channel 【body参数】渠道
+     * @param body-pkgVersion 【body参数】版本
      * @return
      */
     @PostMapping("/cfg")
     public String getSdkCfg(@RequestBody String body,
                             @RequestParam(required = false) String m,
-                            @RequestParam(required = true, defaultValue = "") String appId,
-                            @RequestParam(required = true, defaultValue = "") String channel,
-                            @RequestParam(required = true, defaultValue = "") String pkgVersion,
                             @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion,
                             HttpServletRequest request) {
         String response = "";
@@ -63,17 +60,14 @@ public class SdkController {
     /**
      * 获取展示位列表(旧|海外版)
      * @param m 加密标识，m=1
-     * @param appId 【body参数】appId
-     * @param channel 【body参数】渠道
-     * @param pkgVersion 【body参数】版本
+     * @param body-appId 【body参数】appId
+     * @param body-channel 【body参数】渠道
+     * @param body-pkgVersion 【body参数】版本
      * @return
      */
     @PostMapping("/en/cfg")
     public String getSdkCfgEn(@RequestBody String body,
                               @RequestParam(required = false) String m,
-                              @RequestParam(required = true, defaultValue = "") String appId,
-                              @RequestParam(required = true, defaultValue = "") String channel,
-                              @RequestParam(required = true, defaultValue = "") String pkgVersion,
                               @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion,
                               HttpServletRequest request) {
         String response = "";
@@ -93,18 +87,14 @@ public class SdkController {
     /**
      * 获取展示位列表(新)
      * @param m 加密标识，m=1
-     * @param appId 【body参数】appId
-     * @param channel 【body参数】渠道
-     * @param pkgVersion 【body参数】版本
+     * @param body-appId 【body参数】appId
+     * @param body-channel 【body参数】渠道
+     * @param body-pkgVersion 【body参数】版本
      * @return
      */
-    @ApiDoc(stringResult = "{code:2000, message:'ok', result: {adv:{}, enabled: 'boolean', interval: 300000, pos:{appPositionCode:{cfg:{}, position: [{ad_type: 'int', adv: 'string', limit_click_count:'int', limit_show_count:'int', pos_id:'string', ratio:'int', type_ratio: 'int', unit_id: 'int'}]}}}}")
     @PostMapping("/appPosition")
     public String getAppPosition(@RequestBody String body,
                                  @RequestParam(required = false) String m,
-                                 @RequestParam(required = true, defaultValue = "") String appId,
-                                 @RequestParam(required = true, defaultValue = "") String channel,
-                                 @RequestParam(required = true, defaultValue = "") String pkgVersion,
                                  @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion,
                                  HttpServletRequest request) {
         String response = "";

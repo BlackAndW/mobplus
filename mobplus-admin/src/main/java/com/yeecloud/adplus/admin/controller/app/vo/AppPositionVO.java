@@ -22,11 +22,12 @@ public class AppPositionVO implements Serializable {
     private Integer status;
     private Integer limitShowConfig;
     private Integer limitClickConfig;
+    private Integer orderConfig;
     private String appVersionCheckList;
     private String channelCheckList;
 
-    private Integer createdBy;
-    private Integer modifiedBy;
-    private Long createdAt;
-    private Long modifiedAt;
+//    private Integer createdBy;
+//    private Integer modifiedBy;
+//    private Long createdAt;
+//    private Long modifiedAt;
 }
