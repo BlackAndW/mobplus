@@ -19,4 +19,8 @@ public class AppVersionForm {
     private String content;
     @NotNull(message = "请选择版本状态")
     private Integer status;
+    @NotNull
+    private Integer updateMethod;
+    private String gpUrl;
+    private String localUrl;
 }

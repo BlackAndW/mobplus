@@ -17,6 +17,26 @@
                         <a-radio-button :value="2">已启用</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="更新配置">
+                    <a-radio-group
+                        button-style="solid"
+                        @change="onChangeUpdateMethod"
+                        v-decorator="[ 'updateMethod', {initialValue: model.updateMethod || 0, rules: [ { required: true, message: '更新配置' }]}]">
+                        <a-radio-button :value="0">不启用</a-radio-button>
+                        <a-radio-button :value="1">GP更新</a-radio-button>
+                        <a-radio-button :value="2">应用内更新</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
+                <a-form-item v-if="updateMethod == 1" :labelCol="labelCol" :wrapperCol="wrapperCol" label="GP更新url">
+                    <a-input
+                        v-decorator="[ 'gpUrl', {initialValue: model.gpUrl, rules: [ { required: true, message: '请输入GP更新url' }] }]"
+                    />
+                </a-form-item>
+                <a-form-item v-if="updateMethod == 2" :labelCol="labelCol" :wrapperCol="wrapperCol" label="应用内更新url">
+                    <a-input
+                        v-decorator="[ 'localUrl', {initialValue: model.localUrl, rules: [ { required: true, message: '请输入应用内更新url' }] }]"
+                    />
+                </a-form-item>
                 <a-form-item>
                     <a-input
                         type="hidden"
@@ -45,6 +65,7 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
+            updateMethod: 0,
             func: () => {}
         };
     },
@@ -68,6 +89,7 @@ export default {
             this.url = '/app/version/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
+            this.updateMethod = record.updateMethod;
             this.visible = true;
         },
         close: function (success) {
@@ -77,6 +99,9 @@ export default {
         },
         onCancel: function () {
             this.close(false);
+        },
+        onChangeUpdateMethod  (e) {
+            this.updateMethod = e.target.value;
         },
         onSubmit: function () {
             const $self = this;

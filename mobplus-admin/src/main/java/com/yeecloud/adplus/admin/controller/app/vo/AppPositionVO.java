@@ -28,6 +28,6 @@ public class AppPositionVO implements Serializable {
 
 //    private Integer createdBy;
 //    private Integer modifiedBy;
-//    private Long createdAt;
+    private Long createdAt;
 //    private Long modifiedAt;
 }
