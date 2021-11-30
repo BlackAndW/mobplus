@@ -33,5 +33,14 @@ public class AppVersion extends AuditorEntity {
     @Column(name = "n_status")
     private Integer status;
 
+    @Column(name = "n_update_method")
+    private Integer updateMethod;
+
+    @Column(name = "n_gp_url")
+    private String gpUrl;
+
+    @Column(name = "n_local_url")
+    private String localUrl;
+
 }
 

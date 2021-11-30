@@ -87,6 +87,8 @@ public class AppVersionServiceImpl implements AppVersionService {
             App app = new App();
             app.setId(form.getAppId());
             entity.setApp(app);
+            entity.setGpUrl("");
+            entity.setLocalUrl("");
             NewBeanUtils.copyProperties(entity, form, true);
             appVersionRepository.save(entity);
         } catch (Throwable e) {

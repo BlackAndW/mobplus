@@ -17,4 +17,8 @@ public class AppVersionVO implements Serializable {
     private String content;
     private Long createdAt;
     private Long modifiedAt;
+
+    private Integer updateMethod;
+    private String gpUrl;
+    private String localUrl;
 }
