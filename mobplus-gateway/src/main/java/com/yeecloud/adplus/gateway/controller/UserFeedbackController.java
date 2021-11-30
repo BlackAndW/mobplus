@@ -52,7 +52,7 @@ public class UserFeedbackController {
             params.put("ip", "192.155.85.6");
             MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
             final Request request = new Request.Builder()
-                    .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04//query/ip")
+                    .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/query/ip")
                     .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
                     .build();
             String area = OkHttpUtils.Response(request);
