@@ -18,6 +18,14 @@
         memoryStoreEvictionPolicy：缓存满了之后的淘汰算法。
     -->
 
+    <!-- 30秒 -->
+    <cache name="shortCache"
+           maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="15"
+           timeToLiveSeconds="30"
+           overflowToDisk="true"/>
+
     <!-- 一个月 -->
     <cache name="tokenCache"
            maxElementsInMemory="10000"
