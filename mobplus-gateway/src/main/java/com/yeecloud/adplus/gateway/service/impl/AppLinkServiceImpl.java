@@ -50,6 +50,8 @@ public class AppLinkServiceImpl implements AppLinkService {
         if (form.getAppId() != null && form.getAppId().length() > 0) {
             App app = appRepository.findByAppId(form.getAppId());
             predicate = ExpressionUtils.and(predicate, qAppLink.app.eq(app));
+        } else {
+            return null;
         }
         if (form.getId() != null && form.getId() > 0) {
             predicate = ExpressionUtils.and(predicate, qAppLink.id.eq(form.getId()));
@@ -58,11 +60,14 @@ public class AppLinkServiceImpl implements AppLinkService {
 
         PageRequest pageRequest = PageRequest.of(0, 500, sort);
         List<AppLink> appLinks = appLinkRepository.findAll(predicate, pageRequest).getContent();
-        Integer randomIndex = new Random().nextInt(appLinks.size());
-        AppLink appLink = appLinks.get(randomIndex);
-        AppLinkVO vo = new AppLinkVO();
-        NewBeanUtils.copyProperties(vo, appLink, true);
-        return vo;
+        if (appLinks.size() > 0) {
+            AppLinkVO vo = new AppLinkVO();
+            Integer randomIndex = new Random().nextInt(appLinks.size());
+            AppLink appLink = appLinks.get(randomIndex);
+            NewBeanUtils.copyProperties(vo, appLink, true);
+            return vo;
+        }
+        return null;
     }
 
     @Override

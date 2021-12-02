@@ -9,15 +9,12 @@ import com.yeecloud.adplus.dal.repository.WifiInfoRepository;
 import com.yeecloud.adplus.gateway.controller.vo.WifiInfoVO;
 import com.yeecloud.adplus.gateway.service.WifiService;
 import com.yeecloud.adplus.gateway.util.GPSUtil;
-import com.yeecloud.meeto.common.result.Result;
+import com.yeecloud.adplus.gateway.util.Result;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -25,6 +22,7 @@ import javax.persistence.GenerationType;
 import java.util.List;
 
 /**
+ * WIFI管理
  * @author: Leonard
  * @create: 2021/6/23
  */
@@ -47,14 +45,15 @@ public class WifiController {
     @ApiDoc
     @RequestMapping("distance")
     public Result getDistance(@RequestBody WifiInfo wifiInfo,
-                              @RequestParam(required = true, defaultValue = "") String gps) {
+                              @RequestParam(required = true, defaultValue = "") String gps,
+                              @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         QWifiInfo qWifiInfo = QWifiInfo.wifiInfo;
         Predicate predicate = qWifiInfo.deleted.eq(false);
         predicate = ExpressionUtils.and(predicate, qWifiInfo.id.eq(1));
         WifiInfo entity = wifiInfoRepository.findOne(predicate).orElse(null);
 
         double result = GPSUtil.GetPointDistance(wifiInfo.getGps(), entity.getGps());
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 
     /**
@@ -65,12 +64,13 @@ public class WifiController {
      */
     @ApiDoc
     @RequestMapping("list")
-    public Result<List<WifiInfoVO>> getWifiList(@RequestBody WifiInfo wifiInfo,
-                              @RequestParam(required = false, value = "distance", defaultValue = "1000.000") double distance,
-                              @RequestParam(required = true, defaultValue = "") String gps) {
+    public Result getWifiList(@RequestBody WifiInfo wifiInfo,
+                                                @RequestParam(required = false, value = "distance", defaultValue = "1000.000") double distance,
+                                                @RequestParam(required = true, defaultValue = "") String gps,
+                                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         List<WifiInfoVO> resultList = wifiService.getWifiList(wifiInfo, distance);
         if (resultList == null || resultList.size() < 1) { return Result.FAILURE("get wifiInfo list failure! No wifi found!"); }
-        return Result.SUCCESS(resultList);
+        return Result.isEncode(apiVersion, resultList);
     }
 
     /**
@@ -80,10 +80,11 @@ public class WifiController {
      */
     @ApiDoc
     @RequestMapping("item")
-    public Result<WifiInfoVO> getWifi(@RequestBody WifiInfo wifiInfo,
-                          @RequestParam(required = true, defaultValue = "") String gps) {
+    public Result getWifi(@RequestBody WifiInfo wifiInfo,
+                                      @RequestParam(required = true, defaultValue = "") String gps,
+                                      @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         WifiInfoVO result = wifiService.getWifi(wifiInfo);
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 
     /**

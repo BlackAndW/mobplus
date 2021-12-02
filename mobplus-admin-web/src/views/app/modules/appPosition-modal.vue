@@ -59,16 +59,23 @@
                         </a-row>
                     </a-checkbox-group>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="排序规则">
+                    <a-radio-group @change="changeOrderConfig" button-style="solid" v-decorator="[ 'orderConfig', {initialValue: model.orderConfig || 0}]">
+                        <a-radio-button :value="0">权重排序</a-radio-button>
+                        <a-radio-button :value="1">后台排序</a-radio-button>
+                        <a-radio-button :value="2">本地排序</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="全局展示次数配置">
                     <a-radio-group @change="changeShowConfig" button-style="solid" v-decorator="[ 'limitShowConfig', {initialValue: model.limitShowConfig || 0}]">
-                        <a-radio-button :value="1">开启</a-radio-button>
                         <a-radio-button :value="0">关闭</a-radio-button>
+                        <a-radio-button :value="1">开启</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="全局点击次数配置">
                     <a-radio-group @change="changeClickConfig" button-style="solid" v-decorator="[ 'limitClickConfig', {initialValue: model.limitClickConfig || 0}]">
-                        <a-radio-button :value="1">开启</a-radio-button>
                         <a-radio-button :value="0">关闭</a-radio-button>
+                        <a-radio-button :value="1">开启</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否展示广告">
@@ -107,6 +114,7 @@ export default {
             advList: [],
             limitShowConfigFlag: 0,
             limitClickConfigFlag: 0,
+            orderConfig: 0,
             func: () => {}
         };
     },
@@ -115,7 +123,6 @@ export default {
     },
     computed: {
         AdType: function () {
-            console.log(this.$DictFilterExclude(this.$AdType, [0]));
             return this.$DictFilterExclude(this.$AdType, [0]);
         }
     },
@@ -159,6 +166,9 @@ export default {
         },
         changeClickConfig (e) {
             this.limitClickConfigFlag = e.target.value;
+        },
+        changeOrderConfig (e) {
+            this.orderConfig = e.target.value;
         },
         onVersionChange () {
             this.$nextTick(() => {

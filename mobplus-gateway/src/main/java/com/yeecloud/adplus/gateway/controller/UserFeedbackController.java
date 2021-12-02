@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-    @RequestMapping("/api/v1/user/feedback")
+@RequestMapping("/api/v1/user/feedback")
 public class UserFeedbackController {
 
     @Autowired
@@ -37,18 +37,14 @@ public class UserFeedbackController {
 
     /**
      * 用户反馈信息提交
-     * @param m 加密标识
+     * @param m 加密标识，m=1
      * @param form 用户表单
      * @return
      */
-    @ApiDoc(stringResult = "{ code:2000, message:'ok' }")
     @PostMapping("commit")
-    public String commitUserFeedback(@RequestParam(value = "m") String m,
-                                     @RequestBody UserFeedbackForm form) {
-        boolean needCodec = m == null || m.trim().length() == 0;
-        if (form != null && needCodec) {
-            String body = Codec.decode(form.toString());
-        }
+    public String commitUserFeedback(@RequestParam(required = false, value = "m") String m,
+                                     @RequestBody UserFeedbackForm form,
+                                     @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
         String response = "";
         try {
             String ipAddress = ParamUtils.getIpAddr(request);
@@ -56,7 +52,7 @@ public class UserFeedbackController {
             params.put("ip", ipAddress);
             MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
             final Request request = new Request.Builder()
-                    .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04//query/ip")
+                    .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/query/ip")
                     .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
                     .build();
             String area = OkHttpUtils.Response(request);
@@ -66,6 +62,6 @@ public class UserFeedbackController {
         }catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
-        return needCodec ? Codec.encode(response) : Result.SUCCESS().toString();
+        return Result.SUCCESS().toString();
     }
 }

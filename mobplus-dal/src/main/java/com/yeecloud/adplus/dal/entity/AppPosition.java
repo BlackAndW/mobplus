@@ -53,6 +53,12 @@ public class AppPosition extends AuditorEntity {
     @Column(name = "n_limit_click_config")
     private Integer limitClickConfig = 0;
 
+    /**
+     * 排序规则(0:权重排序; 1:后台排序; 2:本地排序)
+     */
+    @Column(name = "n_order_config")
+    private Integer orderConfig = 0;
+
     @Column(name = "n_app_version_list")
     private String appVersionCheckList;
 

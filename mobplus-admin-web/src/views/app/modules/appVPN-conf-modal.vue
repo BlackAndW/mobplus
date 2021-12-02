@@ -187,7 +187,6 @@ export default {
             this.serverNMList.forEach(item => {
                 checkAllList.push(item.b01);
             });
-            console.log(checkAllList);
             this.form.setFieldsValue({
                 'serverNMCheckList': e.target.checked ? checkAllList : []
             });
@@ -217,7 +216,6 @@ export default {
         onServerBKChange () {
             this.$nextTick(() => {
                 const checkedList = this.form.getFieldValue('serverBKCheckList');
-                console.log(checkedList);
                 this.indeterminateBK = !!checkedList.length && checkedList.length < this.serverBKList.length;
                 this.checkAllServerBK = checkedList.length === this.serverBKList.length;
             });
@@ -240,11 +238,10 @@ export default {
             this.form.validateFields((err, values) => {
                 if (!err) {
                     $self.confirmLoading = true;
-                    console.log(values);
+                    // console.log(values);
                     $self
                         .func($self.url, values)
                         .then(data => {
-                            console.log(data);
                             $self.$message.success(data || '操作成功!');
                             $self.close(true);
                         })

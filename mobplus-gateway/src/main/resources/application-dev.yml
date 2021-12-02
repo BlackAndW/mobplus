@@ -37,6 +37,7 @@ spring:
     connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=3000
   jpa:
     properties.hibernate:
+      enable_lazy_load_no_trans: true
       dialect: org.hibernate.dialect.MySQL8Dialect
       hbm2ddl.auto: none
     show-sql: true

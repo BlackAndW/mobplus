@@ -91,7 +91,6 @@ public class ScannerServiceImpl implements ScannerService {
 
     @Override
     public List<ScannerVO> getResult(ScannerForm form) throws IOException, ServiceException {
-        long startTime = System.currentTimeMillis();
         String image = "image=" + form.getImageBase64();
         String baike_num = "&baike_num=6";
         String typeName = ScannerType.getType(form.getType());
@@ -99,6 +98,7 @@ public class ScannerServiceImpl implements ScannerService {
         if (form.getType() == 0) {
             resUrl = resUrl.replaceAll("/v1/", "/v2/");
         }
+        long startTime = System.currentTimeMillis();
         final Request request = new Request.Builder()
                 .url(resUrl)
                 .post(okhttp3.RequestBody.create(MediaType.parse("Content-Type:application/x-www-form-urlencoded; charset=utf-8"), image + baike_num))
@@ -106,7 +106,7 @@ public class ScannerServiceImpl implements ScannerService {
         String result = OkHttpUtils.buildNoVerifyClient().newCall(request).execute().body().string();
         long endTime = System.currentTimeMillis();
         log.info("百度api用时：" + (endTime - startTime));
-        System.out.println(result);
+
         JSONArray responseArray = JSONObject.parseObject(result).getJSONArray("result");
         List<ScannerVO> vos = new ArrayList<>();
 
@@ -131,7 +131,9 @@ public class ScannerServiceImpl implements ScannerService {
                 vo.setScore(imageInfo.getBigDecimal("score"));
                 String description = getDescription(form.getToLang(), imageNameTrans, imageInfo);
                 vo.setDes(description);
-                vo.setImgUrl(getImgUrl(form.getToLang(), imageNameTrans));
+                String wikiImgUrl = getWikiImgUrl(form.getToLang(), imageNameTrans);
+                vo.setImgUrl(wikiImgUrl);
+                vo.setImgUrlList(genImgUrlList(wikiImgUrl, imageInfo));
                 vos.add(vo);
             }
         } else {
@@ -189,7 +191,7 @@ public class ScannerServiceImpl implements ScannerService {
         return translateService.translation(form);
     }
 
-    private synchronized String getImgUrl(String lang, String title) throws IOException {
+    private synchronized String getWikiImgUrl(String lang, String title) throws IOException {
         String wikiUrl = "https://" +
                 lang +
                 ".wikipedia.org/w/api.php" +
@@ -209,6 +211,19 @@ public class ScannerServiceImpl implements ScannerService {
             }
         }
         return "";
+    }
+
+    // 返回wiki和百科的封面图列表
+    private List<String> genImgUrlList(String wikiImgUrl, JSONObject imageInfo) throws IOException {
+        List<String> imgUrlList = new ArrayList<>();
+        if (wikiImgUrl != null && wikiImgUrl.length() > 0) {
+            imgUrlList.add(wikiImgUrl);
+        }
+        String baikeImgUrl = imageInfo.getJSONObject("baike_info").getString("image_url");
+        if (baikeImgUrl != null && baikeImgUrl.length() > 0) {
+            imgUrlList.add(baikeImgUrl);
+        }
+        return imgUrlList;
     }
 
     @Override

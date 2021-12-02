@@ -82,6 +82,11 @@
                             <span v-if="text===1">未启用</span>
                             <span v-else>已启用</span>
                         </template>
+                        <template slot="updateSlot" slot-scope="text">
+                            <span v-if="text===0">不启用</span>
+                            <span v-if="text===1">GP更新</span>
+                            <span v-if="text===2">应用内更新</span>
+                        </template>
                         <span slot="action" slot-scope="text, record">
                             <a
                                 v-action="['app:version:edit']"
@@ -112,6 +117,11 @@ const columns = [
         title: '状态',
         dataIndex: 'status',
         scopedSlots: { customRender: 'statusSlot' }
+    },
+    {
+        title: '更新配置',
+        dataIndex: 'updateMethod',
+        scopedSlots: { customRender: 'updateSlot' }
     },
     {
         title: '添加时间',

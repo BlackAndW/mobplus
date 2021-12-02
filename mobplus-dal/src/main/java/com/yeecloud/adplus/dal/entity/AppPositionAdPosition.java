@@ -50,4 +50,11 @@ public class AppPositionAdPosition extends AuditorEntity {
      */
     @Column(name = "n_limit_click_count")
     private Integer limitClickCount = 2;
+
+    /**
+     * 后台排序
+     */
+    @Column(name = "n_order")
+    private Integer order = 0;
+
 }

@@ -23,4 +23,6 @@ public class AppPosCfgVO implements Serializable {
 
     @JSONField(name = "cfg")
     private Map<String, Object> params;
+
+    private int orderConfig;
 }

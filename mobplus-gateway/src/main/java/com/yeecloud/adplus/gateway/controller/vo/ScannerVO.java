@@ -3,6 +3,7 @@ package com.yeecloud.adplus.gateway.controller.vo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author: Leonard
@@ -22,4 +23,7 @@ public class ScannerVO {
 
     /** wiki封面url */
     private String imgUrl;
+
+    /** 百度+wiki封面 **/
+    private List<String> imgUrlList;
 }

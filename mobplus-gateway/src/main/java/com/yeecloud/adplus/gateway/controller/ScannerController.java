@@ -63,57 +63,50 @@ public class ScannerController {
 
     /**
      * 图像识别
-     * @param imageBase64 base64编码后的图片
-     * @param type 图片类型 0: 通用; 1: 动物; 2: 植物; 3: 食物; 4: 货币; 5: 地标风景
-     * @param toLang 翻译成的语言简称 如:zh,en
+     * @param form-imageBase64 base64编码后的图片
+     * @param form-type 图片类型 0: 通用; 1: 动物; 2: 植物; 3: 食物; 4: 货币; 5: 地标风景
+     * @param form-toLang 翻译成的语言简称 如:zh,en
      * @return
      * @throws IOException
      * @throws ServiceException
      */
-    @ApiDoc
     @RequestMapping("/imageScan")
-    public Result<List<ScannerVO>> imageScan(@RequestBody ScannerForm form,
-                                             @RequestParam(required = true, defaultValue = "") String imageBase64,
-                                             @RequestParam(required = true, defaultValue = "0") Integer type,
-                                             @RequestParam(required = true, defaultValue = "") String toLang) throws IOException, ServiceException {
+    public Result imageScan(@RequestBody ScannerForm form,
+                            @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws IOException, ServiceException {
         try {
             String imgParam = URLEncoder.encode(form.getImageBase64(), "UTF-8");
             form.setImageBase64(imgParam);
             List<ScannerVO> result = scannerService.getResult(form);
-            return Result.SUCCESS(result);
+            return Result.isEncode(apiVersion, result);
         } catch (Exception e) {
             return Result.FAILURE(e.getMessage());
         }
     }
 
     /**
-     * 用户反馈
+     * 识别结果反馈
      * @param form
      * @return
      */
-    @ApiDoc
     @RequestMapping("/feedback")
     public Result feedback(@RequestBody FeedbackForm form) {
         scannerService.insertFeedbackLog(form);
-        return Result.SUCCESS();
+        return Result.SUCCESS("feedback updated!");
     }
 
     /**
      * 文本翻译（字符串）
-     * @param sourceString  源字符串
-     * @param fromLang      源语言简称
-     * @param toLang        目标语言简称
+     * @param form-sourceString  源字符串
+     * @param form-fromLang      源语言简称
+     * @param form-toLang        目标语言简称
      * @return
      */
-    @ApiDoc
     @RequestMapping("/translate")
     public Result translateText(@RequestBody TranslateForm form,
-                                @RequestParam(required = true, defaultValue = "") String sourceString,
-                                @RequestParam(required = false, defaultValue = "") String fromLang,
-                                @RequestParam(required = true, defaultValue = "") String toLang){
+                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion){
         String result = translateService.translation(form);
         if (result == null) { return Result.FAILURE("translation error!"); }
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 
     /**
@@ -125,12 +118,13 @@ public class ScannerController {
      */
     @ApiDoc
     @RequestMapping("/translateList")
-    public Result<List<String>> translateTextList(@RequestBody TranslateForm form,
+    public Result translateTextList(@RequestBody TranslateForm form,
                                 @RequestParam(required = true, defaultValue = "") String sourceList,
                                 @RequestParam(required = false, defaultValue = "") String fromLang,
-                                @RequestParam(required = true, defaultValue = "") String toLang){
+                                @RequestParam(required = true, defaultValue = "") String toLang,
+                                                  @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion){
         List<String> result = translateService.translationList(form);
         if (result == null) { return Result.FAILURE("translation error!"); }
-        return Result.SUCCESS(result);
+        return Result.isEncode(apiVersion, result);
     }
 }

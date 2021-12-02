@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 @EnableJpaAuditing
 @EnableAsync
 @EnableAspectJAutoProxy(exposeProxy = true)
+@EnableScheduling
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 

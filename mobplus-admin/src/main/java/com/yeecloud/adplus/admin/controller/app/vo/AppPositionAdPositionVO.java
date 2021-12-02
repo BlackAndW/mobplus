@@ -25,6 +25,7 @@ public class AppPositionAdPositionVO implements Serializable, Comparable<AppPosi
     private Integer limitShowCount = 3;
     private Integer limitClickCount = 2;
     private String remark;
+    private Integer order = 0;
 
     public AppPositionAdPositionVO() {
     }
