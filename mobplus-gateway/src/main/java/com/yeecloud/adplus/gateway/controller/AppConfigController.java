@@ -49,7 +49,7 @@ public class AppConfigController {
             AppConfigVO vo = appConfigService.getAppProjectConfigV1(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = JSON.toJSONString(Result.isEncode(apiVersion, vo), config);
+            response = Result.isEncode(apiVersion, JSON.toJSONString(vo, config)).toString();
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
@@ -77,7 +77,7 @@ public class AppConfigController {
             AppConfigVOV2 vo = appConfigService.getAppProjectConfigV2(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
-            response = JSON.toJSONString(Result.isEncode(apiVersion, vo), config);
+            response = Result.isEncode(apiVersion, JSON.toJSONString(vo, config)).toString();
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
         }
