@@ -130,9 +130,9 @@ public class ChargeServiceImpl implements ChargeService {
             List<ChargeMType> resultList =   (List<ChargeMType>)chargeMTypeRepository.findAll(predicate, sort);
             if (toLang != null && toLang.length() > 0) {
                 resultList.forEach(result -> {
-                    TranslateForm form = new TranslateForm(result.getEnName(), toLang);
-                    String newName = translateService.translation(form);
-                    result.setEnName(newName);
+//                    TranslateForm form = new TranslateForm(result.getEnName(), toLang);
+//                    String newName = translateService.translation(form);
+                    result.setEnName(result.getEnName());
                 });
             }
             return convertMType(resultList);
