@@ -49,6 +49,9 @@ public class AppLinkServiceImpl implements AppLinkService {
         Predicate predicate = qAppLink.deleted.eq(false);
         if (form.getAppId() != null && form.getAppId().length() > 0) {
             App app = appRepository.findByAppId(form.getAppId());
+            if (app == null) {
+                return null;
+            }
             predicate = ExpressionUtils.and(predicate, qAppLink.app.eq(app));
         } else {
             return null;

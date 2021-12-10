@@ -13,6 +13,8 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +37,9 @@ public class UserFeedbackController {
     @Autowired
     HttpServletRequest request;
 
+    @Autowired
+    CacheManager cacheManager;
+
     /**
      * 用户反馈信息提交
      * @param m 加密标识，m=1
@@ -48,11 +53,19 @@ public class UserFeedbackController {
         String response = "";
         try {
             String ipAddress = ParamUtils.getIpAddr(request);
+            // 缓存去重
+            Cache shortCache = cacheManager.getCache("shortCache");
+            assert shortCache != null;
+            if (shortCache.get(ipAddress + form.getContent()) != null) {
+                return "";
+            } else {
+                shortCache.put(ipAddress + form.getContent(), 1);
+            }
             Map<String, Object> params = new HashMap<>();
             params.put("ip", ipAddress);
             MediaType mediaType = MediaType.parse("application/json; charset=utf-8");
             final Request request = new Request.Builder()
-                    .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04//query/ip")
+                    .url(OkHttpUtils.VPN_URL + "/app/api/v1/c04/query/ip")
                     .post(okhttp3.RequestBody.create(mediaType, JSONObject.toJSONString(params)))
                     .build();
             String area = OkHttpUtils.Response(request);
