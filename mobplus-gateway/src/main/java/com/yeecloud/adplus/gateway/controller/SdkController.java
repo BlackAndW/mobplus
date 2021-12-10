@@ -104,6 +104,9 @@ public class SdkController {
             SdkCfgVO vo = sdkService.getPosList(form);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
+            if (Double.valueOf(apiVersion) > 1.0) {
+                return Result.ENCODE(JSON.toJSONString(vo, config)).toString();
+            }
             response = JSON.toJSONString(Result.isEncode(apiVersion, vo), config);
         } catch (Throwable e) {
             throw new ServiceException(e.getMessage());
