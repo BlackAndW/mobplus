@@ -48,13 +48,13 @@ public class SpeedController {
 
     }
 
-    @PostMapping("encode")
-    public Result encode(@RequestBody String org) {
-        return Result.ENCODE(org);
-    }
-
-    @PostMapping("decode")
-    public String decode(@RequestBody String org) {
-        return org;
-    }
+//    @PostMapping("encode")
+//    public Result encode(@RequestBody String org) {
+//        return Result.ENCODE(org);
+//    }
+//
+//    @PostMapping("decode")
+//    public String decode(@RequestBody String org) {
+//        return org;
+//    }
 }
