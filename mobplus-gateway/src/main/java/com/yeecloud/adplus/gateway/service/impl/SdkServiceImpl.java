@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.adplus.dal.repository.*;
 import com.yeecloud.adplus.gateway.controller.form.DeviceForm;
+import com.yeecloud.adplus.gateway.controller.form.TestAdPos;
 import com.yeecloud.adplus.gateway.controller.vo.*;
 import com.yeecloud.adplus.gateway.service.AppConfigService;
 import com.yeecloud.adplus.gateway.service.DeviceService;
@@ -79,7 +80,7 @@ public class SdkServiceImpl implements SdkService {
         // 获取应用对应广告平台的配置
         addAdvertiserList(vo, app);
         // 获取应用的所有展示位
-        addAppPositionList(form, vo, app, false);
+        addAppPositionList(form, vo, app, false, "close");
         return vo;
     }
 
@@ -97,12 +98,12 @@ public class SdkServiceImpl implements SdkService {
         // 获取应用对应广告平台的配置
         addAdvertiserList(vo, app);
         // 获取应用的所有展示位
-        addAppPositionList(form, vo, app, true);
+        addAppPositionList(form, vo, app, true, "close");
         return vo;
     }
 
     @Override
-    public SdkCfgVO getPosList(DeviceForm form) throws ServiceException {
+    public SdkCfgVO getPosList(DeviceForm form, String testMode) throws ServiceException {
 //        deviceService.createOrUpdateOpenDevice(form);
         AppConfigVOV2 appConfigVOV2 = appConfigService.getAppProjectConfigV2(form);
         // 根据安卓端请求的值查找对应的应用
@@ -115,7 +116,7 @@ public class SdkServiceImpl implements SdkService {
         SdkCfgVO vo = new SdkCfgVO();
         // 获取应用对应版本渠道的展示位（默认获取所有）
         if (appConfigVOV2.getAdSwitch() == 1) {
-            addAppPositionList(form, vo, app, true);
+            addAppPositionList(form, vo, app, true, testMode);
         }
         return vo;
     }
@@ -128,7 +129,7 @@ public class SdkServiceImpl implements SdkService {
         return v;
     }
 
-    private void addAppPositionList(DeviceForm form, SdkCfgVO vo, App app, Boolean isEn) throws ServiceException {
+    private void addAppPositionList(DeviceForm form, SdkCfgVO vo, App app, Boolean isEn, String testMode) throws ServiceException {
         List<AppPosition> appPositionList = appPositionRepository.findByApp(app);
         if (appPositionList.isEmpty()) {
             if (isEn) {
@@ -166,10 +167,19 @@ public class SdkServiceImpl implements SdkService {
                     continue;
                 }
                 AdPositionVO adPositionVO = new AdPositionVO();
-                adPositionVO.setAdvertiser(appPosAdPosition.getAdPosition().getAdvertiser().getCode());
-                adPositionVO.setPosId(appPosAdPosition.getAdPosition().getCode());
+                String adv = appPosAdPosition.getAdPosition().getAdvertiser().getCode();
+                int adType = appPosAdPosition.getAdPosition().getType().getId();
+                adPositionVO.setAdvertiser(adv);
+                adPositionVO.setAdType(adType);
+                // 替换测试广告id
+                if (testMode != null && testMode.equals("open")) {
+                    adPositionVO.setPosId(TestAdPos.getTestPosId(adv, adType));
+                } else if (!form.getRemoteIp().equals("103.137.150.238") && testMode != null && testMode.equals("close")){
+                    adPositionVO.setPosId(appPosAdPosition.getAdPosition().getCode());
+                } else {
+                    adPositionVO.setPosId("");
+                }
                 adPositionVO.setUnitId(appPosAdPosition.getAdPosition().getMintegralUnitId());
-                adPositionVO.setAdType(appPosAdPosition.getAdPosition().getType().getId());
                 adPositionVO.setRatio(appPosAdPosition.getRatio());
                 adPositionVO.setTypeRatio(appPosAdPosition.getTypeRatio());
                 adPositionVO.setLimitShowCount(appPosAdPosition.getLimitShowCount());
