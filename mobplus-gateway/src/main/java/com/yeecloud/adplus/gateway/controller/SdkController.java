@@ -96,12 +96,13 @@ public class SdkController {
     public String getAppPosition(@RequestBody String body,
                                  @RequestParam(required = false) String m,
                                  @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion,
+                                 @RequestHeader(value = "TestMode", defaultValue = "close") String testMode,
                                  HttpServletRequest request) {
         String response = "";
         try {
             DeviceForm form = JSON.parseObject(body, DeviceForm.class);
             form.setRemoteIp(ParamUtils.getIpAddr(request));
-            SdkCfgVO vo = sdkService.getPosList(form);
+            SdkCfgVO vo = sdkService.getPosList(form, testMode);
             SerializeConfig config = new SerializeConfig();
             config.propertyNamingStrategy = PropertyNamingStrategy.SnakeCase;
             if (Double.valueOf(apiVersion) > 1.0) {
