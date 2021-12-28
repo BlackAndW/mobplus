@@ -172,7 +172,7 @@ public class SdkServiceImpl implements SdkService {
                 adPositionVO.setAdvertiser(adv);
                 adPositionVO.setAdType(adType);
                 // 替换测试广告id
-                if (testMode != null && testMode.equals("open")) {
+                if (testMode != null && testMode.equals("open") && form.getRemoteIp().equals("103.137.150.238")) {
                     adPositionVO.setPosId(TestAdPos.getTestPosId(adv, adType));
                 } else if (!form.getRemoteIp().equals("103.137.150.238") && testMode != null && testMode.equals("close")){
                     adPositionVO.setPosId(appPosAdPosition.getAdPosition().getCode());
