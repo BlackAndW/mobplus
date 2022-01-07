@@ -38,11 +38,10 @@ public class WifiController {
     WifiService wifiService;
 
     /**
-     * 获取距离原点的距离
+     * 获取wifi距离用户坐标的距离
      * @param gps 用户gps坐标
      * @return
      */
-    @ApiDoc
     @RequestMapping("distance")
     public Result getDistance(@RequestBody WifiInfo wifiInfo,
                               @RequestParam(required = true, defaultValue = "") String gps,
@@ -62,7 +61,6 @@ public class WifiController {
      * @param gps       用户gps坐标
      * @return
      */
-    @ApiDoc
     @RequestMapping("list")
     public Result getWifiList(@RequestBody WifiInfo wifiInfo,
                                                 @RequestParam(required = false, value = "distance", defaultValue = "1000.000") double distance,
@@ -78,7 +76,6 @@ public class WifiController {
      * @param gps   用户gps坐标
      * @return
      */
-    @ApiDoc
     @RequestMapping("item")
     public Result getWifi(@RequestBody WifiInfo wifiInfo,
                                       @RequestParam(required = true, defaultValue = "") String gps,
@@ -92,7 +89,6 @@ public class WifiController {
      * @param form
      * @return
      */
-    @ApiDoc
     @RequestMapping("save")
     public Result save(@RequestBody WifiInfoForm form) {
         WifiInfo wifiInfo = new WifiInfo();

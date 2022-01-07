@@ -63,8 +63,12 @@
                         <a-avatar shape="square" :src="text" v-if="text && text.length > 0"/>
                     </template>
                     <template slot="statusSlot" slot-scope="text">
-                        <span v-if="text === 1">暂停</span>
+                        <span v-if="text === 1" class="red">暂停</span>
                         <span v-else-if="text === 2">启用</span>
+                    </template>
+                    <template slot="onlineSlot" slot-scope="text, record">
+                        <span v-if="text > record.maxConn" class="red">{{ text }}</span>
+                        <span v-if="text <= record.maxConn">{{ text }}</span>
                     </template>
                     <span slot="action" slot-scope="text, record">
                         <a
@@ -111,7 +115,8 @@ const columns = [
     },
     {
         title: '在线人数',
-        dataIndex: 'onlineConn'
+        dataIndex: 'onlineConn',
+        scopedSlots: { customRender: 'onlineSlot' }
     },
     {
         title: '连接总数',
@@ -158,6 +163,12 @@ export default {
     computed: {},
     mounted () {
         this.loadAppTreeData();
+        const timer = setInterval(() => {
+            this.$refs.table.refresh(false);
+        }, 5000);
+        this.$once('hook:beforeDestroy', () => {
+            clearInterval(timer);
+        });
     },
     methods: {
         show: function (record) {
@@ -233,5 +244,9 @@ export default {
     .button-area {
         display: flex;
         justify-content: space-between;
+    }
+
+    .red {
+        color: red;
     }
 </style>
