@@ -108,4 +108,17 @@ public class AppConfigController {
             throw new ServiceException(e.getMessage());
         }
     }
+
+    @PostMapping("/api/v1/app/fb_no")
+    public Result getAppFbId(@RequestBody String body,
+                             @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
+        try {
+            DeviceForm form = JSON.parseObject(body, DeviceForm.class);
+            Map<String, String> result = appConfigService.getAppFbNo(form);
+            log.debug("RespToApp:{}", result);
+            return Result.isEncode(apiVersion, result);
+        } catch (Throwable e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 }

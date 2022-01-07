@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.gateway.service.impl;
 
+import cn.hutool.json.JSONString;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.yeecloud.adplus.dal.entity.*;
@@ -149,6 +150,22 @@ public class AppConfigServiceImpl implements AppConfigService {
                 result.put(appMobileConf.getKey(), appMobileConf.getValue());
             }
 
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, String> getAppFbNo(DeviceForm form) throws ServiceException {
+        App app = appRepository.findByAppId(form.getAppId());
+        if (app == null) {
+            throw new ServiceException("app does not exit!");
+        }
+        Map<String, String> result = Maps.newHashMap();
+        JSONObject conf = JSONObject.parseObject(app.getConf());
+        if (conf != null) {
+            if (StringUtils.isNotEmpty(conf.getString("fb_no")))
+            result.put("fb_no", conf.getString("fb_no"));
+            return result;
         }
         return result;
     }

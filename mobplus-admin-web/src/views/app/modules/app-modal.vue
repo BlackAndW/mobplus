@@ -59,9 +59,9 @@
                         v-decorator="[ 'iconPath', {initialValue: model.iconPath }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="友盟—AppKey">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="Facebook编号">
                     <a-input
-                        v-decorator="[ 'extra.umengKey', {initialValue: getUmentKey(model) }]"
+                        v-decorator="[ 'extra.fb_no', {initialValue: getFbNo(model) }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
@@ -99,9 +99,9 @@ export default {
         };
     },
     methods: {
-        getUmentKey: function (model) {
-            if (model.extra && model.extra.umengKey) {
-                return model.extra.umengKey;
+        getFbNo: function (model) {
+            if (model.extra && model.extra.fb_no) {
+                return model.extra.fb_no;
             }
             return '';
         },

@@ -20,4 +20,6 @@ public interface AppConfigService {
 
     Map<String,String > getAppConfig(DeviceForm form) throws ServiceException;
 
+    Map<String, String> getAppFbNo(DeviceForm form) throws ServiceException;
+
 }
