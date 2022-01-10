@@ -163,12 +163,6 @@ export default {
     computed: {},
     mounted () {
         this.loadAppTreeData();
-        const timer = setInterval(() => {
-            this.$refs.table.refresh(false);
-        }, 5000);
-        this.$once('hook:beforeDestroy', () => {
-            clearInterval(timer);
-        });
     },
     methods: {
         show: function (record) {
@@ -188,6 +182,16 @@ export default {
         onQueryDict: function (item) {
             this.currentApp = item;
             this.$refs.table.refresh(true);
+
+            this.startInterval();
+        },
+        startInterval () {
+            const timer = setInterval(() => {
+                this.$refs.table.refresh(false);
+            }, 5000);
+            this.$once('hook:beforeDestroy', () => {
+                clearInterval(timer);
+            });
         },
         loadAppTreeData: async function () {
             this.treeloading = true;
