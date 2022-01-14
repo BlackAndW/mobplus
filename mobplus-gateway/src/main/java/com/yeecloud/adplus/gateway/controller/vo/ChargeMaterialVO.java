@@ -38,6 +38,9 @@ public class ChargeMaterialVO {
     /** 壁纸 缩略图 */
     private String thumbUrl;
 
+    /** 真实使用次数 */
+    private String useNum;
+
     /** 虚拟使用次数(前端展示用) */
     private String useNumFake;
 
