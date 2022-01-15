@@ -1,5 +1,7 @@
 package com.yeecloud.adplus.admin.util;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.meeto.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -71,6 +73,43 @@ public class ExcelUtil {
                     log.error(e.getMessage(), e);
                 } catch (NoSuchMethodException e) {
                     log.error(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    /**
+     * 将JSONArray数据写入excel工作簿
+     *
+     * @param sheet     写入的工作簿的对象
+     * @param list      写入的数据
+     * @param cols      列名数组，对应对象的字段
+     * @param startRow  起始行数，不同于Excel文件，基数为0
+     * @param startCell 起始列数，不同于Excel文件，基数为0
+     */
+    public static void writeJSONArrayToExcel(Sheet sheet, JSONArray list, String[] cols, int startRow, int startCell) {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        CellStyle normalStyle = createNormalStyle(sheet);
+
+        Row headerRow = createRow(sheet, startRow++);
+        for (int i = 0; i < cols.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellStyle(normalStyle);
+            cell.setCellValue(cols[i]);
+        }
+        for (Object obj : list) {
+            JSONObject jsonObject = (JSONObject) obj;
+            Row dataRow = createRow(sheet, startRow++);
+            for (int i = 0; i < cols.length; i++) {
+                Cell cell = dataRow.createCell(i);
+                cell.setCellStyle(normalStyle);
+                if (cols[i].equals("createdAt")) {
+                    cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                            .format(jsonObject.getLong(cols[i])));
+                } else {
+                    cell.setCellValue(jsonObject.getString(cols[i]));
                 }
             }
         }
@@ -154,7 +193,7 @@ public class ExcelUtil {
         if (value == null) {
             value = "";
         }
-        if (StringUtils.equals(BIGDECIMAL, pattern)) { // 货比格式
+        if (StringUtils.equals(BIGDECIMAL, pattern)) { // 货币格式
             cell.setCellValue((new BigDecimal(String.valueOf(value))).doubleValue());
 
             numberStyle.setBorderRight(right ? BorderStyle.MEDIUM : BorderStyle.THIN);
