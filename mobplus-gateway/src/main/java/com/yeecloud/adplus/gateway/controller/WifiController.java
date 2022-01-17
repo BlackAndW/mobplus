@@ -6,6 +6,7 @@ import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.dal.entity.QWifiInfo;
 import com.yeecloud.adplus.dal.entity.WifiInfo;
 import com.yeecloud.adplus.dal.repository.WifiInfoRepository;
+import com.yeecloud.adplus.gateway.controller.form.WifiInfoForm;
 import com.yeecloud.adplus.gateway.controller.vo.WifiInfoVO;
 import com.yeecloud.adplus.gateway.service.WifiService;
 import com.yeecloud.adplus.gateway.util.GPSUtil;
@@ -96,13 +97,4 @@ public class WifiController {
         wifiService.saveWifi(wifiInfo);
         return Result.SUCCESS("save success!");
     }
-}
-
-@Data
-class WifiInfoForm{
-    private String name;
-    private String gps;
-    private String mac;
-    private String type;
-    private String password;
 }
