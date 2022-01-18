@@ -105,7 +105,7 @@ public class VpnLogController extends HttpServlet {
     private String makeExcel(JSONArray list) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet();
-        String[] cols = {"errMsg", "userIp", "country", "region","city", "serverName", "pkgVersion", "createdAt"};
+        String[] cols = {"errMsg", "userIp", "country", "region","city", "serverName", "os", "pkgVersion", "createdAt"};
         ExcelUtil.writeJSONArrayToExcel(sheet, list, cols, 0, 0);
         for (int i = 0; i < cols.length; i++) {
             sheet.autoSizeColumn(i);

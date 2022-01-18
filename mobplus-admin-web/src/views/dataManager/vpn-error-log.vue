@@ -52,6 +52,13 @@
                                     v-model="queryParam.serverName"
                                 />
                             </a-form-item>
+                            <a-form-item>
+                                <a-input
+                                    type="text"
+                                    placeholder="请输入系统版本"
+                                    v-model="queryParam.os"
+                                />
+                            </a-form-item>
                             <a-form-item class="float-right">
                                 <div>
                                     <a-button
@@ -61,7 +68,7 @@
                                 </div>
                             </a-form-item>
                             <a-form-item>
-                                <a-select placeholder="版本" v-model="queryParam.appVersionCode" style="width:120px">
+                                <a-select placeholder="应用版本" v-model="queryParam.appVersionCode" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option
                                         v-for="appVersion in appVersionList"
@@ -140,7 +147,11 @@ const columns = [
         dataIndex: 'serverName'
     },
     {
-        title: '版本号',
+        title: '系统版本',
+        dataIndex: 'os'
+    },
+    {
+        title: '应用版本',
         dataIndex: 'pkgVersion'
     },
     {
