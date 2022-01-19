@@ -60,7 +60,7 @@ public class ScheduleTask {
 
     private static final String FILE_NAME = "result.json";
 
-    private static final String API_VERSION = "1.1";
+    private static final String API_VERSION = "1.0";
 
     @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
     private void getAppConfigCfg() {
