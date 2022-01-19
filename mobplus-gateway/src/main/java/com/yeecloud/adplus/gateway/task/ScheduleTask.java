@@ -60,6 +60,8 @@ public class ScheduleTask {
 
     private static final String FILE_NAME = "result.json";
 
+    private static final String API_VERSION = "1.1";
+
     @Scheduled(fixedDelay = 24 * 60 * 60 * 1000)
     private void getAppConfigCfg() {
         QApp qApp = QApp.app;
@@ -99,7 +101,7 @@ public class ScheduleTask {
                             appVersion + "/" +
                             channel + "/";
 
-                    genConfigFile(dirName, appConfigController.getAppConfig(body,"", "1.0"));
+                    genConfigFile(dirName, appConfigController.getAppConfig(body,"", API_VERSION));
                 });
             });
         });
