@@ -2,6 +2,12 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
+                <a-form-item>
+                    <a-input
+                        type="hidden"
+                        v-decorator="[ 'appId', {initialValue: model.appId}]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型名称">
                     <a-input
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入分类名称' }] }]"
@@ -62,6 +68,7 @@ export default {
     },
     data () {
         return {
+            appId: '',
             title: '',
             visible: false,
             confirmLoading: false,
@@ -74,17 +81,19 @@ export default {
     },
     computed: { },
     methods: {
-        add: function () {
+        add: function (currentApp) {
             this.title = '新增分类';
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.model = {};
+            this.model.appId = currentApp.key;
             this.url = '/cms/charge/mtype';
             this.visible = true;
         },
-        edit: function (record) {
+        edit: function (record, currentApp) {
             this.title = '编辑分类:' + record.name;
             this.model = record;
+            this.model.appId = currentApp.key;
             this.url = '/cms/charge/mtype/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;

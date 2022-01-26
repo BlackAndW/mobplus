@@ -1,92 +1,108 @@
 <template>
     <div class="panel panel-sys-user">
-        <a-card :bordered="true" class="card-search card-list">
-            <!--       -->
-            <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
-                <div class="l">
-                    <a-form-item label="素材类别" >
-                        <a-select
-                            placeholder="选择类型"
-                            v-model="queryParam.type"
-                            style="width:120px"
-                        >
-                            <a-select-option
-                                v-for="item in typeList"
-                                :key="item.name"
-                                :value="item.id"
-                            >{{ item.name }}
-                            </a-select-option>
-                        </a-select>
-                    </a-form-item>
-                    <a-button-group class="btn-grp-margin-top">
-                        <a-button
-                            icon="sync"
-                            v-action="['cms:charge:query']"
-                            @click="$refs.table.refresh(false)"
-                        />
-                        <a-button
-                            type="primary"
-                            icon="search"
-                            @click="$refs.table.refresh(true)"
-                        >查询</a-button>
-                    </a-button-group>
-                </div>
-                <div class="r">
-                    <a-button-group class="btn-grp-margin-top">
-                        <a-button
-                            icon="sync"
-                            v-action="['cms:charge:query']"
-                            @click="$refs.table.refresh(false)"
-                        />
-                        <a-button
-                            icon="plus"
-                            v-action="['cms:charge:create']"
-                            @click="$refs.modal.add(typeList)"
-                        >新增</a-button>
-                        <a-button
-                            icon="delete"
-                            v-action="['cms:charge:delete']"
-                            v-if="selectedRowKeys.length>0"
-                            @click="onDelete()"
-                        >删除</a-button>
-                    </a-button-group>
-                </div>
-            </a-form>
-            <!--       -->
-            <s-table
-                bordered
-                ref="table"
-                class="card-table"
-                :columns="columns"
-                :data="loadData"
-                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-            >
-                <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
-                <span slot="actionSlot" slot-scope="text, record">
-                    <a v-action="['cms:charge:edit']" @click="$refs.modal.edit(record, typeList)">编辑</a>
-                    <a-divider type="vertical" />
-                    <a v-action="['cms:charge:delete']" @click="onDelete(record)">删除</a>
-                </span>
-                <template slot="imgSlot" slot-scope="text">
-                        <img
-                            class="image-slot"
-                            v-if="text && text.length > 0"
-                            :src="text"
-                        />
-                </template>
-                <template slot="useLimitSlot" slot-scope="text">
-                    <span v-if="text===1">是</span>
-                    <span v-else-if="text===2">否</span>
-                </template>
-            </s-table>
-        </a-card>
+        <a-row :gutter="12">
+            <a-col :span="4">
+                <a-card :bordered="true" title="应用信息" class="tree-list" :loading="treeloading">
+                    <a-icon
+                        slot="extra"
+                        type="sync"
+                        @click="loadAppTreeData"
+                        style="cursor: pointer"
+                    />
+                    <s-tree class="tree-list-style" :dataSource="appTreeData" @add="onQueryDict" />
+                </a-card>
+            </a-col>
+            <a-col :span="20">
+                <a-card :bordered="true" class="card-search card-list">
+                    <!--       -->
+                    <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
+                        <div class="l">
+                            <a-form-item label="素材类别" >
+                                <a-select
+                                    placeholder="选择类型"
+                                    v-model="queryParam.type"
+                                    style="width:120px"
+                                >
+                                    <a-select-option
+                                        v-for="item in typeList"
+                                        :key="item.name"
+                                        :value="item.id"
+                                    >{{ item.name }}
+                                    </a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-button-group class="btn-grp-margin-top">
+                                <a-button
+                                    icon="sync"
+                                    v-action="['cms:charge:query']"
+                                    @click="$refs.table.refresh(false)"
+                                />
+                                <a-button
+                                    type="primary"
+                                    icon="search"
+                                    @click="$refs.table.refresh(true)"
+                                >查询</a-button>
+                            </a-button-group>
+                        </div>
+                        <div class="r">
+                            <a-button-group class="btn-grp-margin-top">
+                                <a-button
+                                    icon="sync"
+                                    v-action="['cms:charge:query']"
+                                    @click="$refs.table.refresh(false)"
+                                />
+                                <a-button
+                                    icon="plus"
+                                    v-action="['cms:charge:create']"
+                                    @click="$refs.modal.add(typeList, currentApp)"
+                                >新增</a-button>
+                                <a-button
+                                    icon="delete"
+                                    v-action="['cms:charge:delete']"
+                                    v-if="selectedRowKeys.length>0"
+                                    @click="onDelete()"
+                                >删除</a-button>
+                            </a-button-group>
+                        </div>
+                    </a-form>
+                    <!--       -->
+                    <s-table
+                        bordered
+                        ref="table"
+                        class="card-table"
+                        :columns="columns"
+                        :data="loadData"
+                        :lazy="true"
+                        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+                    >
+                        <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
+                        <span slot="actionSlot" slot-scope="text, record">
+                            <a v-action="['cms:charge:edit']" @click="$refs.modal.edit(record, typeList, currentApp)">编辑</a>
+                            <a-divider type="vertical" />
+                            <a v-action="['cms:charge:delete']" @click="onDelete(record)">删除</a>
+                        </span>
+                        <template slot="imgSlot" slot-scope="text">
+                                <img
+                                    class="image-slot"
+                                    v-if="text && text.length > 0"
+                                    :src="text"
+                                />
+                        </template>
+                        <template slot="useLimitSlot" slot-scope="text">
+                            <span v-if="text===1">是</span>
+                            <span v-else-if="text===2">否</span>
+                        </template>
+                    </s-table>
+                </a-card>
+            </a-col>
+        </a-row>
         <wallpaper-modal ref="modal" @close="refresh => { refresh ? $refs.table.refresh(false) : (a = 1); }"/>
     </div>
 </template>
 
 <script>
 import { mixinDevice } from '@/utils/mixin';
-import { STable, ETag } from '@/components';
+import { STable, ETag, STree } from '@/components';
 import WallpaperModal from '@/views/cms/modules/charge-wallpaper-modal';
 
 const columns = [
@@ -141,7 +157,8 @@ export default {
     components: {
         STable,
         ETag,
-        WallpaperModal
+        WallpaperModal,
+        STree
     },
     data () {
         return {
@@ -154,12 +171,16 @@ export default {
             typeList: [],
             selectedRowKeys: [],
             selectedRows: [],
-            // 加载数据方法
+            // TreeData
+            treeloading: false,
+            appTreeData: [],
+            currentApp: null,
             loadData: this.loadDataList
         };
     },
     created () {},
     mounted () {
+        this.loadAppTreeData();
         this.getTypeList();
     },
     computed: {},
@@ -199,7 +220,35 @@ export default {
             this.selectedRows = selectedRows;
         },
         loadDataList: function (params) {
-            return this.$http.get(url + '?style=2', Object.assign(params, this.queryParam));
+            return this.$http.get(url + '?style=2&appId=' + this.currentApp.key, Object.assign(params, this.queryParam));
+        },
+        onQueryDict: function (item) {
+            this.currentApp = item;
+            this.$refs.table.refresh(true);
+        },
+        loadAppTreeData: async function () {
+            this.treeloading = true;
+            try {
+                const result = await this.$http.get(
+                    '/app/entity/item',
+                    { 'type': 3 }
+                );
+                this.appTreeData = this.convertTreeData(result.data);
+            } finally {
+                this.treeloading = false;
+            }
+        },
+        convertTreeData: function (data) {
+            return data.map(ele => {
+                const item = {
+                    title: ele.name,
+                    key: ele.id
+                };
+                if (ele.children) {
+                    item.children = this.convertTreeData(ele.children);
+                }
+                return item;
+            });
         }
     }
 };

@@ -21,6 +21,10 @@ public class ChargeBanner extends AuditorEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "n_app_id")
+    private App app;
+
     @Column(name = "n_name")
     private String name;
 

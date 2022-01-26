@@ -74,6 +74,7 @@
                 <template slot="typeSlot" slot-scope="text">
                     <span v-if="text===1">应用</span>
                     <span v-else-if="text===2">游戏</span>
+                    <span v-else-if="text===3">壁纸</span>
                 </template>
                 <template slot="runtimeSlot" slot-scope="text">
                     <span v-if="text===1">android</span>
