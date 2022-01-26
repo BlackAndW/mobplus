@@ -7,6 +7,12 @@
                         v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入banner名称' }] }]"
                     />
                 </a-form-item>
+                <a-form-item>
+                    <a-input
+                        type="hidden"
+                        v-decorator="[ 'appId', {initialValue: model.appId}]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="banner图">
                     <a-upload
                         name="file"
@@ -68,6 +74,7 @@ export default {
     },
     data () {
         return {
+            appId: '',
             title: '',
             visible: false,
             confirmLoading: false,
@@ -79,17 +86,19 @@ export default {
     },
     computed: { },
     methods: {
-        add: function () {
+        add: function (currentApp) {
             this.title = '新增banner';
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.model = {};
+            this.model.appId = currentApp.key;
             this.url = '/cms/charge/banner';
             this.visible = true;
         },
-        edit: function (record) {
+        edit: function (record, currentApp) {
             this.title = '编辑banner:' + record.name;
             this.model = record;
+            this.model.appId = currentApp.key;
             this.url = '/cms/charge/banner/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;

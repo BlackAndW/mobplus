@@ -4,6 +4,7 @@ import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.dal.entity.*;
+import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
@@ -45,10 +46,18 @@ public class ChargeServiceImpl implements ChargeService {
     @Autowired
     TranslateService translateService;
 
+    @Autowired
+    AppRepository appRepository;
+
     @Override
-    public List<ChargeBannerVO> queryBanner() throws ServiceException {
+    public List<ChargeBannerVO> queryBanner(ChargeShowForm form) throws ServiceException {
         QChargeBanner banner = QChargeBanner.chargeBanner;
         Predicate predicate = banner.deleted.eq(false);
+        App app = appRepository.findByAppId(form.getAppId());
+        if (app == null) {
+            throw new ServiceException("app is not exist!");
+        }
+        predicate = ExpressionUtils.and(predicate, banner.app.appId.eq(form.getAppId()));
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "order"));
         List<ChargeBanner> bannerList = (List<ChargeBanner>) chargeBannerRepository.findAll(predicate, sort);
         List<ChargeBannerVO> bannerListVO = new ArrayList<>( bannerList.size() );
@@ -64,10 +73,13 @@ public class ChargeServiceImpl implements ChargeService {
     public List<ChargeMaterialVO> queryMaterial(ChargeShowForm form) throws ServiceException {
         QChargeMaterial material = QChargeMaterial.chargeMaterial;
         Predicate predicate = material.deleted.eq(false);
-
         Integer pageNo = form.getPageNo();
         if (pageNo == null || pageNo == 0) {
             pageNo = 0;
+        }
+        App app = appRepository.findByAppId(form.getAppId());
+        if (app == null) {
+            throw new ServiceException("app is not exist!");
         }
         Integer style = 1;
         // 默认获取视频，否则按style获取
@@ -75,6 +87,7 @@ public class ChargeServiceImpl implements ChargeService {
             style = form.getStyle();
         }
         Integer type = form.getType();
+        // 1,2,100,107的type为所有素材类型
         List<Integer> allStyle = Arrays.asList(1, 2, 100, 107);
         ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
         String orderProperty = mType.getOrderColumn();
@@ -82,6 +95,7 @@ public class ChargeServiceImpl implements ChargeService {
         if (type > 0 && !allStyle.contains(type)) {
             predicate = ExpressionUtils.and(predicate, material.type.id.eq(type));
         }
+        predicate = ExpressionUtils.and(predicate, material.app.appId.eq(form.getAppId()));
         predicate = ExpressionUtils.and(predicate, material.style.eq(style));
         Sort.Direction direction = order == 1 ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(new Sort.Order(direction, orderProperty));
@@ -121,9 +135,14 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
-    public List<ChargeMTypeVO> queryTypeList(Integer style, String toLang) {
+    public List<ChargeMTypeVO> queryTypeList(Integer style, String toLang, String appId) throws ServiceException {
         QChargeMType type = QChargeMType.chargeMType;
         Predicate predicate = type.deleted.eq(false);
+        App app = appRepository.findByAppId(appId);
+        if (app == null) {
+            throw new ServiceException("app is not exist!");
+        }
+        predicate = ExpressionUtils.and(predicate, type.app.appId.eq(appId));
         if (style != null && style > 0) {
             predicate = ExpressionUtils.and(predicate, type.style.eq(style));
             Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "rankOrder"));

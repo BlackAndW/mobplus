@@ -10,6 +10,12 @@
                     />
                 </a-form-item>
             -->
+                <a-form-item>
+                    <a-input
+                        type="hidden"
+                        v-decorator="[ 'appId', {initialValue: model.appId}]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所属分类">
                     <a-select
                         placeholder="选择类型"
@@ -106,6 +112,7 @@ export default {
     },
     data () {
         return {
+            appId: '',
             title: '',
             visible: false,
             confirmLoading: false,
@@ -123,7 +130,7 @@ export default {
     mounted () {
     },
     methods: {
-        add: function (queryParam, typeList) {
+        add: function (queryParam, typeList, currentApp) {
             this.title = '新增素材';
             this.func = this.$http.post;
             this.confirmLoading = false;
@@ -131,13 +138,15 @@ export default {
             this.videoList = [];
             this.videoIntroList = [];
             this.typeList = typeList;
+            this.model.appId = currentApp.key;
             this.url = '/cms/charge/material';
             this.isTestMode(queryParam);
             this.visible = true;
         },
-        edit: function (record, queryParam, typeList) {
+        edit: function (record, queryParam, typeList, currentApp) {
             this.title = '编辑:' + record.id;
             this.model = record;
+            this.model.appId = currentApp.key;
             this.videoList = [];
             this.videoIntroList = [];
             this.videoList.push({ uid: record.id, name: record.videoName });

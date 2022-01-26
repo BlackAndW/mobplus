@@ -33,7 +33,7 @@
                         <a-radio-button :value="2">已启用</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
-                                <a-form-item>
+                <a-form-item>
                     <a-input
                         type="hidden"
                         v-decorator="[ 'appId', {initialValue: model.appId}]"

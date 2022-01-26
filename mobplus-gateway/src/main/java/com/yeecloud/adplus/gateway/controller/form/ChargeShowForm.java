@@ -9,6 +9,9 @@ import lombok.Data;
 @Data
 public class ChargeShowForm {
 
+    /** appId */
+    private String appId = "61c43dcde4b02a19c9ef5c26";
+
     /** 页码 起始页为0 */
     private Integer pageNo;
 
