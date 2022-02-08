@@ -15,11 +15,11 @@ import java.util.List;
  */
 public interface ChargeService {
 
-    List<ChargeBannerVO> queryBanner() throws ServiceException;
+    List<ChargeBannerVO> queryBanner(ChargeShowForm form) throws ServiceException;
 
     List<ChargeMaterialVO> queryMaterial(ChargeShowForm form) throws ServiceException;
 
     Result uploadDataV(ChargeShowForm form);
 
-    List<ChargeMTypeVO> queryTypeList(Integer style, String toLang);
+    List<ChargeMTypeVO> queryTypeList(Integer style, String toLang, String appId) throws ServiceException;
 }

@@ -32,20 +32,22 @@ public class ChargeShowController {
      * @throws ServiceException
      */
     @PostMapping("bannerList")
-    public Result getBannerList(@RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
-        return Result.isEncode(apiVersion, chargeService.queryBanner());
+    public Result getBannerList(@RequestBody ChargeShowForm form,
+                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
+        return Result.isEncode(apiVersion, chargeService.queryBanner(form));
     }
 
     /**
      * 获取类型列表
-     * @param style 1:视频;2:壁纸
+     * @param style 1:视频(默认);2:壁纸
      * @param toLang 语言简称,例如:zh, en
      */
     @GetMapping("type")
-    public Result getType(@RequestParam Integer style,
+    public Result getType(@RequestParam(defaultValue = "1") Integer style,
                           @RequestParam(required = false) String toLang,
-                          @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
-        List<ChargeMTypeVO> result = chargeService.queryTypeList(style, toLang);
+                          @RequestParam(defaultValue = "61c43dcde4b02a19c9ef5c26") String appId,
+                          @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
+        List<ChargeMTypeVO> result = chargeService.queryTypeList(style, toLang, appId);
         return Result.isEncode(apiVersion, result);
     }
 

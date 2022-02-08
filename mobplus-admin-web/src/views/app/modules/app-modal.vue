@@ -25,6 +25,7 @@
                     <a-radio-group button-style="solid" v-decorator="[ 'type', {initialValue: model.type || 1, rules: [ { required: true, message: '请选择应用类型' }]}]">
                         <a-radio-button :value="1">应用</a-radio-button>
                         <a-radio-button :value="2">游戏</a-radio-button>
+                        <a-radio-button :value="3">壁纸</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="VPN功能">
@@ -59,9 +60,9 @@
                         v-decorator="[ 'iconPath', {initialValue: model.iconPath }]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="友盟—AppKey">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="Facebook编号">
                     <a-input
-                        v-decorator="[ 'extra.umengKey', {initialValue: getUmentKey(model) }]"
+                        v-decorator="[ 'extra.fb_no', {initialValue: getFbNo(model) }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">
@@ -99,9 +100,9 @@ export default {
         };
     },
     methods: {
-        getUmentKey: function (model) {
-            if (model.extra && model.extra.umengKey) {
-                return model.extra.umengKey;
+        getFbNo: function (model) {
+            if (model.extra && model.extra.fb_no) {
+                return model.extra.fb_no;
             }
             return '';
         },

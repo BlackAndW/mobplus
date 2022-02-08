@@ -17,8 +17,58 @@
                     <!--       -->
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
                         <div class="l" v-action="['dataManager:query']" v-if="currentApp!=null">
-                            <a-form-item label="版本">
-                                <a-select placeholder="版本" v-model="queryParam.appVersionCode" style="width:120px">
+                            <a-form-item>
+                                <a-input
+                                    type="text"
+                                    placeholder="请输入用户ip"
+                                    v-model="queryParam.userIp"
+                                />
+                            </a-form-item>
+                            <a-form-item>
+                                <a-input
+                                    type="text"
+                                    placeholder="请输入国家"
+                                    v-model="queryParam.country"
+                                />
+                            </a-form-item>
+                            <a-form-item>
+                                <a-input
+                                    type="text"
+                                    placeholder="请输入地区"
+                                    v-model="queryParam.region"
+                                />
+                            </a-form-item>
+                            <a-form-item>
+                                <a-input
+                                    type="text"
+                                    placeholder="请输入城市"
+                                    v-model="queryParam.city"
+                                />
+                            </a-form-item>
+                            <a-form-item>
+                                <a-input
+                                    type="text"
+                                    placeholder="请输入节点名"
+                                    v-model="queryParam.serverName"
+                                />
+                            </a-form-item>
+                            <a-form-item>
+                                <a-input
+                                    type="text"
+                                    placeholder="请输入系统版本"
+                                    v-model="queryParam.os"
+                                />
+                            </a-form-item>
+                            <a-form-item class="float-right">
+                                <div>
+                                    <a-button
+                                        icon="download"
+                                        @click="downloadFile"
+                                    >导出</a-button><br />
+                                </div>
+                            </a-form-item>
+                            <a-form-item>
+                                <a-select placeholder="应用版本" v-model="queryParam.appVersionCode" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option
                                         v-for="appVersion in appVersionList"
@@ -53,6 +103,7 @@
                         :columns="columns"
                         :data="loadData"
                         :lazy="true"
+                        :scroll="{ x: 1800 }"
                     >
                         <template slot="timeSlot" slot-scope="text">
                             {{ text | moment }}
@@ -71,10 +122,36 @@ import { STable, STree, ETag } from '@/components';
 const columns = [
     {
         title: '错误日志',
-        dataIndex: 'errMsg'
+        dataIndex: 'errMsg',
+        width: 300,
+        fixed: 'left'
     },
     {
-        title: '版本号',
+        title: 'ip地址',
+        dataIndex: 'userIp'
+    },
+    {
+        title: '所属国家',
+        dataIndex: 'country'
+    },
+    {
+        title: '所属地区',
+        dataIndex: 'region'
+    },
+    {
+        title: '所属城市',
+        dataIndex: 'city'
+    },
+    {
+        title: '访问节点名',
+        dataIndex: 'serverName'
+    },
+    {
+        title: '系统版本',
+        dataIndex: 'os'
+    },
+    {
+        title: '应用版本',
         dataIndex: 'pkgVersion'
     },
     {
@@ -163,17 +240,16 @@ export default {
             this.currentApp = item;
             this.$refs.table.refresh(true);
         },
-        // downloadFile (params) {
-        //     const requestUrl = url + '/data2excel';
-        //     this.$http.get(
-        //         requestUrl + '?appId=' + this.currentApp.key,
-        //         Object.assign(params, this.queryParam)
-        //     ).then(res => {
-        //         this.downloadUrl = res;
-        //         console.log(this.downloadUrl);
-        //         window.location.href = this.downloadUrl;
-        //     });
-        // },
+        downloadFile (params) {
+            const requestUrl = '/data/vpn/errorLog/download';
+            this.$http.get(
+                requestUrl + '?appId=' + this.currentApp.key,
+                Object.assign(params, this.queryParam)
+            ).then(res => {
+                this.downloadUrl = res;
+                window.location.href = this.downloadUrl;
+            });
+        },
         loadAppTreeData: async function () {
             this.treeloading = true;
             try {

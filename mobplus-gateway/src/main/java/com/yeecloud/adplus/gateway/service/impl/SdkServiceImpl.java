@@ -176,6 +176,8 @@ public class SdkServiceImpl implements SdkService {
                     adPositionVO.setPosId(TestAdPos.getTestPosId(adv, adType));
                 } else if (!form.getRemoteIp().equals("103.137.150.238") && testMode != null && testMode.equals("close")){
                     adPositionVO.setPosId(appPosAdPosition.getAdPosition().getCode());
+                } else if (app.getAppId().equals("61c43dcde4b02a19c9ef5c26") && form.getPkgVersion().equals("1.0.0")) {
+                    adPositionVO.setPosId(appPosAdPosition.getAdPosition().getCode());
                 } else {
                     adPositionVO.setPosId("");
                 }

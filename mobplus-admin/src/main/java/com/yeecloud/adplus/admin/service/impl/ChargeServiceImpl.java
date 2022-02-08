@@ -8,6 +8,7 @@ import com.yeecloud.adplus.admin.controller.cms.form.ChargeMTypeForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
 import com.yeecloud.adplus.admin.service.ChargeService;
 import com.yeecloud.adplus.dal.entity.*;
+import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
@@ -51,6 +52,9 @@ public class ChargeServiceImpl implements ChargeService {
     @Autowired
     ChargeMTypeRepository chargeMTypeRepository;
 
+    @Autowired
+    AppRepository appRepository;
+
     /***
      * Banner CURD
      * @param query
@@ -61,6 +65,10 @@ public class ChargeServiceImpl implements ChargeService {
     public Page<ChargeBanner> queryBanner(Query query) throws ServiceException {
         QChargeBanner chargeBanner = QChargeBanner.chargeBanner;
         Predicate predicate = chargeBanner.deleted.eq(false);
+        Integer appId = query.get("appId", Integer.class);
+        if (appId != null && appId > 0) {
+            predicate = ExpressionUtils.and(predicate, chargeBanner.app.id.eq(appId));
+        }
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "order"));
         PageRequest pagRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
         return chargeBannerRepository.findAll(predicate, pagRequest);
@@ -76,7 +84,12 @@ public class ChargeServiceImpl implements ChargeService {
     public void createBanner(ChargeBannerForm form) throws ServiceException {
         try {
             ChargeBanner banner = new ChargeBanner();
-            BeanUtils.copyProperties(form, banner);
+            NewBeanUtils.copyProperties(banner, form, true);
+            App app = appRepository.findById(form.getAppId()).orElse(null);
+            if (app == null) {
+                throw new ServiceException("app is not exist!");
+            }
+            banner.setApp(app);
             chargeBannerRepository.save(banner);
         } catch (Throwable e) {
             throw new ServiceException(e);
@@ -89,7 +102,7 @@ public class ChargeServiceImpl implements ChargeService {
         try {
             ChargeBanner banner = chargeBannerRepository.findById(id).orElse(null);
             if (banner != null && !banner.isDeleted()) {
-                BeanUtils.copyProperties(form, banner);
+                NewBeanUtils.copyProperties(banner, form, true);
                 chargeBannerRepository.save(banner);
             }
         } catch (Throwable e) {
@@ -113,6 +126,10 @@ public class ChargeServiceImpl implements ChargeService {
     public Page<ChargeMaterial> queryMaterial(Query query) throws ServiceException {
         QChargeMaterial chargeMaterial = QChargeMaterial.chargeMaterial;
         Predicate predicate = chargeMaterial.deleted.eq(false);
+        Integer appId = query.get("appId", Integer.class);
+        if (appId != null && appId > 0) {
+            predicate = ExpressionUtils.and(predicate, chargeMaterial.app.id.eq(appId));
+        }
         Integer type;
         type = query.get("type", Integer.class);
         if (type != null && type != 1 && type != 100 && type > 0) {
@@ -145,6 +162,11 @@ public class ChargeServiceImpl implements ChargeService {
                 }
                 material.setStyle(mType.getStyle());
             }
+            App app = appRepository.findById(form.getAppId()).orElse(null);
+            if (app == null) {
+                throw new ServiceException("app is not exist!");
+            }
+            material.setApp(app);
             chargeMaterialRepository.save(material);
         } catch (Throwable e) {
             throw new ServiceException(e);
@@ -184,6 +206,10 @@ public class ChargeServiceImpl implements ChargeService {
     public Page<ChargeMType> queryMType(Query query) throws ServiceException {
         QChargeMType mType = QChargeMType.chargeMType;
         Predicate predicate = mType.deleted.eq(false);
+        Integer appId = query.get("appId", Integer.class);
+        if (appId != null && appId > 0) {
+            predicate = ExpressionUtils.and(predicate, mType.app.id.eq(appId));
+        }
         Integer style = query.get("style", Integer.class);
         // style为空则取全部类别
         if (style != null && style > 0) {
@@ -205,6 +231,11 @@ public class ChargeServiceImpl implements ChargeService {
         try {
             ChargeMType mType = new ChargeMType();
             BeanUtils.copyProperties(form, mType);
+            App app = appRepository.findById(form.getAppId()).orElse(null);
+            if (app == null) {
+                throw new ServiceException("app is not exist!");
+            }
+            mType.setApp(app);
             chargeMTypeRepository.save(mType);
         } catch (Throwable e) {
             throw new ServiceException(e);

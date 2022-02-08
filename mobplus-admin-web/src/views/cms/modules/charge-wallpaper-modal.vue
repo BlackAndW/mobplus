@@ -2,11 +2,16 @@
     <e-drawer :visible="visible" :title="title" @cancel="onCancel" @ok="onSubmit">
         <a-spin :spinning="confirmLoading">
             <a-form :form="form">
+                <a-form-item>
+                    <a-input
+                        type="hidden"
+                        v-decorator="[ 'appId', {initialValue: model.appId}]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所属分类">
                     <a-select
                         placeholder="选择类型"
                         v-decorator="[ 'type.id', { initialValue: model.typeId || 100 } ]"
-                        :disabled="isTest"
                     >
                         <a-select-option
                             v-for="item in typeList"
@@ -81,22 +86,22 @@ export default {
         };
     },
     computed: { },
-    mounted () {
-        this.getTypeList();
-    },
+    mounted () { },
     methods: {
-        add: function (typeList) {
+        add: function (typeList, currentApp) {
             this.title = '新增壁纸';
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.model = {};
+            this.model.appId = currentApp.key;
             this.typeList = typeList;
             this.url = '/cms/charge/material';
             this.visible = true;
         },
-        edit: function (record, typeList) {
+        edit: function (record, typeList, currentApp) {
             this.title = '编辑壁纸:' + record.id;
             this.model = record;
+            this.model.appId = currentApp.key;
             this.typeList = typeList;
             this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;

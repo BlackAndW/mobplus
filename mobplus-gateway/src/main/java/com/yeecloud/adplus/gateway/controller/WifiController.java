@@ -6,6 +6,7 @@ import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.dal.entity.QWifiInfo;
 import com.yeecloud.adplus.dal.entity.WifiInfo;
 import com.yeecloud.adplus.dal.repository.WifiInfoRepository;
+import com.yeecloud.adplus.gateway.controller.form.WifiInfoForm;
 import com.yeecloud.adplus.gateway.controller.vo.WifiInfoVO;
 import com.yeecloud.adplus.gateway.service.WifiService;
 import com.yeecloud.adplus.gateway.util.GPSUtil;
@@ -38,11 +39,10 @@ public class WifiController {
     WifiService wifiService;
 
     /**
-     * 获取距离原点的距离
+     * 获取wifi距离用户坐标的距离
      * @param gps 用户gps坐标
      * @return
      */
-    @ApiDoc
     @RequestMapping("distance")
     public Result getDistance(@RequestBody WifiInfo wifiInfo,
                               @RequestParam(required = true, defaultValue = "") String gps,
@@ -62,7 +62,6 @@ public class WifiController {
      * @param gps       用户gps坐标
      * @return
      */
-    @ApiDoc
     @RequestMapping("list")
     public Result getWifiList(@RequestBody WifiInfo wifiInfo,
                                                 @RequestParam(required = false, value = "distance", defaultValue = "1000.000") double distance,
@@ -78,7 +77,6 @@ public class WifiController {
      * @param gps   用户gps坐标
      * @return
      */
-    @ApiDoc
     @RequestMapping("item")
     public Result getWifi(@RequestBody WifiInfo wifiInfo,
                                       @RequestParam(required = true, defaultValue = "") String gps,
@@ -92,7 +90,6 @@ public class WifiController {
      * @param form
      * @return
      */
-    @ApiDoc
     @RequestMapping("save")
     public Result save(@RequestBody WifiInfoForm form) {
         WifiInfo wifiInfo = new WifiInfo();
@@ -100,13 +97,4 @@ public class WifiController {
         wifiService.saveWifi(wifiInfo);
         return Result.SUCCESS("save success!");
     }
-}
-
-@Data
-class WifiInfoForm{
-    private String name;
-    private String gps;
-    private String mac;
-    private String type;
-    private String password;
 }

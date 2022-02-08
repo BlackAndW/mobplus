@@ -47,7 +47,13 @@ public class AppActivityForm {
     @NotNull(message = "请输入奖励金币的最小值")
     private Integer minBonusCoin;
 
+    /** 活动版本 */
+    @NotNull(message = "请输入活动版本")
+    private Integer version;
+
     private String remark;
+
+    @NotNull(message = "请选择应用状态")
 
     private Integer status;
 }

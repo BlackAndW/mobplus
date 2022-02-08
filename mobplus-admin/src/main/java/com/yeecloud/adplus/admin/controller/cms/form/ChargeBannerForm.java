@@ -13,6 +13,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ChargeBannerForm {
 
+    @NotNull(message = "appId不能为空")
+    private Integer appId;
+
     @NotBlank(message = "名称不能为空")
     private String name;
 
