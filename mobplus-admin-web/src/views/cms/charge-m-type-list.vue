@@ -79,6 +79,10 @@
                             <span v-if="text===1">视频</span>
                             <span v-else-if="text===2">壁纸</span>
                         </template>
+                        <template slot="isAllSlot" slot-scope="text">
+                            <span v-if="text===0">否</span>
+                            <span v-else-if="text===1">是</span>
+                        </template>
                         <template slot="columnSlot" slot-scope="text">
                             <span v-if="text==='createdAt'">日期</span>
                             <span v-else-if="text==='weight'">权重</span>
@@ -114,6 +118,11 @@ const columns = [
         title: '素材类别',
         dataIndex: 'style',
         scopedSlots: { customRender: 'styleSlot' }
+    },
+    {
+        title: '是否全素材',
+        dataIndex: 'isAll',
+        scopedSlots: { customRender: 'isAllSlot' }
     },
     {
         title: '排序依据',

@@ -9,6 +9,7 @@ import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
+import com.yeecloud.adplus.gateway.controller.form.ChargeTypeForm;
 import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
@@ -81,22 +82,32 @@ public class ChargeServiceImpl implements ChargeService {
         if (app == null) {
             throw new ServiceException("app is not exist!");
         }
-        Integer style = 1;
         // 默认获取视频，否则按style获取
-        if (form.getStyle() != null && form.getStyle() > 0) {
-            style = form.getStyle();
+        if (form.getStyle() == null) {
+            throw new ServiceException("the value of style column is empty string!");
         }
         Integer type = form.getType();
-        // 1,2,100,107的type为所有素材类型
-        List<Integer> allStyle = Arrays.asList(1, 2, 100, 107);
         ChargeMType mType = chargeMTypeRepository.findById(type).orElse(null);
+        if (mType == null) {
+            throw new ServiceException("cannot find type by id");
+        }
         String orderProperty = mType.getOrderColumn();
         int order = mType.getOrder();
-        if (type > 0 && !allStyle.contains(type)) {
-            predicate = ExpressionUtils.and(predicate, material.type.id.eq(type));
+        if (form.getIsAll() != null) {
+            if (form.getIsAll() == 0) {
+                predicate = ExpressionUtils.and(predicate, material.type.id.eq(type));
+            } else if (form.getIsAll() != 1) {
+                throw new ServiceException("the value of column isAll is illegal!");
+            }
+        } else {
+            // 1,2,100,107的type为所有素材类型
+            List<Integer> allStyle = Arrays.asList(1, 2, 100, 107);
+            if (type > 0 && !allStyle.contains(type)) {
+                predicate = ExpressionUtils.and(predicate, material.type.id.eq(type));
+            }
         }
         predicate = ExpressionUtils.and(predicate, material.app.appId.eq(form.getAppId()));
-        predicate = ExpressionUtils.and(predicate, material.style.eq(style));
+        predicate = ExpressionUtils.and(predicate, material.style.eq(form.getStyle()));
         Sort.Direction direction = order == 1 ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort sort = Sort.by(new Sort.Order(direction, orderProperty));
         PageRequest pageRequest = PageRequest.of(pageNo, 20, sort);
@@ -148,6 +159,31 @@ public class ChargeServiceImpl implements ChargeService {
             Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "rankOrder"));
             List<ChargeMType> resultList =   (List<ChargeMType>)chargeMTypeRepository.findAll(predicate, sort);
             if (toLang != null && toLang.length() > 0) {
+                resultList.forEach(result -> {
+//                    TranslateForm form = new TranslateForm(result.getEnName(), toLang);
+//                    String newName = translateService.translation(form);
+                    result.setEnName(result.getEnName());
+                });
+            }
+            return convertMType(resultList);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<ChargeMTypeVO> queryTypeListNew(ChargeTypeForm form) throws ServiceException {
+        QChargeMType type = QChargeMType.chargeMType;
+        Predicate predicate = type.deleted.eq(false);
+        App app = appRepository.findByAppId(form.getAppId());
+        if (app == null) {
+            throw new ServiceException("app is not exist!");
+        }
+        predicate = ExpressionUtils.and(predicate, type.app.appId.eq(form.getAppId()));
+        if (form.getStyle() != null && form.getStyle() > 0) {
+            predicate = ExpressionUtils.and(predicate, type.style.eq(form.getStyle()));
+            Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "rankOrder"));
+            List<ChargeMType> resultList =   (List<ChargeMType>)chargeMTypeRepository.findAll(predicate, sort);
+            if (form.getToLang() != null && form.getToLang().length() > 0) {
                 resultList.forEach(result -> {
 //                    TranslateForm form = new TranslateForm(result.getEnName(), toLang);
 //                    String newName = translateService.translation(form);

@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.gateway.controller;
 
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
+import com.yeecloud.adplus.gateway.controller.form.ChargeTypeForm;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMaterialVO;
@@ -48,6 +49,19 @@ public class ChargeShowController {
                           @RequestParam(defaultValue = "61c43dcde4b02a19c9ef5c26") String appId,
                           @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
         List<ChargeMTypeVO> result = chargeService.queryTypeList(style, toLang, appId);
+        return Result.isEncode(apiVersion, result);
+    }
+
+    /**
+     * 获取类型列表-新接口
+     * @param form-style 1:视频(默认);2:壁纸
+     * @param form-toLang 语言简称,例如:zh, en
+     * @param form-appId
+     */
+    @PostMapping("type/new")
+    public Result getTypeNew(@RequestBody ChargeTypeForm form,
+                          @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
+        List<ChargeMTypeVO> result = chargeService.queryTypeListNew(form);
         return Result.isEncode(apiVersion, result);
     }
 

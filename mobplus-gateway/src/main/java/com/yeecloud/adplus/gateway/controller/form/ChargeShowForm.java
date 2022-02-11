@@ -18,6 +18,9 @@ public class ChargeShowForm {
     /** 类型id */
     private Integer type;
 
+    /** 是否属于全部类型 0:不是 1:是*/
+    private Integer isAll;
+
     /** 素材id */
     private Integer id;
 
@@ -28,6 +31,6 @@ public class ChargeShowForm {
     private Integer showNum;
 
     /** 素材类型 1:视频(默认), 2:壁纸 */
-    private Integer style;
+    private Integer style = 1;
 
 }

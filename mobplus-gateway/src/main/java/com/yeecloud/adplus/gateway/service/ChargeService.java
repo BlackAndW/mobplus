@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.gateway.service;
 
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
+import com.yeecloud.adplus.gateway.controller.form.ChargeTypeForm;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMTypeVO;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeMaterialVO;
@@ -22,4 +23,6 @@ public interface ChargeService {
     Result uploadDataV(ChargeShowForm form);
 
     List<ChargeMTypeVO> queryTypeList(Integer style, String toLang, String appId) throws ServiceException;
+
+    List<ChargeMTypeVO> queryTypeListNew(ChargeTypeForm form) throws ServiceException;
 }
