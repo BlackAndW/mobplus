@@ -24,6 +24,12 @@
                         <a-radio-button :value="2">壁纸</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="是否全素材">
+                    <a-radio-group button-style="solid" v-decorator="[ 'isAll', {initialValue: model.isAll || 0 , rules: [{ required: true }]}]">
+                        <a-radio-button :value="0">否</a-radio-button>
+                        <a-radio-button :value="1">是</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="类型优先级：">
                     <a-input
                         placeholder="默认最高为1"

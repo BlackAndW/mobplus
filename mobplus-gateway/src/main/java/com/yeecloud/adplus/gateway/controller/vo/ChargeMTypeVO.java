@@ -16,6 +16,9 @@ public class ChargeMTypeVO {
     /** 类型名 */
     private String name;
 
+    /** 是否属于全部类型 0:不是 1:是*/
+    private Integer isAll;
+
     /** 翻译后的类型名(默认英文) */
     private String enName;
 

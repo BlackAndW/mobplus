@@ -36,6 +36,10 @@ public class ChargeMType extends AuditorEntity{
     @Column(name = "n_style")
     private Integer style;
 
+    /** 0:否；1:是 */
+    @Column(name = "n_isall")
+    private Integer isAll;
+
     /** 类型内排序依据列 */
     @Column(name = "c_order_column")
     private String orderColumn;

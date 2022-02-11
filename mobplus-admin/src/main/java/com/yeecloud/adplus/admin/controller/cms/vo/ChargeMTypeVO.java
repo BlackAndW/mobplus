@@ -19,6 +19,8 @@ public class ChargeMTypeVO {
 
     private Integer style;
 
+    private Integer isAll;
+
     private String orderColumn;
 
     private Integer order;
