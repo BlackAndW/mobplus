@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.admin.service;
 
+import com.yeecloud.adplus.admin.controller.ad.form.AdvertiserForm;
 import com.yeecloud.adplus.dal.entity.Advertiser;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
@@ -16,9 +17,9 @@ public interface AdvertiserService {
 
     Advertiser findByCode(String code) throws ServiceException;
 
-    void create(Advertiser form) throws ServiceException;
+    void create(AdvertiserForm form) throws ServiceException;
 
-    void update(Integer id, Advertiser form) throws ServiceException;
+    void update(Integer id, AdvertiserForm form) throws ServiceException;
 
     void delete(Integer[] ids) throws ServiceException;
 }

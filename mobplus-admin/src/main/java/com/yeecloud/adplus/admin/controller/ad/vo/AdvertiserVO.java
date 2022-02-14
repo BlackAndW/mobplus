@@ -15,6 +15,14 @@ public class AdvertiserVO extends Advertiser {
     private Integer id;
     private String code;
     private String name;
+    private String testId1;
+    private String testId2;
+    private String testId3;
+    private String testId4;
+    private String testId5;
+    private String testId6;
+    private String testId7;
+    private String testId8;
     private String remark;
     private Integer createdBy;
     private Integer modifiedBy;

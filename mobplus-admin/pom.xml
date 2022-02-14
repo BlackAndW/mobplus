@@ -75,6 +75,8 @@
         <dependency>
             <groupId>com.mobplus</groupId>
             <artifactId>mobplus-dal</artifactId>
+            <scope>system</scope>
+            <systemPath>F:/.m2/repository/com/mobplus/mobplus-dal/1.01.001/mobplus-dal-1.01.001.jar</systemPath>
             <version>1.01.001</version>
         </dependency>
 

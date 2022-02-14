@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.admin.controller.ad;
 
 import com.yeecloud.adplus.admin.controller.ad.convert.AdvertiserConvert;
+import com.yeecloud.adplus.admin.controller.ad.form.AdvertiserForm;
 import com.yeecloud.adplus.admin.controller.ad.vo.AdvertiserVO;
 import com.yeecloud.adplus.admin.service.AdvertiserService;
 import com.yeecloud.adplus.dal.entity.Advertiser;
@@ -51,7 +52,7 @@ public class AdvController {
 
     @PostMapping
     @RequiresPermissions("ad:adv:create")
-    public Result create(@RequestBody @Valid Advertiser form, BindingResult bindingResult) throws ServiceException {
+    public Result create(@RequestBody @Valid AdvertiserForm form, BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
             return Result.FAILURE(message);
@@ -62,7 +63,7 @@ public class AdvController {
 
     @PutMapping("/{id}")
     @RequiresPermissions("ad:adv:edit")
-    public Result update(@PathVariable Integer id, @RequestBody @Valid Advertiser form, BindingResult bindingResult) throws ServiceException {
+    public Result update(@PathVariable Integer id, @RequestBody @Valid AdvertiserForm form, BindingResult bindingResult) throws ServiceException {
         if (bindingResult.hasErrors()) {
             String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
             return Result.FAILURE(message);

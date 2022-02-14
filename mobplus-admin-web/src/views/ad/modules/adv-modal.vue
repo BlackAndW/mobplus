@@ -8,9 +8,44 @@
                         :readOnly="model.id!=null"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="平台名称">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="开屏">
                     <a-input
-                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入平台名称' }] }]"
+                        v-decorator="[ 'testId1', {initialValue: model.testId1 }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="横屏">
+                    <a-input
+                        v-decorator="[ 'testId2', {initialValue: model.testId2 }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="插屏">
+                    <a-input
+                        v-decorator="[ 'testId3', {initialValue: model.testId2 }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="插屏视频">
+                    <a-input
+                        v-decorator="[ 'testId4', {initialValue: model.testId4 }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="原生模板">
+                    <a-input
+                        v-decorator="[ 'testId5', {initialValue: model.testId5 }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="激励视频">
+                    <a-input
+                        v-decorator="[ 'testId6', {initialValue: model.testId6 }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="信息流">
+                    <a-input
+                        v-decorator="[ 'testId7', {initialValue: model.testId7 }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="横版信息流">
+                    <a-input
+                        v-decorator="[ 'testId8', {initialValue: model.testId8 }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备注">

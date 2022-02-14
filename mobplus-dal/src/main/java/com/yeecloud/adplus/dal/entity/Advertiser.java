@@ -31,4 +31,8 @@ public class Advertiser extends AuditorEntity {
     /** 备注 */
     @Column(name = "c_remark")
     private String remark;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "n_ad_test_id")
+    private Integer adTestId;
 }
