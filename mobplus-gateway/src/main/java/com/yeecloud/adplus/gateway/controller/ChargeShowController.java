@@ -33,7 +33,7 @@ public class ChargeShowController {
      * @throws ServiceException
      */
     @PostMapping("bannerList")
-    public Result getBannerList(@RequestBody ChargeShowForm form,
+    public Result getBannerList(@RequestBody(required = false) ChargeShowForm form,
                                 @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
         return Result.isEncode(apiVersion, chargeService.queryBanner(form));
     }
