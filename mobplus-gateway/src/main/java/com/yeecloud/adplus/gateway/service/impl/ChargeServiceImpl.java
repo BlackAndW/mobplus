@@ -54,11 +54,15 @@ public class ChargeServiceImpl implements ChargeService {
     public List<ChargeBannerVO> queryBanner(ChargeShowForm form) throws ServiceException {
         QChargeBanner banner = QChargeBanner.chargeBanner;
         Predicate predicate = banner.deleted.eq(false);
-        App app = appRepository.findByAppId(form.getAppId());
-        if (app == null) {
-            throw new ServiceException("app is not exist!");
+        if (form != null) {
+            App app = appRepository.findByAppId(form.getAppId());
+            if (app == null) {
+                throw new ServiceException("app is not exist!");
+            }
+            predicate = ExpressionUtils.and(predicate, banner.app.appId.eq(form.getAppId()));
+        } else {
+            predicate = ExpressionUtils.and(predicate, banner.app.appId.eq("61c43dcde4b02a19c9ef5c26"));
         }
-        predicate = ExpressionUtils.and(predicate, banner.app.appId.eq(form.getAppId()));
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "order"));
         List<ChargeBanner> bannerList = (List<ChargeBanner>) chargeBannerRepository.findAll(predicate, sort);
         List<ChargeBannerVO> bannerListVO = new ArrayList<>( bannerList.size() );
