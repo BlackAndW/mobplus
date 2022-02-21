@@ -4,3 +4,5 @@ logs
 *.iml
 /mobplus-admin/src/main/resources/static
 *.yml
+mobplus-gateway/packageRecord/
+mobplus-admin/packageRecord/

@@ -46,19 +46,19 @@ public class UserAdInfoServiceImpl implements UserAdInfoService {
             ) {
                 return "All counts are 0!No need to record";
             }
-            QUserAdInfo userAdInfo = QUserAdInfo.userAdInfo;
-            Predicate predicate = userAdInfo.uuid.eq(userForm.getUuid());
-            if (userForm.getAppPositionCode() != null) {
-                predicate = ExpressionUtils.and(predicate, userAdInfo.appPositionCode.eq(userForm.getAppPositionCode()));
-            }
-            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
-            PageRequest pagRequest = PageRequest.of(0, 1, sort);
-            List<UserAdInfo> UserAdInfoList = userAdInfoRepository.findAll(predicate, pagRequest).getContent();
-
-            //判断是否需要新增一条记录
-            UserAdInfo userAdInfoPO = setCountValue(isNewRecord(UserAdInfoList, userForm), userForm, userIp);
-
-            userAdInfoRepository.save(userAdInfoPO);
+//            QUserAdInfo userAdInfo = QUserAdInfo.userAdInfo;
+//            Predicate predicate = userAdInfo.uuid.eq(userForm.getUuid());
+//            if (userForm.getAppPositionCode() != null) {
+//                predicate = ExpressionUtils.and(predicate, userAdInfo.appPositionCode.eq(userForm.getAppPositionCode()));
+//            }
+//            Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
+//            PageRequest pagRequest = PageRequest.of(0, 1, sort);
+//            List<UserAdInfo> UserAdInfoList = userAdInfoRepository.findAll(predicate, pagRequest).getContent();
+//
+//            //判断是否需要新增一条记录
+//            UserAdInfo userAdInfoPO = setCountValue(isNewRecord(UserAdInfoList, userForm), userForm, userIp);
+//
+//            userAdInfoRepository.save(userAdInfoPO);
             return "data updated";
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
