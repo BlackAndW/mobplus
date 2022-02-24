@@ -44,6 +44,9 @@ public class FileController {
     @Value("${file.path.aws.rootPath}")
     private String rootPath;
 
+    @Value("${file.path.aws.bookRootPath}")
+    private String bookRootPath;
+
     @Value("${file.path.aws.imgKeyPath}")
     private String imgKeyPath;
 
@@ -105,18 +108,21 @@ public class FileController {
             return Result.FAILURE("只能上传图片");
         }
         // 上传原图
-        FileVO vo = upload2S3(imgKeyPath + key, file);
+        FileVO vo = upload2S3(imgKeyPath + key, file, key);
 
         String tmpPath = tmpImgPath + file.getOriginalFilename();
         File tmpFile = new File(tmpPath);
-        Thumbnails.of(file.getInputStream()).size(200, 200).outputQuality(0.25d).toFile(tmpFile);
+        Thumbnails.of(file.getInputStream()).size(200, 200).outputQuality(0.5d).toFile(tmpFile);
         //将file类型的文件转成MultipartFile 类型的
         FileInputStream fileInputStream = new FileInputStream(tmpFile);
         MultipartFile multipartFile = new MockMultipartFile(tmpFile.getName(),tmpFile.getName(),file.getContentType(),fileInputStream);
         // 上传缩略图
-        upload2S3(imgKeyPath + key + "/thumb", multipartFile);
-        vo.setThumbUrl(rootPath + imgKeyPath + key + "/thumb/" + file.getOriginalFilename());
-
+        upload2S3(imgKeyPath + key + "/thumb", multipartFile, key);
+        if (key.equals("bookCover")) {
+            vo.setThumbUrl(bookRootPath + imgKeyPath + key + "/thumb/" + file.getOriginalFilename());
+        } else {
+            vo.setThumbUrl(rootPath + imgKeyPath + key + "/thumb/" + file.getOriginalFilename());
+        }
         if (tmpFile.exists()) {
             tmpFile.delete();
         }
@@ -138,7 +144,7 @@ public class FileController {
             return Result.FAILURE("只能上传视频");
         }
 
-        FileVO vo = upload2S3(videoKeyPath + key, fileV);
+        FileVO vo = upload2S3(videoKeyPath + key, fileV, key);
         return Result.SUCCESS(vo);
     }
 
@@ -149,12 +155,16 @@ public class FileController {
      * @return
      * @throws Exception
      */
-    private FileVO upload2S3(String desPath, MultipartFile file) throws Exception {
+    private FileVO upload2S3(String desPath, MultipartFile file, String key) throws Exception {
         AmazonS3 s3Client = AWSUtil.init_s3Client();
         String objectKey = desPath + "/" + file.getOriginalFilename();
         AWSUtil.upload(s3Client, file, objectKey);
         FileVO vo = new FileVO();
-        vo.setUrl(rootPath + objectKey);
+        if (key.equals("bookCover")) {
+            vo.setUrl(bookRootPath + objectKey);
+        } else {
+            vo.setUrl(rootPath + objectKey);
+        }
         vo.setRealName(file.getOriginalFilename());
         return vo;
     }
