@@ -23,5 +23,7 @@ public class BookForm {
 
     private Integer lockCount;
 
+    private Integer readCount;
+
     private Integer exitCount;
 }
