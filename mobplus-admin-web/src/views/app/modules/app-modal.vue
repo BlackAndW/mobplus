@@ -26,6 +26,7 @@
                         <a-radio-button :value="1">应用</a-radio-button>
                         <a-radio-button :value="2">游戏</a-radio-button>
                         <a-radio-button :value="3">壁纸</a-radio-button>
+                        <a-radio-button :value="4">小说</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="VPN功能">

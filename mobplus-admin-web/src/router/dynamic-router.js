@@ -33,11 +33,15 @@ const constantRouterComponents = {
     GameList: () => import('@/views/cms/game-list'),
     TalkCategoryList: () => import('@/views/cms/talk-category-list'),
     TalkList: () => import('@/views/cms/talk-list'),
+    // 充电秀
     ChargeBanner: () => import('@/views/cms/charge-banner-list'),
     ChargeMaterial: () => import('@/views/cms/charge-material-list'),
     ChargeWallpaper: () => import('@/views/cms/charge-wallpaper-list'),
     ChargeMType: () => import('@/views/cms/charge-m-type-list'),
     UserFeedback: () => import('@/views/cms/user-feedback-list'),
+    // 小说管理
+    BookManager: () => import('@/views/cms/book-manager-list'),
+    BookChapter: () => import('@/views/cms/book-chapter-list'),
 
     // 发行管理
     ChannelList: () => import('@/views/release/channel-list'),

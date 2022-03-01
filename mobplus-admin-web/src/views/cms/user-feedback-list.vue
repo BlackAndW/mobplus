@@ -20,7 +20,6 @@
                                 <a-range-picker
                                     v-decorator="[ 'time', { initialValue: [moment(moment(), 'YYYY/MM/DD'), moment(moment(), 'YYYY/MM/DD')] } ]"
                                     @change="onChangeDate" />
-                                </a-range-picker>
                             </a-form-item>
                             <a-form-item label="反馈类型">
                                 <a-select placeholder="反馈类型" v-model="queryParam.type" style="width:120px">
