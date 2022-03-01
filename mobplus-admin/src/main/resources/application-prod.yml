@@ -64,6 +64,7 @@ file:
       icon:  /data/server/app/icon/
     aws:
       rootPath: https://d3ky56s9zw9vn5.cloudfront.net/
+      bookRootPath: https://cdn.owlnovel2022.com/
       imgKeyPath: root/img/
       videoKeyPath: root/video/
     tmp:
