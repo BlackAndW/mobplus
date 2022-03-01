@@ -18,6 +18,8 @@
                             <a-select-option :value="0">不限</a-select-option>
                             <a-select-option :value="1">应用</a-select-option>
                             <a-select-option :value="2">游戏</a-select-option>
+                            <a-select-option :value="3">壁纸</a-select-option>
+                            <a-select-option :value="4">小说</a-select-option>
                         </a-select>
                     </a-form-item>
                     <a-form-item label="状态">
