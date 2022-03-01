@@ -46,6 +46,9 @@ public class BookData extends AuditorEntity{
     @Column(name = "n_is_free")
     private Integer isFree;
 
+    @Column(name = "n_size")
+    private long size;
+
     @Column(name = "n_read_count")
     private long readCount;
 

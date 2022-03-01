@@ -31,6 +31,9 @@ public class BookChapter extends AuditorEntity{
     @Column(name = "n_content")
     private String content;
 
+    @Column(name = "n_size")
+    private long size;
+
     @Column(name = "n_chapter_no")
     private Integer chapterNo;
 

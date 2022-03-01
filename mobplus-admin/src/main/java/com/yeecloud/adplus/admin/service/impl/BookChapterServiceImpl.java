@@ -68,6 +68,7 @@ public class BookChapterServiceImpl implements BookChapterService {
         NewBeanUtils.copyProperties(bookChapter, form, true);
         BookData bookData = bookDataRepository.getOne(form.getBookId());
         bookChapter.setBookData(bookData);
+        updateSize(form.getContent(),bookData, bookChapter);
         bookChapterRepository.save(bookChapter);
     }
 
@@ -75,11 +76,22 @@ public class BookChapterServiceImpl implements BookChapterService {
     public void update(Integer id, BookChapterForm form) throws ServiceException {
         BookChapter bookChapter = bookChapterRepository.getOne(id);
         NewBeanUtils.copyProperties(bookChapter, form, true);
+        BookData bookData = bookDataRepository.getOne(form.getBookId());
+        updateSize(form.getContent(), bookData, bookChapter);
         bookChapterRepository.save(bookChapter);
     }
 
     @Override
     public void delete(Integer[] ids) throws ServiceException {
         bookChapterRepository.deleteById(ids);
+    }
+
+    private void updateSize(String content, BookData bookData, BookChapter bookChapter) {
+        long new_size = content.replace(" ","").length();
+        long old_size = bookChapter.getSize();
+        bookChapter.setSize(new_size);
+        long changeSize = new_size - old_size;
+        bookData.setSize(bookData.getSize() + changeSize);
+        bookDataRepository.save(bookData);
     }
 }

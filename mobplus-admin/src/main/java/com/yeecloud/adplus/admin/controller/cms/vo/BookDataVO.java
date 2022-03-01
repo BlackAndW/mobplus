@@ -27,6 +27,8 @@ public class BookDataVO {
 
     private Integer isFree;
 
+    private long size;
+
     private long readCount;
 
     private long fakeReadCount;
@@ -36,6 +38,4 @@ public class BookDataVO {
     private long collection;
 
     private long avgCount;
-
-    private long size;
 }

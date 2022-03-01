@@ -25,7 +25,7 @@
                         v-decorator="[ 'content', {initialValue: model.content }]"
                     />
                 </a-form-item>
-                <a-form-item v-if="isVip == 0" :labelCol="labelCol" :wrapperCol="wrapperCol" label="章节类型">
+                <a-form-item v-if="isVip === 0" :labelCol="labelCol" :wrapperCol="wrapperCol" label="章节类型">
                     <a-radio-group button-style="solid" v-decorator="[ 'isLock', {initialValue: model.isLock || 0, rules: [ { required: true, message: '请选择章节类型' }]}]">
                         <a-radio-button :value="1">需要解锁</a-radio-button>
                         <a-radio-button :value="0">无需解锁</a-radio-button>
@@ -53,26 +53,28 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-            isVip: null,
+            isVip: 0,
             loading: false,
             func: () => {}
         };
     },
     computed: { },
     methods: {
-        add: function (bookId) {
+        add: function (bookId, isVip) {
             this.title = '新增章节';
             this.func = this.$http.post;
             this.confirmLoading = false;
             this.model = {};
             this.model.bookId = bookId;
+            this.isVip = isVip;
             this.url = '/cms/book/chapter';
             this.visible = true;
         },
-        edit: function (record, bookId) {
+        edit: function (record, bookId, isVip) {
             this.title = '编辑章节:' + record.name;
             this.model = record;
             this.model.bookId = bookId;
+            this.isVip = isVip;
             this.url = '/cms/book/chapter/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;

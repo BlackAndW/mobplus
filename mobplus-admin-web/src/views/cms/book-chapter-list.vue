@@ -45,7 +45,7 @@
                                 <a-button
                                     icon="plus"
                                     v-action="['cms:book:create']"
-                                    @click="$refs.modal.add(queryParam.bookId)"
+                                    @click="$refs.modal.add(queryParam.bookId, isVip)"
                                 >新增</a-button>
                             </a-button-group>
                         </div>
@@ -61,7 +61,7 @@
                     >
                         <template slot="dateSlot" slot-scope="text">{{ text | moment }}</template>
                         <span slot="actionSlot" slot-scope="text, record">
-                            <a v-action="['cms:book:edit']" @click="$refs.modal.edit(record, queryParam.bookId, )">编辑</a>
+                            <a v-action="['cms:book:edit']" @click="$refs.modal.edit(record, queryParam.bookId, isVip)">编辑</a>
                             <a-divider type="vertical" />
                             <a v-action="['cms:book:delete']" @click="onDelete(record)">删除</a>
                         </span>
@@ -149,6 +149,7 @@ export default {
             treeloading: false,
             appTreeData: [],
             bookList: [],
+            isVip: 0,
             currentApp: null,
             loadData: this.loadDataList
         };
@@ -169,8 +170,9 @@ export default {
                 this.queryParam.startTimeStr = this.queryParam.endTimeStr = '';
             }
         },
-        onChangeBook (e) {
-            console.log(e);
+        onChangeBook (value) {
+            var obj = this.bookList.find(item => item.id === value);
+            this.isVip = obj.isVip;
             this.$refs.table.refresh(true);
         },
         onDelete: function (record) {

@@ -95,7 +95,7 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-            isVip: 0,
+            isVip: null,
             loading: false,
             func: () => {}
         };
