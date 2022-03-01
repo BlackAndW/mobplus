@@ -67,8 +67,8 @@
                         <a-radio-button :value="0">所有</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
-                <a-form-item v-if="isVip == 0" :labelCol="labelCol" :wrapperCol="wrapperCol" label="解锁类型">
-                    <a-radio-group button-style="solid" v-decorator="[ 'isLock', {initialValue: model.isLock || 0, rules: [ { required: true, message: '请选择解锁类型' }]}]">
+                <a-form-item v-if="isVip === 0" :labelCol="labelCol" :wrapperCol="wrapperCol" label="解锁类型">
+                    <a-radio-group button-style="solid" v-decorator="[ 'isFree', {initialValue: model.isFree || 0, rules: [ { required: true, message: '请选择解锁类型' }]}]">
                         <a-radio-button :value="1">付费</a-radio-button>
                         <a-radio-button :value="0">免费</a-radio-button>
                     </a-radio-group>
@@ -95,7 +95,7 @@ export default {
             confirmLoading: false,
             form: this.$form.createForm(this),
             model: {},
-            isVip: null,
+            isVip: 0,
             loading: false,
             func: () => {}
         };
