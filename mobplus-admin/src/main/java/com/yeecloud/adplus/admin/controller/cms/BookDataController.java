@@ -1,10 +1,15 @@
 package com.yeecloud.adplus.admin.controller.cms;
 
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.cms.convert.BookConvert;
 import com.yeecloud.adplus.admin.controller.cms.form.BookDataForm;
 import com.yeecloud.adplus.admin.controller.cms.vo.BookDataVO;
 import com.yeecloud.adplus.admin.service.BookDataService;
+import com.yeecloud.adplus.dal.entity.BookChapter;
 import com.yeecloud.adplus.dal.entity.BookData;
+import com.yeecloud.adplus.dal.entity.QBookChapter;
+import com.yeecloud.adplus.dal.repository.BookChapterRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.PageInfo;
@@ -38,6 +43,9 @@ public class BookDataController {
     @Autowired
     BookConvert bookConvert;
 
+    @Autowired
+    BookChapterRepository bookChapterRepository;
+
     @GetMapping
     @RequiresPermissions("cms:book:query")
     public Result queryBook(@RequestParam Map<String, Object> params) throws ServiceException, ParseException {
@@ -48,7 +56,10 @@ public class BookDataController {
 
     private PageInfo<BookDataVO> convert(Page<BookData> page) {
         List<BookData> result = page.getContent();
-        result.forEach(BookData::fakeData);
+        for (BookData bookData : result) {
+            bookData.setReadCount(totalReadCount(bookData));
+            bookData.fakeData();
+        }
         List<BookDataVO> resultList = bookConvert.convertBookData(page.getContent());
         return new PageInfo<>(page.getNumber() + 1, page.getSize(), (int) page.getTotalElements(), resultList);
     }
@@ -80,5 +91,13 @@ public class BookDataController {
     public Result deleteBanner(@RequestBody Integer[] ids) throws ServiceException {
         bookDataService.delete(ids);
         return Result.SUCCESS();
+    }
+
+    private long totalReadCount(BookData bookData) {
+        QBookChapter qBookChapter = QBookChapter.bookChapter;
+        Predicate predicate = qBookChapter.deleted.eq(false);
+        predicate = ExpressionUtils.and(predicate, qBookChapter.bookData.eq(bookData));
+        List<BookChapter> chapterList = (List<BookChapter>) bookChapterRepository.findAll(predicate);
+        return chapterList.stream().mapToLong(BookChapter::getReadCount).sum();
     }
 }
