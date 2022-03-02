@@ -82,16 +82,19 @@ public class BookServiceImpl implements BookService {
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "chapterNo"), new Sort.Order(Sort.Direction.ASC, "createdAt"));
         List<BookChapter> bookChapterList = (List<BookChapter>) bookChapterRepository.findAll(predicate2, sort);
         List<BookChapterVO> chapterVOList = new ArrayList<>();
+        long readCount = 0;
         for (BookChapter chapter : bookChapterList) {
             BookChapterVO chapterVO = new BookChapterVO();
             NewBeanUtils.copyProperties(chapterVO, chapter);
             chapterVO.setChapterId(chapter.getId());
             chapterVOList.add(chapterVO);
+            readCount += chapter.getReadCount();
         }
         BookDetailVO detailVO = new BookDetailVO();
         NewBeanUtils.copyProperties(detailVO, bookData);
         detailVO.setBookId(bookData.getId());
         detailVO.setChapterList(chapterVOList);
+        detailVO.setReadCount(readCount);
         return detailVO;
     }
 
