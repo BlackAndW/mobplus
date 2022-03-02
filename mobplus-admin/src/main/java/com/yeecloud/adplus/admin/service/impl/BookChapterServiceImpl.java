@@ -13,6 +13,8 @@ import com.yeecloud.adplus.dal.repository.BookDataRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,14 +36,16 @@ public class BookChapterServiceImpl implements BookChapterService {
     @Autowired
     BookDataRepository bookDataRepository;
 
+    @Autowired
+    CacheManager cacheManager;
+
     @Override
     public Page<BookChapter> query(Query query) throws ServiceException, ParseException {
         QBookChapter qBookChapter = QBookChapter.bookChapter;
         Predicate predicate = qBookChapter.deleted.eq(false);
         Integer bookId = query.get("bookId", Integer.class);
         if (bookId == null || bookId == 0) {
-            BookData bookData = bookDataRepository.findFirstByDeletedOrderByCreatedAtDesc(false);
-            bookId = bookData.getId();
+            bookId = 0;
         }
         String startTimeStr = query.get("startTimeStr", String.class);
         String endTimeStr = query.get("endTimeStr", String.class);
@@ -64,6 +68,13 @@ public class BookChapterServiceImpl implements BookChapterService {
 
     @Override
     public void create(BookChapterForm form) throws ServiceException {
+        Cache shortCache = cacheManager.getCache("nameCache");
+        assert shortCache != null;
+        if (shortCache.get(form.getChapterNo() + form.getName()) != null) {
+            return;
+        } else {
+            shortCache.put(form.getChapterNo() + form.getName(), 1);
+        }
         BookChapter bookChapter = new BookChapter();
         NewBeanUtils.copyProperties(bookChapter, form, true);
         BookData bookData = bookDataRepository.getOne(form.getBookId());
