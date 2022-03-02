@@ -17,10 +17,10 @@
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
                         <div class="l" v-if="currentApp!=null">
                             <a-form-item lable="付费类型">
-                                <a-select placeholder="付费类型" v-model="queryParam.type" style="width:120px">
-                                    <a-select-option :value="0">不限</a-select-option>
-                                    <a-select-option :value="1">免费</a-select-option>
-                                    <a-select-option :value="2">付费</a-select-option>
+                                <a-select placeholder="付费类型" v-model="queryParam.isFree" style="width:120px">
+                                    <a-select-option :value="2">全部</a-select-option>
+                                    <a-select-option :value="0">免费</a-select-option>
+                                    <a-select-option :value="1">付费</a-select-option>
                                 </a-select>
                             </a-form-item>
                             <a-button-group class="btn-grp-margin-top">

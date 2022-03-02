@@ -46,6 +46,10 @@ public class BookDataImpl implements BookDataService {
         if (appId == null || appId <= 0) {
             throw new ServiceException("appId is not exist!");
         }
+        Integer isFree = query.get("isFree", Integer.class);
+        if (isFree != null && isFree != 2) {
+            predicate = ExpressionUtils.and(predicate, qBookData.isFree.eq(isFree));
+        }
         predicate = ExpressionUtils.and(predicate, qBookData.app.id.eq(appId));
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdAt"));
         PageRequest pageRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);

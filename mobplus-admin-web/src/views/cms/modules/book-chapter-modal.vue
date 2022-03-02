@@ -8,14 +8,14 @@
                         v-decorator="[ 'bookId', {initialValue: model.bookId}]"
                     />
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="章节名称">
-                    <a-input
-                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入书籍名称' }] }]"
-                    />
-                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="章节序号">
                     <a-input
-                        v-decorator="[ 'chapterNo', {initialValue: model.chapterNo, rules: [ { required: true, message: '请输入书籍名称' }] }]"
+                        v-decorator="[ 'chapterNo', {initialValue: model.chapterNo, rules: [ { required: true, message: '请输入章节序号' }] }]"
+                    />
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="章节名称">
+                    <a-input
+                        v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请输入章节名称' }] }]"
                     />
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="章节内容：">

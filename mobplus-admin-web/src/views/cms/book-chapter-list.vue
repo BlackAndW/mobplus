@@ -34,6 +34,18 @@
                                     >{{ book.name }}</a-select-option>
                                 </a-select>
                             </a-form-item>
+                            <a-button-group class="btn-grp-margin-top">
+                                <a-button
+                                    icon="sync"
+                                    v-action="['cms:charge:query']"
+                                    @click="$refs.table.refresh(false)"
+                                />
+                                <a-button
+                                    type="primary"
+                                    icon="search"
+                                    @click="$refs.table.refresh(true)"
+                                >查询</a-button>
+                            </a-button-group>
                         </div>
                         <div class="r" v-if="currentApp!=null">
                             <a-button-group class="btn-grp-margin-top">
