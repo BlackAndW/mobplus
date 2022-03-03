@@ -68,7 +68,7 @@ public class BookChapterServiceImpl implements BookChapterService {
 
     @Override
     public void create(BookChapterForm form) throws ServiceException {
-        Cache shortCache = cacheManager.getCache("nameCache");
+        Cache shortCache = cacheManager.getCache("nameCaches");
         assert shortCache != null;
         if (shortCache.get(form.getChapterNo() + form.getName()) != null) {
             return;
