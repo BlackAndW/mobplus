@@ -34,4 +34,6 @@ public class ChargeMaterialForm {
     private String thumbUrl;
 
     private Integer useLimit;
+
+    private Integer needReward;
 }

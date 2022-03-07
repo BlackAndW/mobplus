@@ -96,6 +96,12 @@
                         <a-radio-button :value="2">无限制</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="观看激励视频：">
+                    <a-radio-group button-style="solid" v-decorator="[ 'needReward', {initialValue: model.needReward || 2 }]">
+                        <a-radio-button :value="1">需要</a-radio-button>
+                        <a-radio-button :value="2">不需要</a-radio-button>
+                    </a-radio-group>
+                </a-form-item>
             </a-form>
         </a-spin>
     </e-drawer>

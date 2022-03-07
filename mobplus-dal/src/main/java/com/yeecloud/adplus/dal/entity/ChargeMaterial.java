@@ -89,6 +89,10 @@ public class ChargeMaterial extends AuditorEntity {
     @Column(name = "n_use_limit")
     private Integer useLimit;
 
+    /** 是否需要观看激励视频 */
+    @Column(name = "n_need_reward")
+    private Integer needReward;
+
     @Transient
     private String useNumFake;
 

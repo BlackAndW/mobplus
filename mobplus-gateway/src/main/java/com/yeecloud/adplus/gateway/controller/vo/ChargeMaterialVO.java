@@ -49,4 +49,7 @@ public class ChargeMaterialVO {
 
     /** 素材类型 1:视频; 2:壁纸 */
     private Integer style;
+
+    /** 是否需要观看激励视频 1:需要; 2:不需要 */
+    private Integer needReward;
 }
