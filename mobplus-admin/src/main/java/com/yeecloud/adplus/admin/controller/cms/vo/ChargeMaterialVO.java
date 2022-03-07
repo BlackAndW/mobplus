@@ -46,6 +46,8 @@ public class ChargeMaterialVO {
 
     private Integer useLimit;
 
+    private Integer needReward;
+
     private long createdAt;
 
 }
