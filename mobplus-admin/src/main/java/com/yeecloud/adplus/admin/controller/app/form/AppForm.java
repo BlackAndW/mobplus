@@ -17,6 +17,8 @@ public class AppForm {
     private String name;
     @NotBlank(message = "请输入应用包名")
     private String pkgName;
+    @NotBlank(message = "请输入应用域名")
+    private String domain;
     @NotNull(message = "请选择运行环境")
     private Integer runtime;
     @NotNull(message = "请选择应用类型")

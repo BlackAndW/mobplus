@@ -1,7 +1,9 @@
 package com.yeecloud.adplus.admin.task;
 
+import com.yeecloud.adplus.admin.service.BookChapterService;
 import com.yeecloud.adplus.admin.service.ChargeService;
 import com.yeecloud.adplus.admin.service.SysConfService;
+import com.yeecloud.adplus.dal.entity.BookChapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,9 @@ public class ScheduleTask {
     @Autowired
     private ChargeService chargeService;
 
+    @Autowired
+    private BookChapterService bookChapterService;
+
     @Scheduled(fixedDelay = 10000)
     public void refreshConfiguration() {
         sysConfService.refreshAsync();
@@ -31,5 +36,10 @@ public class ScheduleTask {
     @Scheduled(cron = "0 0 0 * * *")
     public void updateMaterialWeight() {
         chargeService.updateWeight();
+    }
+
+    @Scheduled(cron = "0 0 2 * * *")
+    public void checkBookStatus() {
+        bookChapterService.checkBookStatus();
     }
 }
