@@ -33,6 +33,9 @@ public class App extends AuditorEntity {
     @Column(name = "c_pkg_name")
     private String pkgName;
 
+    @Column(name = "c_domain")
+    private String domain;
+
     @Column(name = "c_app_id")
     private String appId;
 

@@ -12,6 +12,11 @@
                         v-decorator="[ 'pkgName', {initialValue: model.pkgName, rules: [ { required: true, message: '请输入应用包名' }]}]"
                     />
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="应用域名">
+                    <a-input
+                        v-decorator="[ 'domain', {initialValue: model.domain, rules: [ { required: true, message: '请输入应用域名' }]}]"
+                    />
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="运行环境">
                     <a-select placeholder="运行环境" style="width:120px" v-decorator="[ 'runtime', {initialValue: model.runtime, rules: [ { required: true, message: '请选择运行环境' }]}]">
                         <a-select-option :value="1">android</a-select-option>

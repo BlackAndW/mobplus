@@ -15,6 +15,7 @@ public class AppVO implements Serializable {
     private Integer id;
     private String name;
     private String pkgName;
+    private String domain;
     private String appId;
     private Integer runtime;
     private Integer type;

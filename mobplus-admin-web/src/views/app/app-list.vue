@@ -77,7 +77,7 @@
                     <span v-if="text===1">应用</span>
                     <span v-else-if="text===2">游戏</span>
                     <span v-else-if="text===3">壁纸</span>
-                    <span v-else-if="text===3">小说</span>
+                    <span v-else-if="text===4">小说</span>
                 </template>
                 <template slot="runtimeSlot" slot-scope="text">
                     <span v-if="text===1">android</span>
