@@ -54,7 +54,8 @@
                 </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="书籍状态">
                     <a-radio-group button-style="solid" v-decorator="[ 'status', {initialValue: model.status || 1, rules: [ { required: true, message: '请选择书籍类型' }]}]">
-                        <a-radio-button :value="0|2">连载中</a-radio-button>
+                        <a-radio-button :value="0">连载中</a-radio-button>
+                        <a-radio-button :value="2">更新中</a-radio-button>
                         <a-radio-button :value="1">完结</a-radio-button>
                     </a-radio-group>
                 </a-form-item>

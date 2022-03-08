@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * @author: Leonard
@@ -81,4 +82,5 @@ public class BookDataImpl implements BookDataService {
     public void delete(Integer[] ids) throws ServiceException {
         bookDataRepository.deleteById(ids);
     }
+
 }

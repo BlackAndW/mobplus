@@ -8,6 +8,7 @@ import com.yeecloud.adplus.admin.service.BookChapterService;
 import com.yeecloud.adplus.dal.entity.BookChapter;
 import com.yeecloud.adplus.dal.entity.BookData;
 import com.yeecloud.adplus.dal.entity.QBookChapter;
+import com.yeecloud.adplus.dal.entity.QBookData;
 import com.yeecloud.adplus.dal.repository.BookChapterRepository;
 import com.yeecloud.adplus.dal.repository.BookDataRepository;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 /**
  * @author: Leonard
@@ -38,6 +40,13 @@ public class BookChapterServiceImpl implements BookChapterService {
 
     @Autowired
     CacheManager cacheManager;
+
+    private static final Integer SERIAL_STATUS = 1;
+
+    private static final Integer UPDATE_STATUS = 2;
+
+    /** 3天 */
+    private static final long CHECK_TIME = 1000 * 60 * 60 * 24 * 3;
 
     @Override
     public Page<BookChapter> query(Query query) throws ServiceException, ParseException {
@@ -81,6 +90,8 @@ public class BookChapterServiceImpl implements BookChapterService {
         bookChapter.setBookData(bookData);
         updateSize(form.getContent(),bookData, bookChapter);
         bookChapterRepository.save(bookChapter);
+        bookData.setStatus(UPDATE_STATUS);
+        bookDataRepository.save(bookData);
     }
 
     @Override
@@ -95,6 +106,22 @@ public class BookChapterServiceImpl implements BookChapterService {
     @Override
     public void delete(Integer[] ids) throws ServiceException {
         bookChapterRepository.deleteById(ids);
+    }
+
+    @Override
+    public void checkBookStatus() {
+        QBookData qBookData = QBookData.bookData;
+        Predicate predicate = qBookData.deleted.eq(false);
+        predicate = ExpressionUtils.and(predicate, qBookData.status.eq(UPDATE_STATUS));
+        List<BookData> bookDataList = (List<BookData>) bookDataRepository.findAll(predicate);
+        for (BookData bookData : bookDataList) {
+            long modifiedAt = bookData.getModifiedAt();
+            long nowTime = System.currentTimeMillis();
+            if (nowTime - modifiedAt > CHECK_TIME) {
+                bookData.setStatus(SERIAL_STATUS);
+                bookDataRepository.save(bookData);
+            }
+        }
     }
 
     private void updateSize(String content, BookData bookData, BookChapter bookChapter) {
