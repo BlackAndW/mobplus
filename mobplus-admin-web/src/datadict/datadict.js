@@ -24,7 +24,8 @@ export const AdType = [
     { value: 5, label: '原生模板--NativeExpress' },
     { value: 6, label: '激励视频--RewardVideo' },
     { value: 7, label: 'Draw信息流--Draw' },
-    { value: 8, label: 'Draw横版信息流--Draw' }
+    { value: 8, label: 'Draw横版信息流--Draw' },
+    { value: 9, label: '插页式激励视频--InterRewardVideo' }
 ];
 
 export const FunctionType = [
