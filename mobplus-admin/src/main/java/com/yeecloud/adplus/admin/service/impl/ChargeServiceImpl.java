@@ -153,17 +153,17 @@ public class ChargeServiceImpl implements ChargeService {
     @Transactional(rollbackFor = Throwable.class)
     public void createMaterial(ChargeMaterialForm form) throws ServiceException {
         try {
-            ChargeMaterial material = new ChargeMaterial();
-            NewBeanUtils.copyProperties(material, form, true);
             ChargeMType mType = chargeMTypeRepository.findById(form.getType().getId()).orElse(null);
-            if (mType != null) {
-                if (mType.getStyle() == 1){
-                    material.setVideoPath(rootPath + videoKeyPath + "material/" + form.getVideoName());
-                    material.setVideoIntroduce(rootPath + videoKeyPath + "material/" + form.getVideoIntroduceName());
-                }
-                material.setStyle(mType.getStyle());
-            }
             for (int i = 0; i < form.getAppCheckList().size(); i++ ) {
+                ChargeMaterial material = new ChargeMaterial();
+                NewBeanUtils.copyProperties(material, form, true);
+                if (mType != null) {
+                    if (mType.getStyle() == 1){
+                        material.setVideoPath(rootPath + videoKeyPath + "material/" + form.getVideoName());
+                        material.setVideoIntroduce(rootPath + videoKeyPath + "material/" + form.getVideoIntroduceName());
+                    }
+                    material.setStyle(mType.getStyle());
+                }
                 App app = appRepository.findById(form.getAppCheckList().get(i)).orElse(null);
                 if (app == null) {
                     throw new ServiceException("app is not exist!");
