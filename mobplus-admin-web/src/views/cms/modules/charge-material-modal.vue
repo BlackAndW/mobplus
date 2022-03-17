@@ -19,7 +19,7 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所属分类">
                     <a-select
                         placeholder="选择类型"
-                        v-decorator="[ 'type.id', { initialValue: model.typeId || 1 } ]"
+                        v-decorator="[ 'type.id', { initialValue: model.typeId, rules: [ { required: true, message: '请选择类型' }] } ]"
                         :disabled="isTest"
                     >
                         <a-select-option
@@ -102,6 +102,32 @@
                         <a-radio-button :value="2">不需要</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上传到应用">
+                    <a-checkbox :indeterminate="indeterminateApp" :checked="checkAllApp" @change="onCheckAllChange">
+                        全选
+                    </a-checkbox><br />
+                    <a-checkbox-group
+                        @change="onAppChange"
+                        v-decorator="[ 'appCheckList', {initialValue: appCheckList, rules: [ { required: true, message: '请选择应用' }] }]">
+                        <a-row class="checkbox-width">
+                            <a-col
+                                v-for="app in appList"
+                                :key="app.id"
+                                span="24">
+                                    <a-checkbox
+                                        v-if="app.id === 43"
+                                        :value="app.id"
+                                        >(通用){{ app.name }}
+                                    </a-checkbox>
+                                    <a-checkbox
+                                        v-else
+                                        :value="app.id"
+                                        >{{ app.name }}
+                                    </a-checkbox>
+                            </a-col>
+                        </a-row>
+                    </a-checkbox-group>
+                </a-form-item>
             </a-form>
         </a-spin>
     </e-drawer>
@@ -129,11 +155,16 @@ export default {
             isTest: false,
             videoIntroList: [],
             loading: false,
+            appList: [],
+            appCheckList: [],
+            indeterminateApp: true,
+            checkAllApp: false,
             func: () => {}
         };
     },
     computed: {},
     mounted () {
+        this.loadAppList();
     },
     methods: {
         add: function (queryParam, typeList, currentApp) {
@@ -146,9 +177,22 @@ export default {
             this.typeList = typeList;
             this.model.appId = currentApp.key;
             this.url = '/cms/charge/material';
-            this.isTestMode(queryParam);
+            // this.onClickBox();
+            // this.isTestMode(queryParam);
             this.visible = true;
         },
+
+        // onClickBox () {
+        //     const checkAllList = [];
+        //     this.appList.forEach(item => {
+        //         checkAllList.push(item.id);
+        //     });
+        //     this.form.setFieldsValue({
+        //         'appCheckList': checkAllList
+        //     });
+        //     this.indeterminateApp = false;
+        //     this.checkAllApp = true;
+        // },
         edit: function (record, queryParam, typeList, currentApp) {
             this.title = '编辑:' + record.id;
             this.model = record;
@@ -160,7 +204,7 @@ export default {
             this.typeList = typeList;
             this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;
-            this.isTestMode(queryParam);
+            // this.isTestMode(queryParam);
             this.confirmLoading = false;
             this.visible = true;
         },
@@ -189,17 +233,45 @@ export default {
                 });
             });
         },
-        // 判断是否为测试模式
-        isTestMode (queryParam) {
-            if (queryParam.type === 99) {
-                this.isTest = true;
-                this.$nextTick(() => {
-                    this.form.setFieldsValue({ 'type.id': 99 });
-                });
-            } else {
-                this.isTest = false;
-            }
+
+        loadAppList () {
+            this.$http.get('/cms/charge/app/list')
+            .then(res => {
+                this.appList = res;
+            });
         },
+
+        onAppChange () {
+            this.$nextTick(() => {
+                const checkedList = this.form.getFieldValue('appCheckList');
+                this.indeterminateApp = !!checkedList.length && checkedList.length < this.appList.length;
+                this.checkAllApp = checkedList.length === this.appList.length;
+            });
+        },
+
+        onCheckAllChange (e) {
+            const checkAllList = [];
+            this.appList.forEach(item => {
+                checkAllList.push(item.id);
+            });
+            this.form.setFieldsValue({
+                'appCheckList': e.target.checked ? checkAllList : []
+            });
+            this.indeterminateApp = false;
+            this.checkAllApp = e.target.checked;
+        },
+
+        // 判断是否为测试模式
+        // isTestMode (queryParam) {
+        //     if (queryParam.type === 99) {
+        //         this.isTest = true;
+        //         this.$nextTick(() => {
+        //             this.form.setFieldsValue({ 'type.id': 99 });
+        //         });
+        //     } else {
+        //         this.isTest = false;
+        //     }
+        // },
         // file-list复制，form表单值复制
         copyFile (file, fileList) {
             this.videoList = this.videoIntroList = fileList;

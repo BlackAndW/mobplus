@@ -26,7 +26,7 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="普通节点">
                     <a-checkbox :indeterminate="indeterminateNM" :checked="checkAllServerNM" @change="onServerNMCheckAllChange">
                         全选
-                    </a-checkbox></br>
+                    </a-checkbox><br />
                     <a-checkbox-group
                         @change="onServerNMChange"
                         v-decorator="[ 'serverNMCheckList', {initialValue: serverNMCheckList, rules: [ { required: true, message: '请选择普通节点' }] }]">
@@ -47,7 +47,7 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="VIP节点">
                     <a-checkbox :indeterminate="indeterminateVIP" :checked="checkAllServerVIP" @change="onServerVIPCheckAllChange">
                         全选
-                    </a-checkbox></br>
+                    </a-checkbox><br />
                     <a-checkbox-group
                         @change="onServerVIPChange"
                         v-decorator="[ 'serverVIPCheckList', {initialValue: serverVIPCheckList, rules: [ { required: true, message: '请选择VIP节点' }] }]">
@@ -68,7 +68,7 @@
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="备用节点">
                     <a-checkbox :indeterminate="indeterminateBK" :checked="checkAllServerBK" @change="onServerBKCheckAllChange">
                         全选
-                    </a-checkbox></br>
+                    </a-checkbox><br />
                     <a-checkbox-group
                         @change="onServerBKChange"
                         v-decorator="[ 'serverBKCheckList', {initialValue: serverBKCheckList, rules: [ { required: true, message: '请选择备用节点' }] }]">

@@ -150,6 +150,7 @@ public class ChargeServiceImpl implements ChargeService {
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void createMaterial(ChargeMaterialForm form) throws ServiceException {
         try {
             ChargeMaterial material = new ChargeMaterial();
@@ -162,18 +163,26 @@ public class ChargeServiceImpl implements ChargeService {
                 }
                 material.setStyle(mType.getStyle());
             }
-            App app = appRepository.findById(form.getAppId()).orElse(null);
-            if (app == null) {
-                throw new ServiceException("app is not exist!");
+            for (int i = 0; i < form.getAppCheckList().size(); i++ ) {
+                App app = appRepository.findById(form.getAppCheckList().get(i)).orElse(null);
+                if (app == null) {
+                    throw new ServiceException("app is not exist!");
+                }
+                ChargeMType type = chargeMTypeRepository.findByAppAndNameAndStyle(app, mType.getName(), mType.getStyle());
+                if (type == null) {
+                    throw new ServiceException(app.getName() + " have no type of " + mType.getName());
+                }
+                material.setApp(app);
+                material.setType(type);
+                chargeMaterialRepository.save(material);
             }
-            material.setApp(app);
-            chargeMaterialRepository.save(material);
         } catch (Throwable e) {
             throw new ServiceException(e);
         }
     }
 
     @Override
+    @Transactional(rollbackFor = Throwable.class)
     public void updateMaterial(Integer id, ChargeMaterialForm form) throws ServiceException {
         try {
             ChargeMaterial material = chargeMaterialRepository.findById(id).orElse(null);
@@ -284,5 +293,18 @@ public class ChargeServiceImpl implements ChargeService {
         }
         List<ChargeMaterial> result = (List<ChargeMaterial>) chargeMaterialRepository.findAll(predicate);
         return result.size() > 0;
+    }
+
+    @Override
+    public List<App> queryWallpaperAppList() throws ServiceException {
+        QApp qApp = QApp.app;
+        Predicate predicate = qApp.deleted.eq(false);
+        predicate = ExpressionUtils.and(predicate, qApp.type.eq(3));
+        predicate = ExpressionUtils.and(predicate, qApp.id.notIn(33, 48, 56, 57));
+        List<App> appList = (List<App>) appRepository.findAll(predicate);
+        if (appList.size() == 0) {
+            throw new ServiceException("cannot find app of type 3");
+        }
+        return appList;
     }
 }

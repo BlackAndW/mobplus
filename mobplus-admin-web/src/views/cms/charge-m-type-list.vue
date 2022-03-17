@@ -17,8 +17,8 @@
                     <!--       -->
                     <a-form class="act-bar" :form="form" id="form" ref="form" layout="inline">
                         <div class="l" v-if="currentApp!=null">
-                            <a-form-item label="素材类别">
-                                <a-select placeholder="素材类别" v-model="queryParam.style" style="width:120px">
+                            <a-form-item label="素材格式">
+                                <a-select placeholder="素材格式" v-model="queryParam.style" style="width:120px">
                                     <a-select-option :value="0">不限</a-select-option>
                                     <a-select-option :value="1">视频</a-select-option>
                                     <a-select-option :value="2">壁纸</a-select-option>
