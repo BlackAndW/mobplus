@@ -12,6 +12,7 @@ import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.dal.repository.AppVersionRepository;
 import com.yeecloud.adplus.dal.repository.ChannelRepository;
 import com.yeecloud.adplus.gateway.controller.AppConfigController;
+import com.yeecloud.adplus.gateway.service.JpushService;
 import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.configure.service.ConfigureService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,9 @@ public class ScheduleTask {
 
     @Autowired
     JPAQueryFactory jpaQueryFactory;
+
+    @Autowired
+    JpushService jpushService;
 
     private static final String BASE_DIR_NAME = "/www/wwwroot/cdn/";
 
@@ -116,5 +120,10 @@ public class ScheduleTask {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Scheduled(cron = "0 30 9 * * *")
+    private void Jpush() {
+        jpushService.pushMsg();
     }
 }
