@@ -9,6 +9,8 @@ import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * @author: Leonard
  * @create: 2021/6/28
@@ -48,4 +50,6 @@ public interface ChargeService{
     void updateWeight();
 
     boolean checkMaterialByName(String name);
+
+    List<App> queryWallpaperAppList() throws ServiceException;
 }

@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.dal.repository;
 
+import com.yeecloud.adplus.dal.entity.App;
 import com.yeecloud.adplus.dal.entity.ChargeMType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,4 +21,7 @@ public interface ChargeMTypeRepository extends JpaRepository<ChargeMType, Intege
     @Modifying
     @Query("update ChargeMType obj set obj.deleted = true where obj.id in :ids")
     void deleteById(@Param("ids") Integer[] ids);
+
+
+    ChargeMType findByAppAndNameAndStyle(App app, @Param("name") String name, @Param("style") Integer style);
 }

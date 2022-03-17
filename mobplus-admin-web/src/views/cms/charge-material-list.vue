@@ -190,12 +190,11 @@ export default {
     created () {},
     mounted () {
         this.loadAppTreeData();
-        this.getTypeList();
     },
     computed: {},
     methods: {
         getTypeList () {
-            return this.$http.get('/cms/charge/mtype?style=1').then(res => {
+            return this.$http.get('/cms/charge/mtype?style=1&appId=' + this.currentApp.key).then(res => {
                 this.typeList = res.data;
             });
         },
@@ -243,6 +242,7 @@ export default {
         },
         onQueryDict: function (item) {
             this.currentApp = item;
+            this.getTypeList();
             this.$refs.table.refresh(true);
         },
         loadAppTreeData: async function () {

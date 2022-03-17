@@ -195,4 +195,11 @@ public class ChargeController {
         List<ChargeMTypeVO> resultList = chargeConvert.convertMType(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
+
+    @GetMapping("app/list")
+    @RequiresPermissions("cms:charge:query")
+    public Result getAppList() throws ServiceException {
+        List<App> appList = chargeService.queryWallpaperAppList();
+        return Result.SUCCESS(appList);
+    }
 }
