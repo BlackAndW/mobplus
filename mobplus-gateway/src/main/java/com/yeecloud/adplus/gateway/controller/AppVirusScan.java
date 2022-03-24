@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/api/v1/virus")
 public class AppVirusScan {
 
-    private static final String VIRUS_FILE_PATH = "D://3-Docs//virus_pkg.json";
+    private static final String VIRUS_FILE_PATH = "/www/backend/conf/virus_pkg.json";
 
     @PostMapping("scan")
     public Result getVirusPkg() throws IOException {
