@@ -59,15 +59,19 @@ public class GPSUtil {
     public static double GetPointDistance(String firstPoint, String secondPoint) {
         String[] firstArray = firstPoint.split(",");
         String[] secondArray = secondPoint.split(",");
-        double firstLatitude = Double.valueOf(firstArray[0].trim());
-        double firstLongitude = Double.valueOf(firstArray[1].trim());
-        double secondLatitude = Double.valueOf(secondArray[0].trim());
-        double secondLongitude = Double.valueOf(secondArray[1].trim());
-        double distance = getDistance(firstLatitude, firstLongitude, secondLatitude, secondLongitude);
-        // 将单位/米 转换为公里/千米，并保留三位小数
-        DecimalFormat df = new DecimalFormat("0.000");
-        distance = Double.parseDouble(df.format(distance/1000d));
-        return distance;
+        if (firstArray[0].matches("\\d+\\.\\d+") && firstArray[1].matches("\\d+\\.\\d+") &&
+                secondArray[0].matches("\\d+\\.\\d+") && secondArray[1].matches("\\d+\\.\\d+")) {
+            double firstLatitude = Double.valueOf(firstArray[0].trim());
+            double firstLongitude = Double.valueOf(firstArray[1].trim());
+            double secondLatitude = Double.valueOf(secondArray[0].trim());
+            double secondLongitude = Double.valueOf(secondArray[1].trim());
+            double distance = getDistance(firstLatitude, firstLongitude, secondLatitude, secondLongitude);
+            // 将单位/米 转换为公里/千米，并保留三位小数
+            DecimalFormat df = new DecimalFormat("0.000");
+            distance = Double.parseDouble(df.format(distance/1000d));
+            return distance;
+        }
+        return 0;
     }
 
 
