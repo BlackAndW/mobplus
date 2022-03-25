@@ -108,11 +108,8 @@ public class ChargeShowController {
 
     @PostMapping("searchByLabel")
     public Result searchByLabel(@RequestBody ChargeSearchForm form,
-                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
-        List<ChargeMaterial> materials = chargeMaterialRepository.findByLabel(
-                form.getLabelStr(), form.getStyle(), form.getPageSize(), form.getPageNo() * form.getPageSize()
-        );
-        return Result.isEncode(apiVersion, materials);
+                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
+        return Result.isEncode(apiVersion, chargeService.queryMaterialByLabel(form));
     }
 
     @PostMapping("hotLabel")
