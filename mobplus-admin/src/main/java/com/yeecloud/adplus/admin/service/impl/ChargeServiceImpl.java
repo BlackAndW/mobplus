@@ -4,14 +4,12 @@ import com.apache.commons.beanutils.NewBeanUtils;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeBannerForm;
+import com.yeecloud.adplus.admin.controller.cms.form.ChargeLabelForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMTypeForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
 import com.yeecloud.adplus.admin.service.ChargeService;
 import com.yeecloud.adplus.dal.entity.*;
-import com.yeecloud.adplus.dal.repository.AppRepository;
-import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
-import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
-import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
+import com.yeecloud.adplus.dal.repository.*;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.Query;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: Leonard
@@ -51,6 +50,9 @@ public class ChargeServiceImpl implements ChargeService {
 
     @Autowired
     ChargeMTypeRepository chargeMTypeRepository;
+
+    @Autowired
+    ChargeLabelRepository chargeLabelRepository;
 
     @Autowired
     AppRepository appRepository;
@@ -174,6 +176,7 @@ public class ChargeServiceImpl implements ChargeService {
                 }
                 material.setApp(app);
                 material.setType(type);
+                material.setLabels(String.join("|", form.getLabels()));
                 chargeMaterialRepository.save(material);
             }
         } catch (Throwable e) {
@@ -193,6 +196,7 @@ public class ChargeServiceImpl implements ChargeService {
                     material.setVideoPath(rootPath + videoKeyPath + "material/" + form.getVideoName());
                     material.setVideoIntroduce(rootPath + videoKeyPath + "material/" + form.getVideoIntroduceName());
                 }
+                material.setLabels(String.join("|", form.getLabels()));
                 chargeMaterialRepository.save(material);
             }
         } catch (Throwable e) {
@@ -306,5 +310,48 @@ public class ChargeServiceImpl implements ChargeService {
             throw new ServiceException("cannot find app of type 3");
         }
         return appList;
+    }
+
+    @Override
+    public Page<ChargeLabel> queryLabel(Query query) throws ServiceException {
+        QChargeLabel qChargeLabel = QChargeLabel.chargeLabel;
+        Predicate predicate = qChargeLabel.deleted.eq(false);
+        String text = query.get("searchText", String.class);
+        if (text != null && text.length() > 0) {
+            predicate = ExpressionUtils.and(predicate, qChargeLabel.name.like(text));
+            predicate = ExpressionUtils.or(predicate, qChargeLabel.enName.likeIgnoreCase(text));
+        }
+        Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "type"), new Sort.Order(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageRequest = PageRequest.of(query.getPageNo() - 1, query.getPageSize(), sort);
+        return chargeLabelRepository.findAll(predicate, pageRequest);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void createLabel(ChargeLabelForm form) throws ServiceException {
+        try {
+            ChargeLabel label = new ChargeLabel();
+            NewBeanUtils.copyProperties(label, form, true);
+            chargeLabelRepository.save(label);
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void updateLabel(Integer id, ChargeLabelForm form) throws ServiceException {
+        try {
+            chargeLabelRepository.findById(id).ifPresent(label ->
+                    NewBeanUtils.copyProperties(label, form, true));
+        } catch (Exception e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Throwable.class)
+    public void deleteLabel(Integer[] ids) throws ServiceException {
+        chargeLabelRepository.deleteById(ids);
     }
 }

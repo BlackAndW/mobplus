@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.yeecloud.meeto.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.Named;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,4 +78,5 @@ public class GeneralConvert {
         }
         return null;
     }
+
 }

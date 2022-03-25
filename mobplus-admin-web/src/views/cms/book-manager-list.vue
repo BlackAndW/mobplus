@@ -26,7 +26,7 @@
                             <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     icon="sync"
-                                    v-action="['cms:charge:query']"
+                                    v-action="['cms:book:query']"
                                     @click="$refs.table.refresh(false)"
                                 />
                                 <a-button

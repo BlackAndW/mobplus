@@ -1,5 +1,6 @@
 package com.yeecloud.adplus.admin.controller.cms.convert;
 
+import com.yeecloud.adplus.admin.common.convert.ConvertWorker;
 import com.yeecloud.adplus.admin.common.convert.GeneralConvert;
 import com.yeecloud.adplus.admin.controller.cms.vo.*;
 import com.yeecloud.adplus.dal.entity.*;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author: Leonard
  * @create: 2021/6/30
  */
-@Mapper(componentModel = "spring", uses = GeneralConvert.class)
+@Mapper(componentModel = "spring", uses = {GeneralConvert.class, ConvertWorker.class})
 public interface ChargeConvert {
 
     ChargeBannerVO convertBanner(ChargeBanner entity);
@@ -23,6 +24,7 @@ public interface ChargeConvert {
     @Mappings({
             @Mapping(target = "typeId", source = "type.id"),
             @Mapping(target = "typeName", source = "type.name"),
+            @Mapping(target = "labels", source = "labels", qualifiedByName = "str2list")
     })
     ChargeMaterialVO convertMaterial(ChargeMaterial entity);
 
@@ -31,5 +33,9 @@ public interface ChargeConvert {
     ChargeMTypeVO convertMType(ChargeMType entity);
 
     List<ChargeMTypeVO> convertMType(List<ChargeMType> list);
+
+    ChargeLabelVO convertLabel(ChargeLabel entity);
+
+    List<ChargeLabelVO> convertLabel(List<ChargeLabel> list);
 
 }

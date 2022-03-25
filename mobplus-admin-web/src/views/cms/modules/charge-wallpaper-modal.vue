@@ -59,6 +59,20 @@
                         <a-radio-button :value="2">无限制</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="标签：">
+                    <a-select
+                        mode="tags"
+                        style="width: 200px"
+                        v-decorator="['labels', {initialValue: model.labels} ]"
+                        >
+                        <a-select-option
+                            v-for="label in labelList"
+                            :key="label.id"
+                            :value="label.name + '-' + label.enName">
+                            {{ label.name + '-' + label.enName }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
                 <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上传到应用" v-if="checkItem">
                     <a-checkbox :indeterminate="indeterminateApp" :checked="checkAllApp" @change="onCheckAllChange">
                         全选
@@ -113,11 +127,15 @@ export default {
             indeterminateApp: true,
             checkAllApp: false,
             checkItem: true,
+            labelList: [],
             func: () => {}
         };
     },
     computed: { },
-    mounted () { this.loadAppList(); },
+    mounted () {
+        this.loadAppList();
+        this.loadLabelList();
+    },
     methods: {
         add: function (typeList, currentApp) {
             this.title = '新增壁纸';
@@ -153,6 +171,12 @@ export default {
                 this.appList = res;
             });
         },
+        loadLabelList () {
+            this.$http.get('/cms/charge/label?pageNo=0&pageSize=999')
+            .then(res => {
+                this.labelList = res.data;
+            });
+        },
         onAppChange () {
             this.$nextTick(() => {
                 const checkedList = this.form.getFieldValue('appCheckList');
@@ -171,7 +195,6 @@ export default {
             this.indeterminateApp = false;
             this.checkAllApp = e.target.checked;
         },
-
         handleChange (info) {
             if (info.file.status === 'uploading') {
                 this.loading = true;

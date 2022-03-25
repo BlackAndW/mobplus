@@ -102,7 +102,22 @@
                         <a-radio-button :value="2">不需要</a-radio-button>
                     </a-radio-group>
                 </a-form-item>
-                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上传到应用">
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="标签：">
+                    <a-select
+                        mode="tags"
+                        style="width: 200px"
+                        v-decorator="['labels', {initialValue: model.labels} ]"
+                        @change="selectChange"
+                        >
+                        <a-select-option
+                            v-for="label in labelList"
+                            :key="label.id"
+                            :value="label.name + '-' + label.enName">
+                            {{ label.name + '-' + label.enName }}
+                        </a-select-option>
+                    </a-select>
+                </a-form-item>
+                <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="上传到应用" v-if="checkItem">
                     <a-checkbox :indeterminate="indeterminateApp" :checked="checkAllApp" @change="onCheckAllChange">
                         全选
                     </a-checkbox><br />
@@ -158,6 +173,7 @@ export default {
             appList: [],
             appCheckList: [],
             indeterminateApp: true,
+            checkItem: true,
             checkAllApp: false,
             func: () => {}
         };
@@ -174,6 +190,7 @@ export default {
             this.model = {};
             this.videoList = [];
             this.videoIntroList = [];
+            this.checkItem = true;
             this.typeList = typeList;
             this.model.appId = currentApp.key;
             this.url = '/cms/charge/material';
@@ -205,6 +222,7 @@ export default {
             this.url = '/cms/charge/material/' + record.id;
             this.func = this.$http.put;
             // this.isTestMode(queryParam);
+            this.checkItem = false;
             this.confirmLoading = false;
             this.visible = true;
         },

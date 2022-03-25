@@ -39,4 +39,6 @@ public class ChargeMaterialForm {
     private Integer needReward;
 
     private List<Integer> appCheckList;
+
+    private List<String> labels;
 }

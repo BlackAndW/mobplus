@@ -38,6 +38,7 @@ const constantRouterComponents = {
     ChargeMaterial: () => import('@/views/cms/charge-material-list'),
     ChargeWallpaper: () => import('@/views/cms/charge-wallpaper-list'),
     ChargeMType: () => import('@/views/cms/charge-m-type-list'),
+    ChargeLabel: () => import('@/views/cms/charge-label-list'),
     UserFeedback: () => import('@/views/cms/user-feedback-list'),
     // 小说管理
     BookManager: () => import('@/views/cms/book-manager-list'),

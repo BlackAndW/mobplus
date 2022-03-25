@@ -1,8 +1,6 @@
 package com.yeecloud.adplus.admin.service;
 
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeBannerForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeMTypeForm;
-import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
+import com.yeecloud.adplus.admin.controller.cms.form.*;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
 import com.yeecloud.adplus.dal.entity.*;
 import com.yeecloud.meeto.common.exception.ServiceException;
@@ -17,6 +15,7 @@ import java.util.List;
  */
 public interface ChargeService{
 
+    /** Banner */
     Page<ChargeBanner> queryBanner(Query query) throws ServiceException;
 
     ChargeBanner findBannerById(Integer id) throws ServiceException;
@@ -27,6 +26,7 @@ public interface ChargeService{
 
     void deleteBanner(Integer[] ids) throws ServiceException;
 
+    /** 素材 */
     Page<ChargeMaterial> queryMaterial(Query query) throws ServiceException;
 
     ChargeMaterial findMaterialById(Integer id) throws ServiceException;
@@ -37,6 +37,7 @@ public interface ChargeService{
 
     void deleteMaterial(Integer[] ids) throws ServiceException;
 
+    /** 类型 */
     Page<ChargeMType> queryMType(Query query) throws ServiceException;
 
     ChargeMType findMTypeById(Integer id) throws ServiceException;
@@ -52,4 +53,13 @@ public interface ChargeService{
     boolean checkMaterialByName(String name);
 
     List<App> queryWallpaperAppList() throws ServiceException;
+
+    /** 标签 */
+    Page<ChargeLabel> queryLabel(Query query) throws ServiceException;
+
+    void createLabel(ChargeLabelForm form) throws ServiceException;
+
+    void updateLabel(Integer id, ChargeLabelForm form) throws ServiceException;
+
+    void deleteLabel(Integer[] ids) throws ServiceException;
 }
