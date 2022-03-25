@@ -2,6 +2,7 @@ package com.yeecloud.adplus.admin.controller.cms;
 
 import com.yeecloud.adplus.admin.controller.cms.convert.ChargeConvert;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeBannerForm;
+import com.yeecloud.adplus.admin.controller.cms.form.ChargeLabelForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMTypeForm;
 import com.yeecloud.adplus.admin.controller.cms.form.ChargeMaterialForm;
 import com.yeecloud.adplus.admin.controller.cms.vo.*;
@@ -193,6 +194,53 @@ public class ChargeController {
 
     private PageInfo<ChargeMTypeVO> convertMType(Page<ChargeMType> result) {
         List<ChargeMTypeVO> resultList = chargeConvert.convertMType(result.getContent());
+        return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
+    }
+
+    /***
+     * 素材管理
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("label")
+    @RequiresPermissions("cms:charge:query")
+    public Result getLabel(@RequestParam Map<String, Object> params) throws Exception {
+        Page<ChargeLabel> page = chargeService.queryLabel(new Query(params));
+        PageInfo<ChargeLabelVO> result = convertLabel(page);
+        return Result.SUCCESS(result);
+    }
+
+    @PostMapping("label")
+    @RequiresPermissions("cms:charge:create")
+    public Result createLabel(@RequestBody @Valid ChargeLabelForm form, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
+            return Result.FAILURE(message);
+        }
+        chargeService.createLabel(form);
+        return Result.SUCCESS();
+    }
+
+    @PutMapping("label/{id}")
+    @RequiresPermissions("cms:charge:edit")
+    public Result updateLabel(@PathVariable Integer id, @RequestBody @Valid ChargeLabelForm form, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            String message = String.format("操作失败,详细信息:[%s]。", bindingResult.getFieldError().getDefaultMessage());
+            return Result.FAILURE(message);
+        }
+        chargeService.updateLabel(id, form);
+        return Result.SUCCESS();
+    }
+
+    @DeleteMapping("label")
+    @RequiresPermissions("cms:charge:delete")
+    public Result deleteLabel(@RequestBody Integer[] ids) throws ServiceException {
+        chargeService.deleteLabel(ids);
+        return Result.SUCCESS();
+    }
+    private PageInfo<ChargeLabelVO> convertLabel(Page<ChargeLabel> result) {
+        List<ChargeLabelVO> resultList = chargeConvert.convertLabel(result.getContent());
         return new PageInfo<>(result.getNumber() + 1, result.getSize(), (int) result.getTotalElements(), resultList);
     }
 

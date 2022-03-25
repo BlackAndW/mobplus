@@ -4,6 +4,7 @@ import com.yeecloud.adplus.dal.entity.ChargeMType;
 import lombok.Data;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -50,4 +51,5 @@ public class ChargeMaterialVO {
 
     private long createdAt;
 
+    private List<String> labels;
 }

@@ -1,5 +1,10 @@
 package com.yeecloud.adplus.gateway.controller;
 
+import com.yeecloud.adplus.dal.entity.ChargeLabel;
+import com.yeecloud.adplus.dal.entity.ChargeMaterial;
+import com.yeecloud.adplus.dal.repository.ChargeLabelRepository;
+import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
+import com.yeecloud.adplus.gateway.controller.form.ChargeSearchForm;
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
 import com.yeecloud.adplus.gateway.controller.form.ChargeTypeForm;
 import com.yeecloud.adplus.gateway.controller.vo.ChargeBannerVO;
@@ -8,12 +13,15 @@ import com.yeecloud.adplus.gateway.controller.vo.ChargeMaterialVO;
 import com.yeecloud.adplus.gateway.service.ChargeService;
 import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
+import com.yeecloud.meeto.common.util.StringUtils;
 import io.github.yedaxia.apidocs.ApiDoc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 充电秀
@@ -27,6 +35,12 @@ public class ChargeShowController {
 
     @Autowired
     ChargeService chargeService;
+
+    @Autowired
+    ChargeMaterialRepository chargeMaterialRepository;
+
+    @Autowired
+    ChargeLabelRepository chargeLabelRepository;
 
     /***
      * 获取banner
@@ -91,4 +105,21 @@ public class ChargeShowController {
         return chargeService.uploadDataV(form);
     }
 
+
+    @PostMapping("searchByLabel")
+    public Result searchByLabel(@RequestBody ChargeSearchForm form,
+                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
+        List<ChargeMaterial> materials = chargeMaterialRepository.findByLabel(
+                form.getLabelStr(), form.getStyle(), form.getPageSize(), form.getPageNo() * form.getPageSize()
+        );
+        return Result.isEncode(apiVersion, materials);
+    }
+
+    @PostMapping("hotLabel")
+    public Result hotLabel(@RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) {
+        List<ChargeLabel> labels = chargeLabelRepository.findAllByTypeAndDeleted(1, false);
+        List<String> result = new ArrayList<>();
+        labels.forEach(item -> result.add(item.getEnName()));
+        return Result.isEncode(apiVersion, result);
+    }
 }

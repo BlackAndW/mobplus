@@ -93,6 +93,10 @@ public class ChargeMaterial extends AuditorEntity {
     @Column(name = "n_need_reward")
     private Integer needReward;
 
+    /** 标签 */
+    @Column(name = "n_labels")
+    private String labels;
+
     @Transient
     private String useNumFake;
 
