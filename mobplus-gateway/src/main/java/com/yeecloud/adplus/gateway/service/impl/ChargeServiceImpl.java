@@ -8,6 +8,7 @@ import com.yeecloud.adplus.dal.repository.AppRepository;
 import com.yeecloud.adplus.dal.repository.ChargeBannerRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMTypeRepository;
 import com.yeecloud.adplus.dal.repository.ChargeMaterialRepository;
+import com.yeecloud.adplus.gateway.controller.form.ChargeSearchForm;
 import com.yeecloud.adplus.gateway.controller.form.ChargeShowForm;
 import com.yeecloud.adplus.gateway.controller.form.ChargeTypeForm;
 import com.yeecloud.adplus.gateway.controller.form.TranslateForm;
@@ -116,10 +117,10 @@ public class ChargeServiceImpl implements ChargeService {
         Sort sort = Sort.by(new Sort.Order(direction, orderProperty));
         PageRequest pageRequest = PageRequest.of(pageNo, 20, sort);
         List<ChargeMaterial> materialList = chargeMaterialRepository.findAll(predicate, pageRequest).getContent();
-        return convertVideo(materialList);
+        return convertMaterial(materialList);
     }
 
-    private List<ChargeMaterialVO> convertVideo(List<ChargeMaterial> materialList) {
+    private List<ChargeMaterialVO> convertMaterial(List<ChargeMaterial> materialList) {
         materialList.forEach(ChargeMaterial::fakeData);
         List<ChargeMaterialVO> materialListVO = new ArrayList<>( materialList.size() );
         for ( ChargeMaterial chargeMaterial : materialList ) {
@@ -209,4 +210,11 @@ public class ChargeServiceImpl implements ChargeService {
         return mTypeVOS;
     }
 
+    @Override
+    public List<ChargeMaterialVO> queryMaterialByLabel(ChargeSearchForm form) throws ServiceException {
+        List<ChargeMaterial> materials = chargeMaterialRepository.findByLabel(
+                form.getLabelStr(), form.getStyle(), form.getPageSize(), form.getPageNo() * form.getPageSize()
+        );
+        return convertMaterial(materials);
+    }
 }
