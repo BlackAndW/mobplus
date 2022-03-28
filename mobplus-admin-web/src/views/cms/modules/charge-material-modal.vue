@@ -181,6 +181,7 @@ export default {
     computed: {},
     mounted () {
         this.loadAppList();
+        this.loadLabelList();
     },
     methods: {
         add: function (queryParam, typeList, currentApp) {
@@ -258,7 +259,12 @@ export default {
                 this.appList = res;
             });
         },
-
+        loadLabelList () {
+            this.$http.get('/cms/charge/label?pageNo=0&pageSize=999')
+            .then(res => {
+                this.labelList = res.data;
+            });
+        },
         onAppChange () {
             this.$nextTick(() => {
                 const checkedList = this.form.getFieldValue('appCheckList');

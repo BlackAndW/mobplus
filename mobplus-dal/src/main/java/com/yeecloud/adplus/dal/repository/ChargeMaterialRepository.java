@@ -26,8 +26,10 @@ public interface ChargeMaterialRepository extends JpaRepository<ChargeMaterial, 
     @Query(nativeQuery = true,
             value = "select * from t_charge_material " +
                     "where n_deleted = 0 " +
-                    "and Match(n_labels) against (?1 IN BOOLEAN MODE)" +
-                    "and IF (?2=1, n_video_path<>'' , n_img_url<>'' )" +
-                    "limit ?3 offset ?4")
+                    "and Match(n_labels) against (?1 IN BOOLEAN MODE) " +
+                    "and IF (?2=1, n_video_path<>'' , n_img_url<>'' ) " +
+                    "order by n_use_num DESC " +
+                    "limit ?3 offset ?4 "
+                    )
     List<ChargeMaterial> findByLabel(String labelStr, int style, int pageSize, int pageOffset);
 }
