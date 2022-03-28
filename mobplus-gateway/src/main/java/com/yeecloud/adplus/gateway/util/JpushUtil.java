@@ -25,6 +25,7 @@ public class JpushUtil {
         PushPayload.Builder builder = PushPayload.newBuilder();
         builder.setPlatform(Platform.ios());
         Options options = Options.sendno();
+        options.setApnsProduction(true);
         builder.setOptions(options);
         //设置推送方式
         if (type.equals("alias")) {
