@@ -21,4 +21,6 @@ public class ChargeLabelVO {
 
     private Integer type;
 
+    private long createdAt;
+
 }
