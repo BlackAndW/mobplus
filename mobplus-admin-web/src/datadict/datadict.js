@@ -87,7 +87,14 @@ export const CountryList = [
     { name: '新加坡', value: 'SG', name_en: 'Singapore', summary_en: 'Singapore', iconUrl: 'flag_sg.png', id: 9 },
     { name: '印度', value: 'IN', name_en: 'India', summary_en: 'Mumbai', iconUrl: 'flag_in.png', id: 10 },
     { name: '加拿大', value: 'CA', name_en: 'Canada', summary_en: 'Toronto', iconUrl: 'flag_ca.png', id: 11 },
-    { name: '中国', value: 'CN', name_en: 'China', summary_en: 'China', iconUrl: 'flag_cn.png', id: 12 }
+    { name: '中国', value: 'CN', name_en: 'China', summary_en: 'China', iconUrl: 'flag_cn.png', id: 12 },
+    { name: '俄罗斯', value: 'RU', name_en: 'Russia', summary_en: 'Moscow', iconUrl: 'flag_ru.png', id: 13 },
+    { name: '乌克兰', value: 'UA', name_en: 'Ukraine', summary_en: 'Kyiv', iconUrl: 'flag_ua.png', id: 14 },
+    { name: '荷兰', value: 'NL', name_en: 'Netherlands', summary_en: 'Amsterdam', iconUrl: 'flag_nl.png', id: 15 },
+    { name: '土耳其', value: 'TR', name_en: 'Turkey', summary_en: 'Istanbul', iconUrl: 'flag_tr.png', id: 16 },
+    { name: '以色列', value: 'IL', name_en: 'Israel', summary_en: 'Tel Aviv', iconUrl: 'flag_il.png', id: 17 },
+    { name: '巴西', value: 'BR', name_en: 'Brazil', summary_en: 'São Paulo', iconUrl: 'flag_br.png', id: 18 },
+    { name: '墨西哥', value: 'MX', name_en: 'Mexico', summary_en: 'Santiago de Querétaro', iconUrl: 'flag_mx.png', id: 19 }
 ];
 
 export const DimensionsList = [
