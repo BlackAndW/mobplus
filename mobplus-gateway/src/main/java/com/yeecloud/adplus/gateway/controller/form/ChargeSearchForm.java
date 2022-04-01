@@ -12,6 +12,8 @@ public class ChargeSearchForm {
 
     String labelStr = "";
 
+    String appId = "";
+
     int style = 1;
 
     int pageNo = 0;

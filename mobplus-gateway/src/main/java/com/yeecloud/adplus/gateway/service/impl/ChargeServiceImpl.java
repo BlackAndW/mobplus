@@ -212,8 +212,14 @@ public class ChargeServiceImpl implements ChargeService {
 
     @Override
     public List<ChargeMaterialVO> queryMaterialByLabel(ChargeSearchForm form) throws ServiceException {
+        String appIdStr = form.getAppId();
+        App app = appRepository.findByAppId(appIdStr);
+        if (app == null) {
+            throw new ServiceException("cannot find app by appId: " + appIdStr);
+        }
+        Integer appId = app.getId();
         List<ChargeMaterial> materials = chargeMaterialRepository.findByLabel(
-                form.getLabelStr(), form.getStyle(), form.getPageSize(), form.getPageNo() * form.getPageSize()
+                form.getLabelStr(), form.getStyle(), form.getPageSize(), form.getPageNo() * form.getPageSize(), appId
         );
         return convertMaterial(materials);
     }

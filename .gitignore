@@ -6,3 +6,4 @@ logs
 *.yml
 mobplus-gateway/packageRecord/
 mobplus-admin/packageRecord/
+*.log
