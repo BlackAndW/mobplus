@@ -99,6 +99,27 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public List<BookChapterVO> queryChapterList(BookForm form) throws ServiceException {
+        Integer bookId = form.getBookId();
+        if (bookId == null || bookId == 0) {
+            throw new ServiceException("bookId is empty!");
+        }
+        QBookChapter qBookChapter = QBookChapter.bookChapter;
+        Predicate predicate = qBookChapter.deleted.eq(false);
+        predicate = ExpressionUtils.and(predicate, qBookChapter.bookData.id.eq(bookId));
+        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "chapterNo"), new Sort.Order(Sort.Direction.ASC, "createdAt"));
+        List<BookChapter> bookChapterList = (List<BookChapter>) bookChapterRepository.findAll(predicate, sort);
+        List<BookChapterVO> chapterVOList = new ArrayList<>();
+        for (BookChapter chapter : bookChapterList) {
+            BookChapterVO chapterVO = new BookChapterVO();
+            NewBeanUtils.copyProperties(chapterVO, chapter);
+            chapterVO.setChapterId(chapter.getId());
+            chapterVOList.add(chapterVO);
+        }
+        return chapterVOList;
+    }
+
+    @Override
     public BookChapterContentVO queryBookChapterContent(BookForm form) throws ServiceException {
         QBookChapter qBookChapter = QBookChapter.bookChapter;
         Predicate predicate = qBookChapter.deleted.eq(false);

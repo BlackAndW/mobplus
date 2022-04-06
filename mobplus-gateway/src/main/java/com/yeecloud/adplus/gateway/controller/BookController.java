@@ -32,6 +32,12 @@ public class BookController {
         return Result.isEncode(apiVersion, bookService.queryBookDetail(form));
     }
 
+    @PostMapping("chapter/list")
+    public Result getChapterList(@RequestBody BookForm form,
+                                @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
+        return Result.isEncode(apiVersion, bookService.queryChapterList(form));
+    }
+
     @PostMapping("chapter")
     public Result getBookChapter(@RequestBody BookForm form,
                               @RequestHeader(value = "Api-Version", defaultValue = "1.0") String apiVersion) throws ServiceException {
