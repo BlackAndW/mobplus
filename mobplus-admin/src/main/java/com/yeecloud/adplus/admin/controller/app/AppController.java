@@ -81,7 +81,6 @@ public class AppController {
     }
 
     @GetMapping("/item")
-    @RequiresPermissions("app:entity:query")
     public Result<AppVO> getAppItem(@RequestParam Map<String, Object> params) throws ServiceException {
         params.put("pageSize", Integer.MAX_VALUE);
         Query query = new Query(params);

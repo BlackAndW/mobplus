@@ -53,6 +53,13 @@
                                 />
                             </a-form-item>
                             <a-form-item>
+                                <a-select placeholder="是否付费" v-model="queryParam.isSubscribe" style="width:120px">
+                                    <a-select-option :value="0">全部</a-select-option>
+                                    <a-select-option :value="1">未付费</a-select-option>
+                                    <a-select-option :value="2">已付费</a-select-option>
+                                </a-select>
+                            </a-form-item>
+                            <a-form-item>
                                 <a-range-picker @change="onChangeDate"/>
                             </a-form-item>
                             <a-form-item class="float-right">
@@ -89,6 +96,10 @@
                         <template slot="timeSlot" slot-scope="text">
                             {{ text | moment }}
                         </template>
+                        <template slot="subSlot" slot-scope="text">
+                            <span v-if="text===1">未付费</span>
+                            <span v-if="text===2">已付费</span>
+                        </template>
                     </s-table>
                 </a-card>
             </a-col>
@@ -120,6 +131,11 @@ const columns = [
     {
         title: '访问节点名',
         dataIndex: 'serverName'
+    },
+    {
+        title: '是否付费',
+        dataIndex: 'isSubscribe',
+        scopedSlots: { customRender: 'subSlot' }
     },
     {
         title: '连接日期',
