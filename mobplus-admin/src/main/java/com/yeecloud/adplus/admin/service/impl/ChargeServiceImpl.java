@@ -304,7 +304,7 @@ public class ChargeServiceImpl implements ChargeService {
         QApp qApp = QApp.app;
         Predicate predicate = qApp.deleted.eq(false);
         predicate = ExpressionUtils.and(predicate, qApp.type.eq(3));
-        predicate = ExpressionUtils.and(predicate, qApp.id.notIn(33, 48, 56, 57));
+        predicate = ExpressionUtils.and(predicate, qApp.id.notIn(48, 56, 57));
         List<App> appList = (List<App>) appRepository.findAll(predicate);
         if (appList.size() == 0) {
             throw new ServiceException("cannot find app of type 3");
