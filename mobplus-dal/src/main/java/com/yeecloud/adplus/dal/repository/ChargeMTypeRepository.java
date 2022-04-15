@@ -23,5 +23,5 @@ public interface ChargeMTypeRepository extends JpaRepository<ChargeMType, Intege
     void deleteById(@Param("ids") Integer[] ids);
 
 
-    ChargeMType findByAppAndNameAndStyle(App app, @Param("name") String name, @Param("style") Integer style);
+    ChargeMType findByAppAndNameAndStyleAndDeleted(App app, @Param("name") String name, @Param("style") Integer style, boolean deleted);
 }
