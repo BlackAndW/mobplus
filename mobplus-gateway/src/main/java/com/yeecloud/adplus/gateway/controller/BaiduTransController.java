@@ -35,12 +35,6 @@ import java.util.List;
 @RequestMapping("/api/v1/trans")
 public class BaiduTransController {
 
-    @Value("${baidu.translate.appId}")
-    private String appId;
-
-    @Value("${baidu.translate.securityKey}")
-    private String securityKey;
-
     @Autowired
     BookChannelReository bookChannelReository;
 
