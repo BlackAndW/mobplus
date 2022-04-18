@@ -1,7 +1,7 @@
 package com.yeecloud.adplus.gateway.controller;
 
 import com.yeecloud.adplus.gateway.controller.form.BookForm;
-import com.yeecloud.adplus.gateway.service.BookService;
+import com.yeecloud.adplus.gateway.service.BookDataService;
 import com.yeecloud.adplus.gateway.util.Result;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
 
     @Autowired
-    BookService bookService;
+    BookDataService bookService;
 
     @PostMapping("list")
     public Result getBookList(@RequestBody BookForm form,

@@ -14,7 +14,7 @@ import java.util.List;
  * @author: Leonard
  * @create: 2022/3/1
  */
-public interface BookService {
+public interface BookDataService {
 
     List<BookVO> queryBookList(BookForm form) throws ServiceException;
 

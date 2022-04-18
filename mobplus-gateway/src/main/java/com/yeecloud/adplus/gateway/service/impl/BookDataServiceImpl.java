@@ -14,7 +14,7 @@ import com.yeecloud.adplus.gateway.controller.vo.BookChapterContentVO;
 import com.yeecloud.adplus.gateway.controller.vo.BookChapterVO;
 import com.yeecloud.adplus.gateway.controller.vo.BookDetailVO;
 import com.yeecloud.adplus.gateway.controller.vo.BookVO;
-import com.yeecloud.adplus.gateway.service.BookService;
+import com.yeecloud.adplus.gateway.service.BookDataService;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ import java.util.List;
  * @create: 2022/3/1
  */
 @Service
-public class BookServiceImpl implements BookService {
+public class BookDataServiceImpl implements BookDataService {
 
     @Autowired
     BookDataRepository bookDataRepository;
