@@ -6,6 +6,8 @@ import com.yeecloud.adplus.admin.controller.cms.convert.BookConvert;
 import com.yeecloud.adplus.admin.controller.cms.form.BookDataForm;
 import com.yeecloud.adplus.admin.controller.cms.vo.BookDataVO;
 import com.yeecloud.adplus.admin.service.BookDataService;
+import com.yeecloud.adplus.admin.util.FileUtil;
+import com.yeecloud.adplus.admin.util.OkHttpUtils;
 import com.yeecloud.adplus.dal.entity.BookChapter;
 import com.yeecloud.adplus.dal.entity.BookData;
 import com.yeecloud.adplus.dal.entity.QBookChapter;
@@ -15,13 +17,18 @@ import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -99,5 +106,19 @@ public class BookDataController {
         predicate = ExpressionUtils.and(predicate, qBookChapter.bookData.eq(bookData));
         List<BookChapter> chapterList = (List<BookChapter>) bookChapterRepository.findAll(predicate);
         return chapterList.stream().mapToLong(BookChapter::getReadCount).sum();
+    }
+
+    @PostMapping("/crawler/upload")
+    public Result crawlerUpload(@RequestParam(value = "book", required = false) MultipartFile book) throws IOException {
+        okhttp3.RequestBody fileBody = okhttp3.RequestBody.create(FileUtil.toFile(book), MediaType.parse("multipart/form-data"));
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("book", book.getOriginalFilename(), fileBody)
+                .build();
+        final Request request = new Request.Builder()
+                .url("http://localhost:9091" + "/api/v1/book/crawler/book/upload")
+                .post(requestBody)
+                .build();
+        return Result.SUCCESS(OkHttpUtils.Response(request));
     }
 }

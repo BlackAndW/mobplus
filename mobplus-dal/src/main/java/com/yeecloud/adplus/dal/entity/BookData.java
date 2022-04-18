@@ -25,6 +25,24 @@ public class BookData extends AuditorEntity{
     @JoinColumn(name = "n_app_id")
     private App app;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "n_channel_id")
+    private BookChannel bookChannel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "n_type_id")
+    private BookType bookType;
+
+    @Column(name = "n_type_org")
+    private String typeOrg;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "n_sex_id")
+    private BookSex bookSex;
+
+    @Column(name = "n_label_ids")
+    private String labels;
+
     @Column(name = "n_name")
     private String name;
 
@@ -39,6 +57,9 @@ public class BookData extends AuditorEntity{
 
     @Column(name = "n_status")
     private Integer status;
+
+    @Column(name = "n_is_online")
+    private Integer isOnline;
 
     @Column(name = "n_is_vip")
     private Integer isVip;

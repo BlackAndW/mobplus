@@ -1,7 +1,7 @@
 package com.yeecloud.adplus.dal.repository;
 
 
-import com.yeecloud.adplus.dal.entity.BookData;
+import com.yeecloud.adplus.dal.entity.Booki18n;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,21 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
  * @create: 2022/2/16
  */
 @Repository
-public interface BookDataRepository extends JpaRepository<BookData, Integer>, QuerydslPredicateExecutor<BookData> {
+public interface Booki18nRepository extends JpaRepository<Booki18n, Integer>, QuerydslPredicateExecutor<Booki18n> {
 
     @Transactional
     @Modifying
-    @Query("update BookData obj set obj.deleted = true where obj.id = :id")
+    @Query("update Booki18n obj set obj.deleted = true where obj.id = :id")
     void deleteById(@Param("id") Integer id);
 
     @Transactional
     @Modifying
-    @Query("update BookData obj set obj.deleted = true where obj.id in :ids")
+    @Query("update Booki18n obj set obj.deleted = true where obj.id in :ids")
     void deleteById(@Param("ids") Integer[] ids);
 
-    BookData findFirstByDeletedOrderByCreatedAtDesc(boolean deleted);
-
-    BookData findByNameAndDeleted(String name, boolean deleted);
-
-    BookData findByNameAndAuthorAndDeleted(String name, String author, boolean deleted);
 }

@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService {
             throw new ServiceException("上传失败");
         }
         try {
-            FileVO vo = new FileVO(
+            return new FileVO(
                     file.getName(),
                     relativePath + file.getName(),
                     relativePath + file.getName(),
@@ -41,7 +41,6 @@ public class FileServiceImpl implements FileService {
                     type,
                     FileUtil.getSize(multipartFile.getSize())
             );
-            return vo;
         } catch (Exception e) {
             FileUtil.del(file);
             throw e;

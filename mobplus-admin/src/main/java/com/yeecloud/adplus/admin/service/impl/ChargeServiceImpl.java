@@ -170,7 +170,7 @@ public class ChargeServiceImpl implements ChargeService {
                 if (app == null) {
                     throw new ServiceException("app is not exist!");
                 }
-                ChargeMType type = chargeMTypeRepository.findByAppAndNameAndStyle(app, mType.getName(), mType.getStyle());
+                ChargeMType type = chargeMTypeRepository.findByAppAndNameAndStyleAndDeleted(app, mType.getName(), mType.getStyle(), false);
                 if (type == null) {
                     throw new ServiceException(app.getName() + " have no type of " + mType.getName());
                 }

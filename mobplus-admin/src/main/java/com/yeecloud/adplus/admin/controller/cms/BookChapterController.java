@@ -1,23 +1,32 @@
 package com.yeecloud.adplus.admin.controller.cms;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yeecloud.adplus.admin.controller.cms.convert.BookConvert;
 import com.yeecloud.adplus.admin.controller.cms.form.BookChapterForm;
 import com.yeecloud.adplus.admin.controller.cms.vo.BookChapterVO;
 import com.yeecloud.adplus.admin.service.BookChapterService;
 import com.yeecloud.adplus.admin.service.BookChapterService;
+import com.yeecloud.adplus.admin.util.FileUtil;
+import com.yeecloud.adplus.admin.util.OkHttpUtils;
 import com.yeecloud.adplus.dal.entity.BookChapter;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.PageInfo;
 import com.yeecloud.meeto.common.util.Query;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -85,5 +94,19 @@ public class BookChapterController {
     public Result deleteBanner(@RequestBody Integer[] ids) throws ServiceException {
         bookChapterService.delete(ids);
         return Result.SUCCESS();
+    }
+
+    @PostMapping("/crawler/upload")
+    public Result crawlerUpload(@RequestParam(value = "chapters", required = false) MultipartFile chapters) throws IOException {
+        okhttp3.RequestBody fileBody = okhttp3.RequestBody.create(FileUtil.toFile(chapters), MediaType.parse("multipart/form-data"));
+        MultipartBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("chapters", chapters.getOriginalFilename(), fileBody)
+                .build();
+        final Request request = new Request.Builder()
+                .url("http://localhost:9091" + "/api/v1/book/crawler/chapter/upload")
+                .post(requestBody)
+                .build();
+        return Result.SUCCESS(OkHttpUtils.Response(request));
     }
 }

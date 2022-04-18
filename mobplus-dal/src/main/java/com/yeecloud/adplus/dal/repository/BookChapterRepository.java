@@ -1,6 +1,7 @@
 package com.yeecloud.adplus.dal.repository;
 
 import com.yeecloud.adplus.dal.entity.BookChapter;
+import com.yeecloud.adplus.dal.entity.BookData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,6 @@ public interface BookChapterRepository extends JpaRepository<BookChapter, Intege
     @Modifying
     @Query("update BookChapter obj set obj.deleted = true where obj.id in :ids")
     void deleteById(@Param("ids") Integer[] ids);
+
+    BookChapter findByBookDataAndNameAndDeleted(BookData bookData, String name, boolean deleted);
 }

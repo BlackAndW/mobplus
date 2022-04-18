@@ -34,6 +34,21 @@
                                     >{{ book.name }}</a-select-option>
                                 </a-select>
                             </a-form-item>
+                            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="章节文件：">
+                                <a-upload
+                                    directory
+                                    name="chapters"
+                                    action="/api/cms/book/chapter/crawler/upload"
+                                    :file-list="chapterList"
+                                    @change="handleChange('v1', $event)"
+                                >
+                                <a-button> <a-icon type="upload" /> 上传 </a-button>
+                                <!-- <a-input
+                                    type="hidden"
+                                    v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请上传' }] }]"
+                                /> -->
+                                </a-upload>
+                            </a-form-item>
                             <a-button-group class="btn-grp-margin-top">
                                 <a-button
                                     icon="sync"
@@ -162,6 +177,7 @@ export default {
             appTreeData: [],
             bookList: [],
             isVip: 0,
+            chapterList: [],
             currentApp: null,
             loadData: this.loadDataList
         };
@@ -173,6 +189,25 @@ export default {
     computed: {},
     methods: {
         moment,
+        handleChange (params, info) {
+            // 删除列表项时，对应表单值置为空
+            if (info.file.status === 'removed') {
+                this.chapterList = [];
+                this.form.setFieldsValue({ name: '' });
+            } else if (info.file.status === 'uploading') {
+                this.loading = true;
+                this.chapterList = [...info.fileList];
+            // 上传完成后，对应表单项赋值
+            } else if (info.file.status === 'done') {
+                if (info.file.response.code === 5000) {
+                    this.$message.error(info.file.response.message);
+                    this.loading = false;
+                } else if (info.file.response.code === 2000) {
+                    this.form.setFieldsValue({ name: info.file.response.result.realName });
+                    this.loading = false;
+                }
+            }
+        },
         onChangeDate (date, dateString) {
             if (date.length > 0) {
                 this.queryParam.startTimeStr = dateString[0] + ' 00:00:00';
