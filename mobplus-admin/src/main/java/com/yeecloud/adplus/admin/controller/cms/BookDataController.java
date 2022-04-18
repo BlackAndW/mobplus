@@ -116,7 +116,7 @@ public class BookDataController {
                 .addFormDataPart("book", book.getOriginalFilename(), fileBody)
                 .build();
         final Request request = new Request.Builder()
-                .url("http://localhost:9091" + "/api/v1/book/crawler/book/upload")
+                .url("https://ap.owlnovel2022.com" + "/v1/book/crawler/book/upload")
                 .post(requestBody)
                 .build();
         return Result.SUCCESS(OkHttpUtils.Response(request));
