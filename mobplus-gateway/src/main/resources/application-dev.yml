@@ -65,8 +65,4 @@ google:
 #swagger:
 #  swaggerEnabled: true
 
-baidu:
-  translate:
-    appId: 20220401001153477
-    securityKey: e4ZYoLIDAeEzo7N5No6E
 
