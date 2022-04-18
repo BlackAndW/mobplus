@@ -7,7 +7,9 @@ import com.yeecloud.adplus.gateway.controller.vo.BookChapterVO;
 import com.yeecloud.adplus.gateway.controller.vo.BookDetailVO;
 import com.yeecloud.adplus.gateway.controller.vo.BookVO;
 import com.yeecloud.meeto.common.exception.ServiceException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,4 +29,8 @@ public interface BookDataService {
     void countBookData(BookForm form) throws ServiceException;
 
     void countBookChapter(BookForm form) throws ServiceException;
+
+    void crawlerBookUpload(MultipartFile book) throws Exception;
+
+    void crawlerChapterUpload(MultipartFile chapter) throws Exception;
 }

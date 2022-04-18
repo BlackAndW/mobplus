@@ -122,8 +122,8 @@ public class ScheduleTask {
         }
     }
 
-    @Scheduled(cron = "0 30 9 * * *")
-    private void Jpush() {
-        jpushService.pushMsg();
-    }
+//    @Scheduled(cron = "0 30 9 * * *")
+//    private void Jpush() {
+//        jpushService.pushMsg();
+//    }
 }

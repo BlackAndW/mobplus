@@ -55,6 +55,20 @@
                                     @change="val => handleDiscountChange(val)"
                                 />
                             </a-form-item>
+                            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="书籍文件：">
+                                <a-upload
+                                    name="book"
+                                    action="/api/cms/book/manager/crawler/upload"
+                                    :file-list="book"
+                                    @change="handleChange('v1', $event)"
+                                >
+                                <a-button> <a-icon type="upload" /> 上传 </a-button>
+                                <!-- <a-input
+                                    type="hidden"
+                                    v-decorator="[ 'name', {initialValue: model.name, rules: [ { required: true, message: '请上传' }] }]"
+                                /> -->
+                                </a-upload>
+                            </a-form-item>
                         </div>
                         <div class="r" v-if="currentApp!=null">
                             <a-button-group class="btn-grp-margin-top">
@@ -167,6 +181,7 @@ export default {
             queryParam: {},
             treeloading: false,
             appTreeData: [],
+            chapterList: [],
             currentApp: null,
             loadData: this.loadDataList
         };
@@ -177,6 +192,25 @@ export default {
     },
     computed: {},
     methods: {
+        handleChange (params, info) {
+            // 删除列表项时，对应表单值置为空
+            if (info.file.status === 'removed') {
+                this.chapterList = [];
+                this.form.setFieldsValue({ name: '' });
+            } else if (info.file.status === 'uploading') {
+                this.loading = true;
+                this.chapterList = [...info.fileList];
+            // 上传完成后，对应表单项赋值
+            } else if (info.file.status === 'done') {
+                if (info.file.response.code === 5000) {
+                    this.$message.error(info.file.response.message);
+                    this.loading = false;
+                } else if (info.file.response.code === 2000) {
+                    this.form.setFieldsValue({ name: info.file.response.result.realName });
+                    this.loading = false;
+                }
+            }
+        },
         onDelete: function (record) {
             var params = [];
             if (record !== undefined) {

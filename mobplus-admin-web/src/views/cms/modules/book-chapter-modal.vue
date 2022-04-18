@@ -54,6 +54,7 @@ export default {
             form: this.$form.createForm(this),
             model: {},
             isVip: 0,
+            chapterList: [],
             loading: false,
             func: () => {}
         };
@@ -67,6 +68,7 @@ export default {
             this.model = {};
             this.model.bookId = bookId;
             this.isVip = isVip;
+            this.chapterList = [];
             this.url = '/cms/book/chapter';
             this.visible = true;
         },
@@ -75,6 +77,8 @@ export default {
             this.model = record;
             this.model.bookId = bookId;
             this.isVip = isVip;
+            this.chapterList = [];
+            this.chapterList.push({ uid: record.id, name: record.name });
             this.url = '/cms/book/chapter/' + record.id;
             this.func = this.$http.put;
             this.confirmLoading = false;
