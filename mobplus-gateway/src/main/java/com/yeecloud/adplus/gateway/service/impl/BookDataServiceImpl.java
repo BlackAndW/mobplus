@@ -228,8 +228,6 @@ public class BookDataServiceImpl implements BookDataService {
         byte[] b = new byte[inputStream.available()];
         while (inputStream.read(b) != -1) {
             String bookInfo = new String(b);
-            // 去掉|符号，防止与后面的分隔符|混淆
-            bookInfo = bookInfo.replace("||", "");
             JSONObject jsonObject = JSON.parseObject(bookInfo);
             String title = jsonObject.getString("title");
             String author = jsonObject.getString("author");
@@ -289,14 +287,14 @@ public class BookDataServiceImpl implements BookDataService {
             Booki18n booki18n = new Booki18n();
             booki18n.setLang(LANG);
             booki18n.setBookData(savedData);
-            String title_trans = BaiduTransUtil.translateByDomain(new TranslateForm(title, LANG), "novel");
-            booki18n.setName(title_trans);
-            String author_trans = BaiduTransUtil.translateByDomain(new TranslateForm(author, LANG), "novel");
-            booki18n.setAuthor(author_trans);
+//            String title_trans = BaiduTransUtil.translateByDomain(new TranslateForm(title, LANG), "novel");
+//            booki18n.setName(title_trans);
+//            String author_trans = BaiduTransUtil.translateByDomain(new TranslateForm(author, LANG), "novel");
+//            booki18n.setAuthor(author_trans);
 //            String description_trans = "It was said that there was no time travel in the world, so there were many people who jumped into the river. [陈飞] didn't think about it, because he didn't need to think about it at all. But when he fell into the river and kept drinking water, he suddenly remembered this sentence. He began to think if it was better to travel through time than drowning. Miraculously, [陈龙] didn't call for help while sinking. Instead, he kept thinking about where he would pass through. Was he out of his mind? A normal person would know that he would die right away, but [陈飞] jumped into the water with a smile. It was all because of a dream he had";
-            String description_trans = BaiduTransUtil.translateByDomain(new TranslateForm(description, LANG), "novel");
-            description_trans = replaceHanziName(description_trans);
-            booki18n.setDescription(description_trans);
+//            String description_trans = BaiduTransUtil.translateByDomain(new TranslateForm(description, LANG), "novel");
+//            description_trans = replaceHanziName(description_trans);
+//            booki18n.setDescription(description_trans);
             String label_trans = "";
             if (!label.equals("未分类")) {
                 label_trans = BaiduTransUtil.translateByDomain(new TranslateForm(label, LANG), "novel");

@@ -138,24 +138,14 @@ public class FileController {
      */
     @PostMapping("/upload/aws/video/{key}")
     public Result uploadVideo(@PathVariable("key") String key, @RequestParam("fileV") MultipartFile fileV) throws Exception {
-        // 判断文件是否为视频
-//        String suffix = FileUtil.getExtensionName(fileV.getOriginalFilename());
-//        if (!FileUtil.VIDEO.equals(FileUtil.getFileType(suffix))) {
-//            return Result.FAILURE("只能上传视频");
-//        }
-//
-//        FileVO vo = upload2S3(videoKeyPath + key, fileV, key);
-//        return Result.SUCCESS(vo);
-        String fileName = fileV.getOriginalFilename();
-        System.out.println(fileName);
-        String suffix = FileUtil.getExtensionName(fileName);
-        if (!FileUtil.TXT.equals(FileUtil.getFileType(suffix))) {
-            return Result.FAILURE("文件格式不正确");
+//         判断文件是否为视频
+        String suffix = FileUtil.getExtensionName(fileV.getOriginalFilename());
+        if (!FileUtil.VIDEO.equals(FileUtil.getFileType(suffix))) {
+            return Result.FAILURE("只能上传视频");
         }
-        String bookName = fileName.substring(0, fileName.indexOf("/"));
-        String chapterNo = fileName.substring(fileName.indexOf("/") + 1, fileName.indexOf("-"));
-        String chapterName = fileName.substring(fileName.indexOf("-") + 1,fileName.indexOf("."));
-        return Result.SUCCESS();
+
+        FileVO vo = upload2S3(videoKeyPath + key, fileV, key);
+        return Result.SUCCESS(vo);
     }
 
     /***
