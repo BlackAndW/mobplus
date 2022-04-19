@@ -19,6 +19,7 @@ import com.yeecloud.adplus.gateway.util.FileUtil;
 import com.yeecloud.meeto.common.exception.ServiceException;
 import com.yeecloud.meeto.common.result.Result;
 import com.yeecloud.meeto.common.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -38,6 +39,7 @@ import java.util.regex.Pattern;
  * @author: Leonard
  * @create: 2022/3/1
  */
+@Slf4j
 @Service
 public class BookDataServiceImpl implements BookDataService {
 
@@ -282,8 +284,9 @@ public class BookDataServiceImpl implements BookDataService {
             bookData.setBookSex(bookSex);
             bookData.setCover(picture);
             BookData savedData = bookDataRepository.save(bookData);
-            List list = (List) jsonObject.get("chapterArr");
+            log.info("书籍{}已保存", book.getOriginalFilename());
 
+            List list = (List) jsonObject.get("chapterArr");
             Booki18n booki18n = new Booki18n();
             booki18n.setLang(LANG);
             booki18n.setBookData(savedData);
@@ -301,13 +304,19 @@ public class BookDataServiceImpl implements BookDataService {
             booki18n.setLabel(label_trans);
             booki18n.setCatalogue(list.toString());
             booki18nRepository.save(booki18n);
+            log.info("书籍{}已翻译", book.getOriginalFilename());
         }
     }
 
     @Override
     public synchronized void crawlerChapterUpload(MultipartFile folder) throws Exception {
         String fileName = folder.getOriginalFilename();
-        System.out.println(fileName);
+        if (fileName == null) {
+            throw new ServiceException("上传失败，无法获取文件名");
+        }
+        if (!fileName.contains("/")) {
+            throw new ServiceException("请上传文件夹");
+        }
         String suffix = FileUtil.getExtensionName(fileName);
         if (!FileUtil.TXT.equals(FileUtil.getFileType(suffix))) {
             throw new ServiceException("文件格式不正确");
@@ -342,6 +351,7 @@ public class BookDataServiceImpl implements BookDataService {
             chapter.setIsLock(1);
         }
         bookChapterRepository.save(chapter);
+        log.info("章节{}已保存", fileName);
         if (chapterNo < 100) {
             String content_trans = "";
             if (size < 2000) {
@@ -362,6 +372,7 @@ public class BookDataServiceImpl implements BookDataService {
             bookChapteri18n.setTitle(title_trans);
             bookChapteri18n.setContent(replaceHanziName(content_trans));
             bookChapteri18nRepository.save(bookChapteri18n);
+            log.info("章节{}已翻译", fileName);
         }
     }
 

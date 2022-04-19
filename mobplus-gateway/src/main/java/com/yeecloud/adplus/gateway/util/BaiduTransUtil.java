@@ -30,14 +30,14 @@ public class BaiduTransUtil {
                 "zh", form.getToLang(), domain);
         JSONObject object = JSON.parseObject(result);
         if (object == null) {
-            throw new ServiceException("baidu translation request error");
+            throw new ServiceException("百度翻译请求报错");
         }
-        System.out.println(object.toString());
         JSONArray trans_result = object.getJSONArray("trans_result");
         StringBuilder resultStr = new StringBuilder();
         if (trans_result != null && trans_result.size() > 0) {
             for (int i = 0; i < trans_result.size(); i++) {
                 resultStr.append(trans_result.getJSONObject(i).getString("dst"));
+                resultStr.append("\r\n");
             }
         }
         return resultStr.toString();
